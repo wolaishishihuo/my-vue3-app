@@ -1,5 +1,9 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
+import { createApp, App } from "vue";
+import "@/styles/index.scss"; // 全局样式
+import APP from "./App.vue";
 
-createApp(App).mount('#app')
+const app: App = createApp(APP); // 创建vue实例
+import router from "@/router"; // 注册路由
+
+app.use(router)
+app.mount("#app");
