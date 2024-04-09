@@ -44,6 +44,7 @@ module.exports = {
         '@typescript-eslint/ban-types': 'off', // 禁止使用特定类型
         '@typescript-eslint/no-var-requires': 'off', // 允许使用 require() 函数导入模块
         '@typescript-eslint/no-non-null-assertion': 'off', // 不允许使用后缀运算符的非空断言(!)
+        '@typescript-eslint/no-unused-vars': 'off',
 
         // vue (https://eslint.vuejs.org/rules)
         'vue/script-setup-uses-vars': 'error', // 防止<script setup>使用的变量<template>被标记为未使用，此规则仅在启用该 no-unused-vars 规则时有效

@@ -20,7 +20,7 @@ module.exports = {
     // 箭头函数，尽可能不用括号
     arrowParens: 'avoid',
     // 尾随逗号, 'none': 不要有尾随逗号, 'es5': 在 ES5 模式下要有尾随逗号, 'all': 在所有情况下都要有尾随逗号
-    trailingComma: 'all',
+    trailingComma: 'none',
     // 使用默认的折行标准
     proseWrap: 'preserve',
   }
