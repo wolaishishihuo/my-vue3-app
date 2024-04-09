@@ -1,12 +1,11 @@
+// https://vitejs.dev/config/
 import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
-// https://vitejs.dev/config/
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const root = process.cwd();
     const env = loadEnv(mode, root);
-    console.log(env);
 
     return {
         base: env.VITE_PUBLIC_PATH,
