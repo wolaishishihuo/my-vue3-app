@@ -1,9 +1,22 @@
 import { createApp, App } from 'vue';
-import '@/styles/index.scss'; // 全局样式
 import APP from './App.vue';
+import { setupRouter } from './routers';
+import { setupAssets } from '@/plugins/index';
+import { setupStore } from '@/stores';
 
 const app: App = createApp(APP); // 创建vue实例
-import router from '@/router'; // 注册路由
 
-app.use(router);
-app.mount('#app');
+// 注册插件
+function setupPlugins() {
+    setupAssets();
+}
+// 初始化应用
+async function setupApp() {
+    // 挂载pinia状态管理
+    setupStore(app);
+    // 挂载路由
+    await setupRouter(app);
+    app.mount('#app');
+}
+setupPlugins();
+setupApp();
