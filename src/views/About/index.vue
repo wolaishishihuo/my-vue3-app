@@ -1,6 +1,6 @@
 <template>
     <div>about</div>
-    <el-button>Default</el-button>
+    <el-button type="primary">Default</el-button>
 </template>
 
 <script setup lang="ts"></script>
