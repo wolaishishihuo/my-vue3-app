@@ -1,5 +1,6 @@
 // https://vitejs.dev/config/
 import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite';
+
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
