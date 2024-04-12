@@ -5,7 +5,7 @@ import path from 'path';
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const root = process.cwd();
-    const env = loadEnv(mode, root);
+    const env = loadEnv(mode, root) as unknown as ViteEnv;
 
     return {
         base: env.VITE_PUBLIC_PATH,
