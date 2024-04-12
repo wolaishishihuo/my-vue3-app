@@ -1,7 +1,6 @@
 // https://vitejs.dev/config/
 import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite';
-
-import vue from '@vitejs/plugin-vue';
+import { vitePlugins } from './build/plugins';
 import path from 'path';
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
@@ -10,7 +9,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 
     return {
         base: env.VITE_PUBLIC_PATH,
-        plugins: [vue()],
+        plugins: vitePlugins(env),
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'src')
