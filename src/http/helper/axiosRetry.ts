@@ -2,7 +2,10 @@ import type { AxiosError, AxiosInstance } from 'axios';
 
 export function retry(instance: AxiosInstance, err: AxiosError) {
     const config: any = err.config;
-    const { waitTime, count } = config.retryConfig ?? {};
+    const { waitTime, count, isRetry } = config.retryConfig ?? {};
+    if (!isRetry) {
+        return Promise.reject(err);
+    }
     config.currentCount = config.currentCount ?? 0;
     console.log(`第${config.currentCount}次重连`);
     if (config.currentCount >= count) {

@@ -60,6 +60,8 @@ class HttpRequest {
             },
             async (error: AxiosError) => {
                 const { response } = error;
+                if (error.message.indexOf('timeout') !== -1) ElMessage.error('请求超时！请您稍后重试');
+                if (error.message.indexOf('Network Error') !== -1) ElMessage.error('网络错误！请您稍后重试');
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 }
@@ -73,19 +75,19 @@ class HttpRequest {
     /**
      * @description 常用请求方法封装
      */
-    get<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    get<T>(url: string, params?: object, _object: Partial<CustomAxiosRequestConfig> = {}): Promise<ResultData<T>> {
         return this.service.get(url, { params, ..._object });
     }
-    post<T>(url: string, params?: object | string, _object = {}): Promise<ResultData<T>> {
+    post<T>(url: string, params?: object | string, _object: Partial<CustomAxiosRequestConfig> = {}): Promise<ResultData<T>> {
         return this.service.post(url, params, _object);
     }
-    put<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    put<T>(url: string, params?: object, _object: Partial<CustomAxiosRequestConfig> = {}): Promise<ResultData<T>> {
         return this.service.put(url, params, _object);
     }
-    delete<T>(url: string, params?: any, _object = {}): Promise<ResultData<T>> {
+    delete<T>(url: string, params?: any, _object: Partial<CustomAxiosRequestConfig> = {}): Promise<ResultData<T>> {
         return this.service.delete(url, { params, ..._object });
     }
-    download(url: string, params?: object, _object = {}): Promise<BlobPart> {
+    download(url: string, params?: object, _object: Partial<CustomAxiosRequestConfig> = {}): Promise<BlobPart> {
         return this.service.post(url, params, { ..._object, responseType: 'blob' });
     }
 }

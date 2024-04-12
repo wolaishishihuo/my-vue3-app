@@ -17,6 +17,6 @@ export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     retryConfig?: {
         isRetry: boolean;
         count: number;
-        wait?: number;
+        waitTime?: number;
     };
 }
