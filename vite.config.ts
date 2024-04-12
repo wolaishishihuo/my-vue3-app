@@ -18,6 +18,18 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         esbuild: {
             pure: env.VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : []
         },
+        server: {
+            host: '0.0.0.0',
+            port: env.VITE_PORT,
+            open: env.VITE_OPEN,
+            cors: true,
+            proxy: {
+                '/auth': {
+                    target: 'http://localhost:3000',
+                    changeOrigin: true
+                }
+            }
+        },
         build: {
             outDir: 'dist',
             minify: 'esbuild',
