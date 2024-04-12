@@ -3,6 +3,10 @@ import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } fro
 import useEnv from '@/hooks/useEnv';
 import { ResultEnum } from '@/enums/httpEnum';
 import { CustomAxiosRequestConfig, ResultData } from './interface';
+import { AxiosCanceler } from './helper/axiosCancel';
+import { ElMessage } from 'element-plus';
+import { checkStatus } from './helper/checkStatus';
+import { retry } from './helper/axiosRetry';
 
 const { VITE_BASE_API } = useEnv();
 const serviceConfig = {
@@ -11,6 +15,8 @@ const serviceConfig = {
     // 跨域时候允许携带凭证
     withCredentials: true
 };
+
+const axiosCanceler = new AxiosCanceler();
 
 class HttpRequest {
     service: AxiosInstance;
@@ -24,6 +30,11 @@ class HttpRequest {
          */
         this.service.interceptors.request.use(
             (config: CustomAxiosRequestConfig) => {
+                // 是否清除重复请求
+                const cancel = (config.cancel ??= false);
+                if (cancel) {
+                    axiosCanceler.addPending(config);
+                }
                 return config;
             },
             (error: AxiosError) => {
@@ -37,12 +48,24 @@ class HttpRequest {
          */
         this.service.interceptors.response.use(
             (response: AxiosResponse & { config: CustomAxiosRequestConfig }) => {
-                const { data } = response;
+                const { data, config } = response;
+                axiosCanceler.removePending(config);
+                // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）
+                if (data.code && data.code !== ResultEnum.SUCCESS) {
+                    ElMessage.error(data.msg);
+                    return Promise.reject(data);
+                }
                 // 成功请求（在页面上除非特殊情况，否则不用处理失败逻辑）
                 return data;
             },
             async (error: AxiosError) => {
-                return Promise.reject(error);
+                const { response } = error;
+                if (axios.isCancel(error)) {
+                    return Promise.reject(error);
+                }
+                // 根据服务器响应的错误状态码，做不同的处理
+                if (response) checkStatus(response.status);
+                return retry(this.service, error);
             }
         );
     }

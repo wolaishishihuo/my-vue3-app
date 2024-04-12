@@ -14,4 +14,9 @@ export interface ResultData<T = any> extends Result {
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     loading?: boolean;
     cancel?: boolean;
+    retryConfig?: {
+        isRetry: boolean;
+        count: number;
+        wait?: number;
+    };
 }

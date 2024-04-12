@@ -17,9 +17,11 @@ export class AxiosCanceler {
         // 在请求开始前，对之前的请求做检查取消操作
         this.removePending(config);
         const url = getPendingUrl(config);
-        const controller = new AbortController();
-        config.signal = controller.signal;
-        pendingMap.set(url, controller);
+        const abortController = new AbortController();
+        config.signal = abortController.signal;
+        if (!pendingMap.has(url)) {
+            pendingMap.set(url, abortController);
+        }
     }
 
     /**
@@ -29,8 +31,11 @@ export class AxiosCanceler {
     removePending(config: CustomAxiosRequestConfig) {
         const url = getPendingUrl(config);
         // 如果在 pending 中存在当前请求标识，需要取消当前请求
-        const controller = pendingMap.get(url);
-        controller && controller.abort();
+        if (pendingMap.has(url)) {
+            const abortController = pendingMap.get(url);
+            abortController?.abort();
+            pendingMap.delete(url);
+        }
     }
 
     /**
