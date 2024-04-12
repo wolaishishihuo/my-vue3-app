@@ -20,14 +20,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
         build: {
             outDir: 'dist',
-            // esbuild 打包更快，但是不能去除 console.log，terser打包慢，但能去除 console.log
-            // minify: 'terser',
-            // terserOptions: {
-            //     compress: {
-            //         drop_console: viteEnv.VITE_DROP_CONSOLE,
-            //         drop_debugger: true
-            //     }
-            // },
             minify: 'esbuild',
             sourcemap: false,
             // 禁用 gzip 压缩大小报告，可略微减少打包时间
