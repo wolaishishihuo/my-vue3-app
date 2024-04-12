@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
-export const vitePlugins = (viteEnv: any): PluginOption[] => {
+export const vitePlugins = (viteEnv: ViteEnv): PluginOption[] => {
     const { VITE_GLOB_APP_TITLE } = viteEnv;
     return [
         vue(),
