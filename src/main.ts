@@ -1,10 +1,9 @@
 import { createApp, App } from 'vue';
 import APP from './App.vue';
 import { setupRouter } from './routers';
-import { setupAssets } from '@/plugins/index';
 import { setupStore } from '@/stores';
+import { setupAssets, setupElement } from '@/plugins/index';
 import errorHandler from '@/utils/errorHandler';
-import { setupElement } from './plugins/setupElement';
 
 const app: App = createApp(APP); // 创建vue实例
 // 注册插件
