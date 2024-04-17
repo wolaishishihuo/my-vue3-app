@@ -5,3 +5,10 @@ export interface UserState {
         [Key: string]: any;
     };
 }
+export interface AuthState {
+    routeName: string;
+    authButtonList: {
+        [key: string]: string[];
+    };
+    authMenuList: any[];
+}
