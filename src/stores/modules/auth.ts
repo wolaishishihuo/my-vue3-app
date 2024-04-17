@@ -14,7 +14,9 @@ export const useAuthStore = defineStore('auth', {
     }),
     getters: {
         // 菜单权限列表 ==> 扁平化之后的一维数组菜单，主要用来添加动态路由
-        flatMenuListGet: state => getFlatList<Menu.MenuOptions>(state.authMenuList)
+        flatMenuListGet: state => getFlatList<Menu.MenuOptions>(state.authMenuList),
+        // 菜单权限列表 ==> 这里的菜单没有经过任何处理
+        authMenuListGet: state => state.authMenuList
     },
     actions: {
         getAuthButtonList() {

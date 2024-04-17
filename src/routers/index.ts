@@ -36,6 +36,14 @@ router.beforeEach(async (to, from, next) => {
 
     // 白名单放行
     if (ROUTER_WHITE_LIST.includes(to.path)) return next();
+
+    // 判断是否有 Token，没有重定向到 login 页面
+    if (!userStore.token) return next({ path: LOGIN_URL, replace: true });
+
+    if (authStore.authMenuListGet.length == 0) {
+        // await initDynamicRouter();
+        return next({ ...to, replace: true });
+    }
     next();
 });
 
