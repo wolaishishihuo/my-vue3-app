@@ -3,12 +3,14 @@ import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite';
 import { vitePlugins } from './build/plugins';
 import { creatProxy } from './build/proxy';
 import path from 'path';
+import { wrapperEnv } from './build/wrapperEnv';
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const root = process.cwd();
     const env = loadEnv(mode, root) as unknown as ViteEnv;
-
+    const viteEnv = wrapperEnv(env);
     return {
+        root,
         base: env.VITE_PUBLIC_PATH,
         plugins: vitePlugins(env),
         resolve: {
@@ -24,7 +26,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             port: env.VITE_PORT,
             open: env.VITE_OPEN,
             cors: true,
-            proxy: creatProxy(env.VITE_PROXY)
+            proxy: creatProxy(viteEnv.VITE_PROXY)
         },
         build: {
             outDir: 'dist',
