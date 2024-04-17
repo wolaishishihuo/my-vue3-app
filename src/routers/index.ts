@@ -41,8 +41,6 @@ router.beforeEach(async (to, from, next) => {
 
     // 判断是否有 Token，没有重定向到 login 页面
     // if (!userStore.token) return next({ path: LOGIN_URL, replace: true });
-    console.log(authStore.authMenuListGet);
-
     if (!authStore.authMenuListGet.length) {
         await initDynamicRouter();
         return next({ ...to, replace: true });

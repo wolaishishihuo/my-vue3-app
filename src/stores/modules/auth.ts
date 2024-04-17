@@ -29,6 +29,5 @@ export const useAuthStore = defineStore('auth', {
         setRouteName(routeName: string) {
             this.routeName = routeName;
         }
-    },
-    persist: piniaPersistConfig('auth')
+    }
 });
