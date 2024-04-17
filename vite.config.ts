@@ -1,6 +1,7 @@
 // https://vitejs.dev/config/
 import { defineConfig, loadEnv, ConfigEnv, UserConfig } from 'vite';
 import { vitePlugins } from './build/plugins';
+import { creatProxy } from './build/proxy';
 import path from 'path';
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
@@ -23,12 +24,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             port: env.VITE_PORT,
             open: env.VITE_OPEN,
             cors: true,
-            proxy: {
-                '/auth': {
-                    target: 'http://localhost:3000',
-                    changeOrigin: true
-                }
-            }
+            proxy: creatProxy(env.VITE_PROXY)
         },
         build: {
             outDir: 'dist',
