@@ -2,6 +2,7 @@ import { Router, createRouter, createWebHashHistory } from 'vue-router';
 import type { App } from 'vue';
 import { staticRouter } from './modules/staticRouter';
 import NProgress from '@/config/nprogress';
+import { ROUTER_WHITE_LIST } from '@/config';
 // 路由实例
 const router: Router = createRouter({
     history: createWebHashHistory(),
@@ -18,6 +19,8 @@ router.beforeEach(async (to, from, next) => {
     // 动态设置标题
     const title = import.meta.env.VITE_GLOB_APP_TITLE;
     document.title = to.meta.title ? `${to.meta.title} - ${title}` : title;
+    // 白名单放行
+    if (ROUTER_WHITE_LIST.includes(to.path)) return next();
     next();
 });
 
