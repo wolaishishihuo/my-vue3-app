@@ -1,0 +1,22 @@
+import type { ProxyOptions } from 'vite';
+
+type ProxyItem = [string, string];
+type ProxyList = ProxyItem[];
+type ProxyTargetList = Record<string, ProxyOptions>;
+
+export const creatProxy = (list: ProxyList) => {
+    const ret: ProxyTargetList = {};
+    for (const [prefix, target] of list) {
+        const httpsRE = /^https:\/\//;
+        const isHttps = httpsRE.test(target);
+        ret[prefix] = {
+            target,
+            changeOrigin: true,
+            // 重写
+            rewrite: path => path.replace(new RegExp(`^${prefix}`), ''),
+            // https 需要设置 secure=false
+            ...(isHttps ? { secure: false } : {})
+        };
+    }
+    return ret;
+};

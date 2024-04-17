@@ -8,9 +8,9 @@ import { ElMessage } from 'element-plus';
 import { checkStatus } from './helper/checkStatus';
 import { retry } from './helper/axiosRetry';
 
-const { VITE_BASE_API } = useEnv();
+const { VITE_BASE_URL } = useEnv();
 const serviceConfig = {
-    baseURL: VITE_BASE_API,
+    baseURL: VITE_BASE_URL,
     timeout: ResultEnum.TIMEOUT as number,
     // 跨域时候允许携带凭证
     withCredentials: true
