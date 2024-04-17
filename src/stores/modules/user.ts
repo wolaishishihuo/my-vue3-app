@@ -10,13 +10,11 @@ export const useUserStore = defineStore('user', {
         }
     }),
     actions: {
-        setToken() {
-            this.token = 'Token';
+        setToken(token: string) {
+            this.token = token;
         },
-        setUserInfo() {
-            this.userInfo = {
-                username: 'Jname_kw'
-            };
+        setUserInfo(userInfo) {
+            this.userInfo = userInfo;
         }
     },
     persist: piniaPersistConfig('user')

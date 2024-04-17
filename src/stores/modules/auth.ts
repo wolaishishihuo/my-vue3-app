@@ -19,10 +19,10 @@ export const useAuthStore = defineStore('auth', {
         authMenuListGet: state => state.authMenuList
     },
     actions: {
-        getAuthButtonList() {
+        async getAuthButtonList() {
             this.authButtonList = {};
         },
-        getAuthMenuList() {
+        async getAuthMenuList() {
             this.authMenuList = [];
         },
         setRouteName(routeName: string) {
