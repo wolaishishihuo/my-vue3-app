@@ -1,6 +1,6 @@
 import { Router, createRouter, createWebHistory } from 'vue-router';
 import type { App } from 'vue';
-import { staticRouter } from './modules/staticRouter';
+import { errorRouter, staticRouter } from './modules/staticRouter';
 import { initDynamicRouter } from './modules/dynamicRouter';
 import { ROUTER_WHITE_LIST, LOGIN_URL } from '@/config';
 import { useUserStore } from '@/stores/modules/user';
@@ -10,7 +10,7 @@ import NProgress from '@/config/nprogress';
 // 路由实例
 const router: Router = createRouter({
     history: createWebHistory('/v3/web/'),
-    routes: [...staticRouter],
+    routes: [...staticRouter, ...errorRouter],
     strict: false,
     scrollBehavior: () => ({ left: 0, top: 0 })
 });
@@ -41,6 +41,7 @@ router.beforeEach(async (to, from, next) => {
 
     // 判断是否有 Token，没有重定向到 login 页面
     // if (!userStore.token) return next({ path: LOGIN_URL, replace: true });
+    console.log(authStore.authMenuListGet);
 
     if (!authStore.authMenuListGet.length) {
         await initDynamicRouter();
