@@ -1,4 +1,4 @@
-import { Router, createRouter, createWebHashHistory } from 'vue-router';
+import { Router, createRouter, createWebHistory } from 'vue-router';
 import type { App } from 'vue';
 import { staticRouter } from './modules/staticRouter';
 import { initDynamicRouter } from './modules/dynamicRouter';
@@ -9,7 +9,7 @@ import NProgress from '@/config/nprogress';
 
 // 路由实例
 const router: Router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory('/v3/web/'),
     routes: [...staticRouter],
     strict: false,
     scrollBehavior: () => ({ left: 0, top: 0 })
