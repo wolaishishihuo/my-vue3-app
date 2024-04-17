@@ -23,7 +23,8 @@ export const useAuthStore = defineStore('auth', {
             this.authButtonList = {};
         },
         async getAuthMenuList() {
-            this.authMenuList = [];
+            const { data } = await import('@/assets/json/authMenuList.json');
+            this.authMenuList = data;
         },
         setRouteName(routeName: string) {
             this.routeName = routeName;
