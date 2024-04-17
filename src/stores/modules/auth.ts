@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { AuthState } from '../interface';
-import piniaPersistConfig from '../helper';
 import { getFlatList } from '@/utils/array';
 
 export const useAuthStore = defineStore('auth', {
