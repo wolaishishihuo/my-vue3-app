@@ -33,6 +33,7 @@
     "prettier": "^3.2.5",
     "sass": "^1.74.1",
     "typescript": "^5.2.2",
+    "unplugin-vue-setup-extend-plus": "^1.0.1",
     "vite": "^5.2.0",
     "vite-plugin-html": "^3.2.2",
     "vue-tsc": "^2.0.6"
