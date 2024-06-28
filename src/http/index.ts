@@ -11,9 +11,9 @@ import { retry } from './helper/axiosRetry';
 const { VITE_BASE_URL } = useEnv();
 const serviceConfig = {
     baseURL: VITE_BASE_URL,
-    timeout: ResultEnum.TIMEOUT as number,
+    timeout: ResultEnum.TIMEOUT as number
     // 跨域时候允许携带凭证
-    withCredentials: true
+    // withCredentials: true
 };
 
 const axiosCanceler = new AxiosCanceler();

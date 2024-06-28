@@ -4,7 +4,7 @@ import piniaPersistConfig from '../helper';
 
 export const useUserStore = defineStore('user', {
     state: (): UserState => ({
-        token: 'Token',
+        token: '',
         userInfo: {
             username: 'Jname_kw'
         }
