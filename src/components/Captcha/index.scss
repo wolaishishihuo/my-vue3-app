@@ -5,4 +5,9 @@
     .captcha_input {
         flex: 1;
     }
+    .captcha_svg {
+        border: 1px solid #ccc;
+        margin-left: 10px;
+        cursor: pointer;
+    }
 }

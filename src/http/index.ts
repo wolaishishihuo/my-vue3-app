@@ -66,7 +66,7 @@ class HttpRequest {
                     return Promise.reject(error);
                 }
                 // 根据服务器响应的错误状态码，做不同的处理
-                if (response) checkStatus(response.status);
+                if (response) checkStatus(response.status, response);
                 return retry(this.service, error);
             }
         );

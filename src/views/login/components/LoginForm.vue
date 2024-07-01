@@ -19,7 +19,8 @@
             </el-input>
         </el-form-item>
         <el-form-item>
-            <Captcha />
+            <Captcha v-model:captcha_value="loginForm.captcha.value" v-model:captcha_key="loginForm.captcha.key" />
+            {{ loginForm }}
         </el-form-item>
     </el-form>
     <div class="login-btn">
@@ -53,7 +54,11 @@ const loginRules = reactive({
 const loading = ref(false);
 const loginForm = reactive({
     username: 'admin',
-    password: 'admin'
+    password: 'admin',
+    captcha: {
+        key: '',
+        value: ''
+    }
 });
 
 // login
@@ -73,12 +78,6 @@ const login = (formEl: FormInstance | undefined) => {
             // // keepAliveStore.setKeepAliveName([]);
             // // 4.跳转到首页
             router.push(HOME_URL);
-            // ElNotification({
-            //     title: getTimeState(),
-            //     message: '欢迎登录 Geeker-Admin',
-            //     type: 'success',
-            //     duration: 3000
-            // });
         } finally {
             loading.value = false;
         }

@@ -10,7 +10,8 @@
 import { getCaptcha } from '@/api/login';
 import { ref, watch } from 'vue';
 interface EmitsType {
-    (e: 'update:modelValue', value: String): void;
+    (e: 'update:captcha_value', value: String): void;
+    (e: 'update:captcha_key', value: String): void;
 }
 const emit = defineEmits<EmitsType>();
 interface Captcha {
@@ -23,14 +24,14 @@ const captcha = ref<Captcha>();
 const getCaptchaApi = async () => {
     const { data } = await getCaptcha();
     captcha.value = data;
-    captchaValue.value = '';
 };
 getCaptchaApi();
 
 watch(
     () => captchaValue.value,
     () => {
-        emit('update:modelValue', captchaValue.value);
+        emit('update:captcha_key', captcha.value!.key);
+        emit('update:captcha_value', captchaValue.value);
     }
 );
 </script>
