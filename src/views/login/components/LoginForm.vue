@@ -20,7 +20,6 @@
         </el-form-item>
         <el-form-item>
             <Captcha v-model:captcha_value="loginForm.captcha.value" v-model:captcha_key="loginForm.captcha.key" />
-            {{ loginForm }}
         </el-form-item>
     </el-form>
     <div class="login-btn">
