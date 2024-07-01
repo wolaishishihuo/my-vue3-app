@@ -18,6 +18,9 @@
                 </template>
             </el-input>
         </el-form-item>
+        <el-form-item>
+            <Captcha />
+        </el-form-item>
     </el-form>
     <div class="login-btn">
         <el-button :icon="CircleClose" round size="large" @click="resetForm(loginFormRef)"> 重置 </el-button>
@@ -34,6 +37,7 @@ import { useUserStore } from '@/stores/modules/user';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { CircleClose, UserFilled } from '@element-plus/icons-vue';
 import { login as loginApi } from '@/api/login';
+import Captcha from '@/components/Captcha/index.vue';
 import type { ElForm } from 'element-plus';
 
 const router = useRouter();
