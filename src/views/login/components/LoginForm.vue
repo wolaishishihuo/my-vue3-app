@@ -55,6 +55,10 @@ const externalLinkIcons = [
     {
         name: 'github',
         link: 'https://github.com/wolaishishihuo'
+    },
+    {
+        name: 'vue',
+        link: 'https://cn.vuejs.org/'
     }
 ];
 
