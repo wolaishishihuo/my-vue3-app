@@ -6,7 +6,7 @@
             </div>
             <div class="login-form">
                 <div class="login-logo">
-                    <h2 class="logo-text">Welcome To My Page</h2>
+                    <h2 class="logo-text">Get's started</h2>
                 </div>
                 <LoginForm v-if="!isRegister" />
                 <template v-if="isRegister">

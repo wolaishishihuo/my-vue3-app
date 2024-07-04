@@ -29,17 +29,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { HOME_URL } from '@/config';
-import { useUserStore } from '@/stores/modules/user';
-import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { UserFilled } from '@element-plus/icons-vue';
-import { login as loginApi } from '@/api/login';
 import Captcha from '@/components/Captcha/index.vue';
 import type { ElForm } from 'element-plus';
-
-const router = useRouter();
-const userStore = useUserStore();
+import useLoginAndRegister from '@/views/login/hook';
 
 type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
@@ -48,49 +41,13 @@ const loginRules = reactive({
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 });
 
-const loading = ref(false);
-const loginForm = reactive({
-    username: 'admin',
-    password: 'admin',
-    password_confirm: '',
-    captcha: {
-        key: '',
-        value: ''
-    }
-});
-
-// login
-const login = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.validate(async valid => {
-        if (!valid) return;
-        loading.value = true;
-        try {
-            // // 1.执行登录接口
-            const { data } = await loginApi({ ...loginForm });
-            userStore.setToken(data.token);
-            // 2.添加动态路由
-            await initDynamicRouter();
-            // // 3.清空 tabs、keepAlive 数据
-            // // tabsStore.setTabs([]);
-            // // keepAliveStore.setKeepAliveName([]);
-            // // 4.跳转到首页
-            router.push(HOME_URL);
-        } finally {
-            loading.value = false;
-        }
-    });
-};
+const { loading, loginForm, login, monitorEnter } = useLoginAndRegister();
 
 onMounted(() => {
     // 监听 enter 事件（调用登录）
-    document.onkeydown = (e: KeyboardEvent) => {
-        e = (window.event as KeyboardEvent) || e;
-        if (e.code === 'Enter' || e.code === 'enter' || e.code === 'NumpadEnter') {
-            if (loading.value) return;
-            login(loginFormRef.value);
-        }
-    };
+    monitorEnter(() => {
+        login(loginFormRef.value);
+    });
 });
 </script>
 
