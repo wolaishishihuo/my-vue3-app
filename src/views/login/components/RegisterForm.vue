@@ -18,12 +18,21 @@
                 </template>
             </el-input>
         </el-form-item>
+        <el-form-item prop="password_confirm">
+            <el-input v-model="loginForm.password_confirm" type="password" placeholder="请输入确认密码" show-password autocomplete="new-password">
+                <template #prefix>
+                    <el-icon class="el-input__icon">
+                        <lock />
+                    </el-icon>
+                </template>
+            </el-input>
+        </el-form-item>
         <el-form-item>
             <Captcha v-model:captcha_value="loginForm.captcha.value" v-model:captcha_key="loginForm.captcha.key" />
         </el-form-item>
     </el-form>
     <div class="login-btn">
-        <el-button :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="login(loginFormRef)"> 登录 </el-button>
+        <el-button :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="register(loginFormRef)"> 注册 </el-button>
     </div>
 </template>
 
@@ -59,8 +68,8 @@ const loginForm = reactive({
     }
 });
 
-// login
-const login = (formEl: FormInstance | undefined) => {
+// register
+const register = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     formEl.validate(async valid => {
         if (!valid) return;
@@ -88,7 +97,7 @@ onMounted(() => {
         e = (window.event as KeyboardEvent) || e;
         if (e.code === 'Enter' || e.code === 'enter' || e.code === 'NumpadEnter') {
             if (loading.value) return;
-            login(loginFormRef.value);
+            register(loginFormRef.value);
         }
     };
 });
