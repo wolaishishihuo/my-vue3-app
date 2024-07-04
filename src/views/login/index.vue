@@ -6,7 +6,6 @@
             </div>
             <div class="login-form">
                 <div class="login-logo">
-                    <img class="login-icon" src="@/assets/images/logo.svg" alt="" />
                     <h2 class="logo-text">Welcome To My Page</h2>
                 </div>
                 <LoginForm v-if="!isRegister" />
