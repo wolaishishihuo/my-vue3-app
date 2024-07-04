@@ -23,21 +23,22 @@
         </el-form-item>
     </el-form>
     <div class="login-btn">
-        <el-button :icon="CircleClose" round size="large" @click="resetForm(loginFormRef)"> 重置 </el-button>
         <el-button :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="login(loginFormRef)"> 登录 </el-button>
     </div>
+    <div class="login-signup">Dont have an acount yet? <el-button link type="primary">Sign Up</el-button></div>
+    <div class="login-externalLinkIcons"><ExternalLinkIcons v-for="icon in externalLinkIcons" :key="icon.name" :icon-name="icon.name" :iconlink="icon.link"></ExternalLinkIcons></div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { HOME_URL } from '@/config';
-import { ElNotification } from 'element-plus';
 import { useUserStore } from '@/stores/modules/user';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
-import { CircleClose, UserFilled } from '@element-plus/icons-vue';
+import { UserFilled } from '@element-plus/icons-vue';
 import { login as loginApi } from '@/api/login';
 import Captcha from '@/components/Captcha/index.vue';
+import ExternalLinkIcons from '@/components/ExternalLinkIcons/index.vue';
 import type { ElForm } from 'element-plus';
 
 const router = useRouter();
@@ -49,6 +50,13 @@ const loginRules = reactive({
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 });
+
+const externalLinkIcons = [
+    {
+        name: 'github',
+        link: 'https://github.com/wolaishishihuo'
+    }
+];
 
 const loading = ref(false);
 const loginForm = reactive({
@@ -81,12 +89,6 @@ const login = (formEl: FormInstance | undefined) => {
             loading.value = false;
         }
     });
-};
-
-// resetForm
-const resetForm = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.resetFields();
 };
 
 onMounted(() => {

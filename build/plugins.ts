@@ -4,6 +4,8 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 import vueSetupExtend from 'unplugin-vue-setup-extend-plus/vite';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import viteCompression from 'vite-plugin-compression';
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import { resolve } from 'path';
 
 export const vitePlugins = (viteEnv: ViteEnv): PluginOption[] => {
     const { VITE_GLOB_APP_TITLE } = viteEnv;
@@ -19,7 +21,12 @@ export const vitePlugins = (viteEnv: ViteEnv): PluginOption[] => {
         }),
         // script setup 上添加name属性
         vueSetupExtend({}),
-        creatCompression(viteEnv)
+        creatCompression(viteEnv),
+        // 全局Svg引入
+        createSvgIconsPlugin({
+            iconDirs: [resolve(process.cwd(), 'src/assets/svgs')],
+            symbolId: 'icon-[dir]-[name]'
+        })
     ];
 };
 
