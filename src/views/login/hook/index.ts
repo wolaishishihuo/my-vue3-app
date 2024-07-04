@@ -50,6 +50,7 @@ export default () => {
 
     const successCallback = async (data: Login.Res) => {
         userStore.setToken(data.token);
+        userStore.setUserId(data.userId);
         // 添加动态路由
         await initDynamicRouter();
         // // 清空 tabs、keepAlive 数据

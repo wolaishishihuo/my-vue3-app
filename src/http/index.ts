@@ -7,6 +7,7 @@ import { AxiosCanceler } from './helper/axiosCancel';
 import { ElMessage } from 'element-plus';
 import { checkStatus } from './helper/checkStatus';
 import { retry } from './helper/axiosRetry';
+import { useUserStore } from '@/stores/modules/user';
 
 const { VITE_BASE_URL } = useEnv();
 const serviceConfig = {
@@ -30,10 +31,15 @@ class HttpRequest {
          */
         this.service.interceptors.request.use(
             (config: CustomAxiosRequestConfig) => {
+                const userStore = useUserStore();
                 // 是否清除重复请求
                 const cancel = (config.cancel ??= false);
                 if (cancel) {
                     axiosCanceler.addPending(config);
+                }
+                if (config.headers && typeof config.headers.set === 'function') {
+                    config.headers.set('x-access-token', userStore.token);
+                    config.headers.set('Authorization', 'Bearer ' + userStore.token);
                 }
                 return config;
             },

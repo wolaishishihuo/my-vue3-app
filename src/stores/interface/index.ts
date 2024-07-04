@@ -1,9 +1,8 @@
+import { User } from '@/api/interface';
+
 export interface UserState {
     token: string;
-    userInfo: {
-        username: string;
-        [Key: string]: any;
-    };
+    userInfo: User.UserInfo;
 }
 export interface AuthState {
     routeName: string;

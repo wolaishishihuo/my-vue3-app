@@ -24,13 +24,18 @@
                 </div>
             </el-aside>
             <el-container class="classic-main">
+                {{ user.userInfo }}
                 <!-- <Main /> -->
             </el-container>
         </el-container>
     </el-container>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useUserStore } from '@/stores/modules/user';
+const user = useUserStore();
+user.getUserInfo();
+</script>
 <style scoped lang="scss">
 @import './index.scss';
 .layout {

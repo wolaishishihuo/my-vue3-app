@@ -47,8 +47,32 @@ type FormInstance = InstanceType<typeof ElForm>;
 const registerFormRef = ref<FormInstance>();
 const loginRules = reactive({
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-    passwordConfirm: [{ required: true, message: '请输入确认密码', trigger: 'blur' }]
+    password: [
+        {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+        }
+    ],
+    passwordConfirm: [
+        {
+            required: true,
+            validator: (_: any, value: any, callback: any) => {
+                if (value) {
+                    console.log(value);
+
+                    if (value != registerForm.password) {
+                        callback(new Error('俩次密码不一致'));
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback(new Error('请输入确认密码'));
+                }
+            },
+            trigger: ['change', 'blur']
+        }
+    ]
 });
 const { loading, registerForm, register, monitorEnter } = useLoginAndRegister();
 
