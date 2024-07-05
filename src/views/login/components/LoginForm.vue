@@ -18,8 +18,8 @@
                 </template>
             </el-input>
         </el-form-item>
-        <el-form-item>
-            <Captcha v-model:captcha_value="loginForm.captcha.value" v-model:captcha_key="loginForm.captcha.key" />
+        <el-form-item prop="captchaValue">
+            <Captcha v-model:captcha_value="loginForm.captchaValue" v-model:captcha_key="loginForm.captchaKey" />
         </el-form-item>
     </el-form>
     <div class="login-btn">
@@ -31,14 +31,15 @@
 import { ref, reactive, onMounted } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
 import Captcha from '@/components/Captcha/index.vue';
-import type { ElForm } from 'element-plus';
+import type { ElForm, FormRules } from 'element-plus';
 import useLoginAndRegister from '@/views/login/hook';
 
 type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
-const loginRules = reactive({
+const loginRules: FormRules = reactive({
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+    captchaValue: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
 });
 
 const { loading, loginForm, login, monitorEnter } = useLoginAndRegister();

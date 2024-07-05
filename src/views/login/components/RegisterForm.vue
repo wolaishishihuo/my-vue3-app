@@ -27,8 +27,8 @@
                 </template>
             </el-input>
         </el-form-item>
-        <el-form-item>
-            <Captcha v-model:captcha_value="registerForm.captcha.value" v-model:captcha_key="registerForm.captcha.key" />
+        <el-form-item prop="captchaValue">
+            <Captcha v-model:captcha_value="registerForm.captchaValue" v-model:captcha_key="registerForm.captchaKey" />
         </el-form-item>
     </el-form>
     <div class="login-btn">
@@ -72,7 +72,8 @@ const loginRules = reactive({
             },
             trigger: ['change', 'blur']
         }
-    ]
+    ],
+    captchaValue: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
 });
 const { loading, registerForm, register, monitorEnter } = useLoginAndRegister();
 

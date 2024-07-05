@@ -14,19 +14,15 @@ export default () => {
     const loginForm = reactive({
         username: 'admin',
         password: 'admin',
-        captcha: {
-            key: '',
-            value: ''
-        }
+        captchaValue: '',
+        captchaKey: ''
     });
     const registerForm = reactive({
         username: '',
         password: '',
         passwordConfirm: '',
-        captcha: {
-            key: '',
-            value: ''
-        }
+        captchaValue: '',
+        captchaKey: ''
     });
     const login = (formEl: FormInstance | undefined) => {
         validateAndCallApi(formEl, loginForm, loginApi);
@@ -40,8 +36,8 @@ export default () => {
             if (!valid) return;
             loading.value = true;
             try {
-                const { data } = await api({ ...form });
-                successCallback(data);
+                const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
+                // successCallback(data);
             } finally {
                 loading.value = false;
             }

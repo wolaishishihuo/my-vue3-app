@@ -8,9 +8,9 @@ import { ElMessage } from 'element-plus';
  */
 export const checkStatus = (status: number, errorRes: AxiosResponse) => {
     switch (status) {
-        // case 400:
-        //     ElMessage.error('请求失败！请您稍后重试');
-        //     break;
+        case 400:
+            ElMessage.error('请求失败！请您稍后重试');
+            break;
         case 401:
             ElMessage.error('登录失效！请您重新登录');
             break;
@@ -38,9 +38,5 @@ export const checkStatus = (status: number, errorRes: AxiosResponse) => {
         case 504:
             ElMessage.error('网关超时！');
             break;
-        default:
-            const { data } = errorRes;
-            const errorMsg = data.message || '请求失败！';
-            ElMessage.error(errorMsg);
     }
 };
