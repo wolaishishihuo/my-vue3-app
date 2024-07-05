@@ -37,7 +37,7 @@ export default () => {
             loading.value = true;
             try {
                 const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
-                // successCallback(data);
+                successCallback(data);
             } finally {
                 loading.value = false;
             }

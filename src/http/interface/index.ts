@@ -2,8 +2,9 @@ import type { InternalAxiosRequestConfig } from 'axios';
 
 // 请求响应参数（不包含data）
 export interface Result {
-    code: string;
-    msg: string;
+    status: string;
+    message: string;
+    success: boolean;
 }
 
 // 请求响应参数（包含data）

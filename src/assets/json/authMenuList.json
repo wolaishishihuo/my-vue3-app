@@ -1,5 +1,5 @@
 {
-  "code": 200,
+  "status": 200,
   "data": [
     {
       "path": "/home",
@@ -16,12 +16,12 @@
       }
     },
     {
-      "path": "/about",
-      "name": "about",
-      "component": "/about/index",
+      "path": "/member",
+      "name": "member",
+      "component": "/member/index",
       "meta": {
         "icon": "InfoFilled",
-        "title": "关于",
+        "title": "个人中心",
         "isLink": "",
         "isHide": false,
         "isFull": false,
@@ -31,5 +31,5 @@
     }
  
   ],
-  "msg": "成功"
+  "message": "成功"
 }

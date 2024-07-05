@@ -59,8 +59,6 @@ const loginRules = reactive({
             required: true,
             validator: (_: any, value: any, callback: any) => {
                 if (value) {
-                    console.log(value);
-
                     if (value != registerForm.password) {
                         callback(new Error('俩次密码不一致'));
                     } else {
