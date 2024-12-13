@@ -38,8 +38,8 @@ export default () => {
             try {
                 // const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
                 const data = {
-                    token: 'admin',
-                    userId: 'admin'
+                    token: 'admin123',
+                    userId: 'admin123'
                 };
                 await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
                 successCallback(data);
