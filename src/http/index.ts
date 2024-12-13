@@ -65,19 +65,31 @@ class HttpRequest {
                 return data;
             },
             async (error: AxiosError) => {
-                const { response } = error;
-                if (error.message.indexOf('timeout') !== -1) ElMessage.error('请求超时！请您稍后重试');
-                if (error.message.indexOf('Network Error') !== -1) ElMessage.error('网络错误！请您稍后重试');
+                const { response, config } = error;
+                if (error.message.indexOf('timeout') !== -1) {
+                    ElMessage.error('请求超时！请您稍后重试');
+                }
+                if (error.message.indexOf('Network Error') !== -1) {
+                    ElMessage.error('网络错误！请您稍后重试');
+                }
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 }
-                // 根据服务器响应的错误状态码，做不同的处理
-                if (response) checkStatus(response.status, response);
-                return retry(this.service, error);
+                if (response) {
+                    checkStatus(response.status, response);
+                }
+                const retryConfig = config as CustomAxiosRequestConfig;
+                if (retryConfig?.retryConfig?.isRetry) {
+                    try {
+                        return await retry(this.service, error);
+                    } catch (retryError) {
+                        return Promise.reject(retryError);
+                    }
+                }
+                return Promise.reject(error);
             }
         );
     }
-
     /**
      * @description 常用请求方法封装
      */
