@@ -19,7 +19,7 @@
             </el-input>
         </el-form-item>
         <el-form-item prop="captchaValue">
-            <Captcha v-model:captcha_value="loginForm.captchaValue" v-model:captcha_key="loginForm.captchaKey" />
+            <!-- <Captcha v-model:captcha_value="loginForm.captchaValue" v-model:captcha_key="loginForm.captchaKey" /> -->
         </el-form-item>
     </el-form>
     <div class="login-btn">
@@ -38,8 +38,8 @@ type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
 const loginRules: FormRules = reactive({
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-    captchaValue: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+    // captchaValue: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
 });
 
 const { loading, loginForm, login, monitorEnter } = useLoginAndRegister();

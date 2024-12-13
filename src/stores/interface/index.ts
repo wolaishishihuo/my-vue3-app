@@ -10,4 +10,6 @@ export interface AuthState {
         [key: string]: string[];
     };
     authMenuList: any[];
+    coursePortalList: any[];
+    folderList: any[]
 }

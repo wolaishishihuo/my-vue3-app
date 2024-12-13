@@ -36,7 +36,12 @@ export default () => {
             if (!valid) return;
             loading.value = true;
             try {
-                const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
+                // const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
+                const data = {
+                    token: 'admin',
+                    userId: 'admin'
+                };
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
                 successCallback(data);
             } finally {
                 loading.value = false;

@@ -24,7 +24,15 @@ export const useUserStore = defineStore('user', {
         },
 
         async getUserInfo() {
-            const { data } = await getUserInfo();
+            // const { data } = await getUserInfo();
+            const data = {
+                username: 'admin',
+                userId: 'admin',
+                avatar: '',
+                secret: '',
+                email: '',
+                mobile: ''
+            };
             Object.assign(this.userInfo, data);
         }
     },
