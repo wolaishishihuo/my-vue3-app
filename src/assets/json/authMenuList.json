@@ -2,9 +2,9 @@
   "status": 200,
   "data": [
     {
-      "path": "/home",
-      "name": "home",
-      "component": "/home/index",
+      "path": "/dashboard",
+      "name": "dashboard",
+      "component": "/dashboard/index",
       "meta": {
         "icon": "HomeFilled",
         "title": "首页",
@@ -38,20 +38,6 @@
           }
         }
       ]
-    },
-    {
-      "path": "/courseware/:id/:path",
-      "name": "courseware",
-      "component": "/courseware/index",
-      "meta": {
-        "icon": "InfoFilled",
-        "title": "课件",
-        "isLink": "",
-        "isHide": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      }
     }
   ],
   "message": "成功"

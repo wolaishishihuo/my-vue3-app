@@ -10,24 +10,13 @@ export const useAuthStore = defineStore('auth', {
         authButtonList: {},
         // 菜单权限列表
         authMenuList: [],
-        // 课程门户列表
-        coursePortalList: [
-            {
-                name: '课件',
-                icon: '',
-                path: '/courseware',
-                component: '/coursePortal/courseware/index'
-            }
-        ],
-        folderList:[
-            { id: 1,  projectname: '123', username: '31231', children:[] }
-        ]
+        folderList: [{ id: 1, projectname: '123', username: '31231', children: [] }]
     }),
     getters: {
         // 菜单权限列表 ==> 扁平化之后的一维数组菜单，主要用来添加动态路由
         flatMenuListGet: state => getFlatList<Menu.MenuOptions>(state.authMenuList),
         // 菜单权限列表 ==> 这里的菜单没有经过任何处理
-        authMenuListGet: state => state.authMenuList,
+        authMenuListGet: state => state.authMenuList
     },
     actions: {
         async getAuthButtonList() {
@@ -40,18 +29,18 @@ export const useAuthStore = defineStore('auth', {
         setRouteName(routeName: string) {
             this.routeName = routeName;
         },
-        getFolderList(fatherId: string){
-            debugger
-            if(!fatherId || fatherId == 'all'){
-                return this.folderList
-            }else{
-                let res = this.folderList.filter(elem=>{
-                    return elem.id == fatherId
-                })
-                if(res && res.length >0) {
-                    return res[0].children
-                }else{
-                    return []
+        getFolderList(fatherId: string) {
+            debugger;
+            if (!fatherId || fatherId == 'all') {
+                return this.folderList;
+            } else {
+                let res = this.folderList.filter(elem => {
+                    return elem.id == fatherId;
+                });
+                if (res && res.length > 0) {
+                    return res[0].children;
+                } else {
+                    return [];
                 }
             }
         }

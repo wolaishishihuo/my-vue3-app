@@ -33,8 +33,8 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/modules/auth';
 import HeaderRight from './components/Header/HeaderRight.vue';
-import SubMenu from '@/layouts/components/SubMenu.vue';
-import Main from '@/layouts/components/Main.vue';
+import SubMenu from '@/layouts/components/SubMenu/index.vue';
+import Main from '@/layouts/components/Main/index.vue';
 import { useUserStore } from '@/stores/modules/user';
 
 const title = import.meta.env.VITE_GLOB_APP_TITLE;
@@ -46,5 +46,5 @@ const menuList = computed(() => authStore.authMenuList);
 const activeMenu = computed(() => (route.meta.activeMenu ? route.meta.activeMenu : route.path) as string);
 </script>
 <style scoped lang="scss">
-@import './index.scss';
+@use './index.scss';
 </style>

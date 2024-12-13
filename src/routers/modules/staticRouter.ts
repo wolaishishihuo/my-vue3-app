@@ -1,5 +1,5 @@
 import { HOME_URL, LOGIN_URL } from '@/config';
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 export const staticRouter: RouteRecordRaw[] = [
     {
@@ -50,10 +50,5 @@ export const errorRouter = [
         meta: {
             title: '500页面'
         }
-    },
-    // Resolve refresh page, route warnings
-    {
-        path: '/:pathMatch(.*)*',
-        component: () => import('@/components/ErrorMessage/404.vue')
     }
 ];

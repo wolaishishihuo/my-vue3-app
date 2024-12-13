@@ -41,10 +41,28 @@ router.beforeEach(async (to, from, next) => {
 
     // 判断是否有 Token，没有重定向到 login 页面
     if (!userStore.token) return next({ path: LOGIN_URL, replace: true });
+
     if (!authStore.authMenuListGet.length) {
-        await initDynamicRouter();
-        return next({ ...to, replace: true });
+        try {
+            console.log(userStore.token);
+            await initDynamicRouter();
+            // 确保路由已经添加
+            return next({ ...to, replace: true });
+        } catch (error) {
+            // 处理动态路由加载失败的情况
+            console.error('动态路由加载失败:', error);
+            return next({ path: '/500', replace: true });
+        }
     }
+    // 如果要访问的路由不存在，重定向到 404
+    if (to.matched.length === 0) {
+        return next({ path: '/404', replace: true });
+    }
+    console.log('当前路由:', to.path);
+    console.log(
+        '可用路由:',
+        router.getRoutes().map(route => route.path)
+    );
     next();
 });
 
