@@ -45,8 +45,8 @@
       ]
     },
     {
-      "path": "/commonComponents",
-      "name": "commonComponents",
+      "path": "/assembly",
+      "name": "assembly",
       "meta": {
         "icon": "HomeFilled",
         "title": "常用组件",
@@ -58,9 +58,9 @@
       },
       "children": [
         {
-          "path": "/commonComponents/select",
-          "name": "commonComponentsSelect",
-          "component": "/commonComponents/select/index",
+          "path": "/assembly/select",
+          "name": "assemblySelect",
+          "component": "/assembly/select/index",
           "meta": {
             "title": "select",
             "isLink": "",
