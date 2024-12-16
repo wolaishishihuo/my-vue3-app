@@ -11,13 +11,22 @@ export interface Result {
 export interface ResultData<T = any> extends Result {
     data: T;
 }
+// 分页请求响应参数
+export interface PageResult<T = any> {
+    list: T[];
+    total: number;
+    pageNum: number;
+    pageSize: number;
+}
 
+// 重试配置
 export interface RetryConfig {
     isRetry: boolean; // 是否开启重试
     count?: number; // 重试次数，默认3次
     waitTime?: number; // 重试等待时间，默认1000ms
 }
 
+// 自定义请求配置
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     retryConfig?: RetryConfig;
     currentCount?: number; // 当前重试次数

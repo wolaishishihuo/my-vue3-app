@@ -1,13 +1,11 @@
-// src/stores/modules/user.ts
 import { defineStore } from 'pinia';
-import { getUserInfo } from '@/api/user';
-import { login } from '@/api/login';
+import { getUserInfoApi } from '@/api/user';
 import { resetRouter } from '@/routers';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         token: '',
-        userInfo: null as Auth.UserInfo | null,
+        userInfo: null as User.UserInfo | null,
         roles: [] as string[],
         permissions: [] as string[]
     }),
@@ -17,20 +15,14 @@ export const useUserStore = defineStore('user', {
         userPermissions: state => state.permissions
     },
     actions: {
-        // 登录
-        async login(params: Auth.LoginParams) {
-            try {
-                const { data } = await login(params);
-                this.token = data.token;
-                return await this.getUserInfo();
-            } catch (error) {
-                return Promise.reject(error);
-            }
+        // 设置 Token
+        setToken(token: string) {
+            this.token = token;
         },
         // 获取用户信息
         async getUserInfo() {
             try {
-                const { data } = await getUserInfo();
+                const { data } = await getUserInfoApi();
                 this.userInfo = data;
                 this.roles = data.roles;
                 this.permissions = data.permissions;

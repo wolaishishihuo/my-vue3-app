@@ -18,6 +18,15 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
                 '@': path.resolve(__dirname, 'src')
             }
         },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    // 配置 SCSS 预处理器选项
+                    api: 'modern' // 或 'modern'
+                }
+            }
+        },
+
         esbuild: {
             pure: env.VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : []
         },

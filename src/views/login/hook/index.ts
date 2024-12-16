@@ -1,5 +1,4 @@
-import { Login } from '@/api/interface';
-import { loginApi, registerApi } from '@/api/login';
+import { loginApi, registerApi } from '@/api/auth';
 import { HOME_URL } from '@/config';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { useUserStore } from '@/stores/modules/user';
@@ -25,11 +24,11 @@ export default () => {
         captchaKey: ''
     });
     const login = (formEl: FormInstance | undefined) => {
-        validateAndCallApi(formEl, loginForm, loginApi);
+        validateAndCallApi(formEl, loginForm, login);
     };
 
     const register = (formEl: FormInstance | undefined) => {
-        validateAndCallApi(formEl, registerForm, registerApi);
+        validateAndCallApi(formEl, registerForm, register);
     };
     const validateAndCallApi = async (formEl: FormInstance | undefined, form: any, api: any) => {
         formEl!.validate(async valid => {
@@ -38,8 +37,9 @@ export default () => {
             try {
                 // const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
                 const data = {
-                    token: 'admin123',
-                    userId: 'admin123'
+                    access_token: 'admin123',
+                    token_type: 'Bearer',
+                    expires_in: 3600
                 };
                 await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
                 successCallback(data);
@@ -49,9 +49,8 @@ export default () => {
         });
     };
 
-    const successCallback = async (data: Login.Res) => {
-        userStore.setToken(data.token);
-        userStore.setUserId(data.userId);
+    const successCallback = async (data: Auth.LoginResult) => {
+        userStore.setToken(data.access_token);
         // 添加动态路由
         await initDynamicRouter();
         // // 清空 tabs、keepAlive 数据

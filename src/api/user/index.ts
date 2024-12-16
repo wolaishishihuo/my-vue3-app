@@ -1,4 +1,6 @@
 import http from '@/http';
-export const getUserInfo = () => {
-    return http.get<Auth.UserInfo>('/user/getUserInfo');
+
+// 获取用户信息
+export const getUserInfoApi = () => {
+    return http.get<User.UserInfo>('/user/info');
 };
