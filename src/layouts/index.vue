@@ -2,10 +2,7 @@
     <el-container class="layout">
         <el-header>
             <div class="header-lf mask-image">
-                <div class="logo flx-center">
-                    <img class="logo-img" src="@/assets/images/logo.svg" alt="logo" />
-                    <span class="logo-text">{{ title }}</span>
-                </div>
+                <HeaderLeft />
             </div>
             <div class="header-ri">
                 <HeaderRight />
@@ -33,11 +30,10 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/modules/auth';
 import HeaderRight from './components/Header/HeaderRight.vue';
+import HeaderLeft from './components/Header/HeaderLeft.vue';
 import SubMenu from '@/layouts/components/SubMenu/index.vue';
 import Main from '@/layouts/components/Main/index.vue';
 import { filterHiddenMenus, processMenuItems } from '@/utils/menu';
-
-const title = import.meta.env.VITE_GLOB_APP_TITLE;
 
 const route = useRoute();
 const authStore = useAuthStore();

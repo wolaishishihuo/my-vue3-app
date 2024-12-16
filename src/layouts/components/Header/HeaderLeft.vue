@@ -1,12 +1,16 @@
 <template>
-    <div class="header-lf">
-        <SvgIcon class="logo" @click="goHome" name="logo" :icon-style="{ width: '100px', height: '50px' }" />
+    <div class="logo">
+        <SvgIcon @click="goHome" name="logo" :icon-style="{ width: '100px', height: '50px' }" />
+        <span class="logo-text">{{ title }}</span>
     </div>
 </template>
 
 <script setup lang="ts">
 import SvgIcon from '@/components/SvgIcon/index.vue';
 import { useRouter } from 'vue-router';
+
+const title = import.meta.env.VITE_GLOB_APP_TITLE;
+
 const router = useRouter();
 const goHome = () => {
     router.replace('/');

@@ -8,14 +8,16 @@
       justify-content: space-between;
       height: 55px;
       padding: 0 15px 0 15px;
-      background-color: #ffff;
-      border-bottom: 1px solid #dcdfe6;
+      background-color: var(--el-bg-color);
+      border-bottom: 1px solid var(--el-border-color);
       .header-lf {
         display: flex;
         align-items: center;
         overflow: hidden;
         white-space: nowrap;
         .logo {
+          display: flex;
+          align-items: center;
           flex-shrink: 0;
           width: 210px;
           margin-right: 16px;
@@ -27,7 +29,7 @@
           .logo-text {
             font-size: 21.5px;
             font-weight: bold;
-            color: var(--el-header-logo-text-color);
+            color: var(--el-text-color-primary);
             white-space: nowrap;
           }
         }
