@@ -3,14 +3,13 @@
  */
 export function processMenuItems(menuList: Menu.MenuOptions[], parentPath: string = ''): Menu.MenuOptions[] {
     return menuList.map(menu => {
-        const currentPath = parentPath ? `${parentPath}/${menu.path}`.replace(/\/+/g, '/') : menu.path;
         const processedMenu: Menu.MenuOptions = {
             ...menu,
             parentPath,
-            path: currentPath
+            path: menu.path
         };
         if (menu.children?.length) {
-            processedMenu.children = processMenuItems(menu.children, currentPath);
+            processedMenu.children = processMenuItems(menu.children, menu.path);
         }
         return processedMenu;
     });

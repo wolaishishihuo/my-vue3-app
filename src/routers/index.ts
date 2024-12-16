@@ -41,7 +41,6 @@ router.beforeEach(async (to, from, next) => {
             resetRouter();
             return next();
         }
-
         // 3. 白名单放行
         if (ROUTER_WHITE_LIST.includes(to.path)) return next();
 
