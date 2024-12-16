@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-
+import SubMenu from './index.vue';
 defineProps<{ menuList: Menu.MenuOptions[] }>();
 
 const router = useRouter();

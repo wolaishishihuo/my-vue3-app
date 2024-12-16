@@ -1,6 +1,7 @@
 declare namespace Menu {
     interface MenuOptions {
         path: string;
+        parentPath?: string;
         name: string;
         component?: string | (() => Promise<unknown>);
         redirect?: string;

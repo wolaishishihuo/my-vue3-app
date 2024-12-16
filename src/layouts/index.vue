@@ -35,14 +35,19 @@ import { useAuthStore } from '@/stores/modules/auth';
 import HeaderRight from './components/Header/HeaderRight.vue';
 import SubMenu from '@/layouts/components/SubMenu/index.vue';
 import Main from '@/layouts/components/Main/index.vue';
-import { useUserStore } from '@/stores/modules/user';
+import { filterHiddenMenus, processMenuItems } from '@/utils/menu';
 
 const title = import.meta.env.VITE_GLOB_APP_TITLE;
-const user = useUserStore();
-// user.getUserInfo();
+
 const route = useRoute();
 const authStore = useAuthStore();
-const menuList = computed(() => authStore.authMenuList);
+
+const menuList = computed(() => {
+    const rawMenuList = authStore.authMenuListGet;
+    const processedMenuList = processMenuItems(rawMenuList);
+    return filterHiddenMenus(processedMenuList);
+});
+
 const activeMenu = computed(() => (route.meta.activeMenu ? route.meta.activeMenu : route.path) as string);
 </script>
 <style scoped lang="scss">

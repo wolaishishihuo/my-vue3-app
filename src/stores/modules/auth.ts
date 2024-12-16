@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', {
         async getAuthMenuList() {
             const { data } = await import('@/assets/json/authMenuList.json');
             this.authMenuList = data;
-            return data;
+            return this.authMenuList;
         },
         setRouteName(routeName: string) {
             this.routeName = routeName;
@@ -54,10 +54,5 @@ export const useAuthStore = defineStore('auth', {
             this.permissionCache.set(cacheKey, result);
             return result;
         }
-    },
-    persist: {
-        key: 'auth-store',
-        storage: localStorage,
-        paths: ['authMenuList']
     }
 });

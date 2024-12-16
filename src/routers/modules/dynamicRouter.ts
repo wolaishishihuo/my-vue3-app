@@ -31,11 +31,10 @@ export const initDynamicRouter = async () => {
         resetRouter();
         // 动态添加路由
         authStore.flatMenuListGet.forEach(menu => {
-            menu.children && delete menu.children;
             if (menu.component && typeof menu.component === 'string') {
                 menu.component = modules['/src/views' + menu.component + '.vue'];
             }
-            if (menu.meta.isFull) {
+            if (menu.meta?.isFull) {
                 router.addRoute(menu as unknown as RouteRecordRaw);
             } else {
                 router.addRoute('layout', menu as unknown as RouteRecordRaw);

@@ -11,8 +11,8 @@
         "isLink": "",
         "isHide": false,
         "isFull": false,
-        "isAffix": true,
-        "isKeepAlive": true
+        "isAffix": false,
+        "isKeepAlive": false
       }
     },
     {
@@ -25,8 +25,8 @@
         "isLink": "",
         "isHide": false,
         "isFull": false,
-        "isAffix": true,
-        "isKeepAlive": true
+        "isAffix": false,
+        "isKeepAlive": false
       },
       "children": [
         {
@@ -34,7 +34,40 @@
           "name": "topicDetail",
           "component": "/topic/detail/index",
           "meta": {
-            "title": "讨论详情"
+            "title": "讨论详情",
+            "isLink": "",
+            "isHide": true,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        }
+      ]
+    },
+    {
+      "path": "/commonComponents",
+      "name": "commonComponents",
+      "meta": {
+        "icon": "HomeFilled",
+        "title": "常用组件",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": false
+      },
+      "children": [
+        {
+          "path": "/commonComponents/select",
+          "name": "commonComponentsSelect",
+          "component": "/commonComponents/select/index",
+          "meta": {
+            "title": "select",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
           }
         }
       ]
