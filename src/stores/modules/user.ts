@@ -1,40 +1,60 @@
+// src/stores/modules/user.ts
 import { defineStore } from 'pinia';
-import { UserState } from '../interface';
-import piniaPersistConfig from '../helper';
 import { getUserInfo } from '@/api/user';
+import { login } from '@/api/login';
+import { resetRouter } from '@/routers';
 
 export const useUserStore = defineStore('user', {
-    state: (): UserState => ({
+    state: () => ({
         token: '',
-        userInfo: {
-            username: 'Jname_kw',
-            userId: '',
-            avatar: '',
-            secret: '',
-            email: '',
-            mobile: ''
-        }
+        userInfo: null as Auth.UserInfo | null,
+        roles: [] as string[],
+        permissions: [] as string[]
     }),
+    getters: {
+        isLogin: state => !!state.token,
+        userRoles: state => state.roles,
+        userPermissions: state => state.permissions
+    },
     actions: {
-        setToken(token: string) {
-            this.token = token;
+        // 登录
+        async login(params: Auth.LoginParams) {
+            try {
+                const { data } = await login(params);
+                this.token = data.token;
+                return await this.getUserInfo();
+            } catch (error) {
+                return Promise.reject(error);
+            }
         },
-        setUserId(userId: string) {
-            this.userInfo.userId = userId;
-        },
-
+        // 获取用户信息
         async getUserInfo() {
-            // const { data } = await getUserInfo();
-            const data = {
-                username: 'admin',
-                userId: 'admin',
-                avatar: '',
-                secret: '',
-                email: '',
-                mobile: ''
-            };
-            Object.assign(this.userInfo, data);
+            try {
+                const { data } = await getUserInfo();
+                this.userInfo = data;
+                this.roles = data.roles;
+                this.permissions = data.permissions;
+                return data;
+            } catch (error) {
+                return Promise.reject(error);
+            }
+        },
+        // 登出
+        async logout() {
+            this.resetUserInfo();
+            resetRouter();
+        },
+        // 重置用户信息
+        resetUserInfo() {
+            this.token = '';
+            this.userInfo = null;
+            this.roles = [];
+            this.permissions = [];
         }
     },
-    persist: piniaPersistConfig('user')
+    persist: {
+        key: 'user-store',
+        storage: localStorage,
+        paths: ['token']
+    }
 });

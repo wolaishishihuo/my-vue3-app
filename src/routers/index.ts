@@ -6,6 +6,8 @@ import { ROUTER_WHITE_LIST, LOGIN_URL } from '@/config';
 import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
 import NProgress from '@/config/nprogress';
+import { hasPermission } from '@/utils/permission';
+import { ElMessage } from 'element-plus';
 
 // 路由实例
 const router: Router = createRouter({
@@ -19,51 +21,70 @@ const router: Router = createRouter({
  * @description 路由跳转开始
  * */
 router.beforeEach(async (to, from, next) => {
-    const userStore = useUserStore();
-    const authStore = useAuthStore();
+    try {
+        const userStore = useUserStore();
+        const authStore = useAuthStore();
 
-    // 进度开始
-    NProgress.start();
+        NProgress.start();
 
-    // 动态设置标题
-    const title = import.meta.env.VITE_GLOB_APP_TITLE;
-    document.title = to.meta.title ? `${to.meta.title} - ${title}` : title;
+        // 1. 动态设置标题
+        const title = import.meta.env.VITE_GLOB_APP_TITLE;
+        const pageTitle = to.matched
+            .slice()
+            .reverse()
+            .find(item => item.meta?.title)?.meta?.title;
+        document.title = pageTitle ? `${pageTitle} - ${title}` : title;
 
-    // 判断是否前往login页面,如果有token则继续当前页
-    if (to.path.toLocaleLowerCase() == LOGIN_URL) {
-        if (userStore.token) return next(from.fullPath);
-        resetRouter();
-        return next();
-    }
-
-    // 白名单放行
-    if (ROUTER_WHITE_LIST.includes(to.path)) return next();
-
-    // 判断是否有 Token，没有重定向到 login 页面
-    if (!userStore.token) return next({ path: LOGIN_URL, replace: true });
-
-    if (!authStore.authMenuListGet.length) {
-        try {
-            console.log(userStore.token);
-            await initDynamicRouter();
-            // 确保路由已经添加
-            return next({ ...to, replace: true });
-        } catch (error) {
-            // 处理动态路由加载失败的情况
-            console.error('动态路由加载失败:', error);
-            return next({ path: '/500', replace: true });
+        // 2. 处理登录页面
+        if (to.path === LOGIN_URL) {
+            if (userStore.isLogin) return next(from.fullPath);
+            resetRouter();
+            return next();
         }
+
+        // 3. 白名单放行
+        if (ROUTER_WHITE_LIST.includes(to.path)) return next();
+
+        // 4. 判断是否登录
+        if (!userStore.isLogin) {
+            return next({
+                path: LOGIN_URL,
+                query: { redirect: to.fullPath },
+                replace: true
+            });
+        }
+
+        // 5. 获取权限列表
+        if (!authStore.authMenuListGet.length) {
+            try {
+                await initDynamicRouter();
+                return next({ ...to, replace: true });
+            } catch (error) {
+                console.error('动态路由加载失败:', error);
+                userStore.resetUserInfo();
+                return next({
+                    path: LOGIN_URL,
+                    query: { redirect: to.fullPath },
+                    replace: true
+                });
+            }
+        }
+
+        // 6. 权限验证
+        if (to.meta?.auth) {
+            const hasAuth = hasPermission(to, authStore.authMenuListGet, userStore.userRoles, userStore.userPermissions);
+            if (!hasAuth) {
+                ElMessage.error('暂无访问权限');
+                return next({ path: '/403' });
+            }
+        }
+        next();
+    } catch (error) {
+        console.error('路由守卫错误:', error);
+        next({ path: '/500' });
+    } finally {
+        NProgress.done();
     }
-    // 如果要访问的路由不存在，重定向到 404
-    if (to.matched.length === 0) {
-        return next({ path: '/404', replace: true });
-    }
-    console.log('当前路由:', to.path);
-    console.log(
-        '可用路由:',
-        router.getRoutes().map(route => route.path)
-    );
-    next();
 });
 
 /**

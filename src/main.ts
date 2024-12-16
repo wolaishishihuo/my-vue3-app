@@ -2,7 +2,7 @@ import { createApp, App } from 'vue';
 import APP from './App.vue';
 import { setupRouter } from './routers';
 import { setupStore } from '@/stores';
-import { setupAssets, setupElement } from '@/plugins/index';
+import { setupAssets, setupElement, setupDirective } from '@/plugins/index';
 import errorHandler from '@/utils/errorHandler';
 
 const app: App = createApp(APP); // 创建vue实例
@@ -14,6 +14,8 @@ function setupPlugins() {
     setupAssets();
     // 设置element
     setupElement(app);
+    // 注册指令
+    setupDirective(app);
 }
 // 初始化应用
 async function setupApp() {

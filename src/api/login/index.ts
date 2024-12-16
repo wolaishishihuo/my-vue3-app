@@ -1,10 +1,10 @@
 import http from '@/http';
 import { Captcha, Login, Register } from '../interface';
 
-export const loginApi = params => {
+export const login = params => {
     return http.post<Login.Res>('/auth/login', params);
 };
-export const registerApi = params => {
+export const register = params => {
     return http.post<Register.Res>('/auth/register', params);
 };
 export const getCaptcha = () => {
