@@ -6,7 +6,7 @@
                 <h1>Vue3 app</h1>
                 <p class="subtitle">现代化的后台管理系统解决方案</p>
                 <div class="version-tag">
-                    <el-tag type="success">Version {{ version }}</el-tag>
+                    <el-tag type="success">Version {{ version }} {{ lastBuildTime }}</el-tag>
                 </div>
             </el-card>
         </div>
