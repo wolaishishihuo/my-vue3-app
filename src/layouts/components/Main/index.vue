@@ -3,7 +3,7 @@
         <router-view v-slot="{ Component, route }">
             <transition appear name="fade-transform" mode="out-in">
                 <keep-alive>
-                    <component :is="createComponentWrapper(Component, route)" v-if="isRouterShow" :key="route.fullPath" />
+                    <component class="card" :is="createComponentWrapper(Component, route)" v-if="isRouterShow" :key="route.fullPath" />
                 </keep-alive>
             </transition>
         </router-view>
