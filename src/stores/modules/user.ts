@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { getUserInfoApi } from '@/api/user';
 import { resetRouter } from '@/routers';
+import piniaPersistConfig from '../helper';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -22,7 +22,8 @@ export const useUserStore = defineStore('user', {
         // 获取用户信息
         async getUserInfo() {
             try {
-                const { data } = await getUserInfoApi();
+                const { data } = await import('@/assets/json/userInfo.json');
+                console.log(data);
                 this.userInfo = data;
                 this.roles = data.roles;
                 this.permissions = data.permissions;
@@ -44,9 +45,5 @@ export const useUserStore = defineStore('user', {
             this.permissions = [];
         }
     },
-    persist: {
-        key: 'user-store',
-        storage: localStorage,
-        paths: ['token']
-    }
+    persist: piniaPersistConfig('user-store', ['token', 'userInfo'])
 });

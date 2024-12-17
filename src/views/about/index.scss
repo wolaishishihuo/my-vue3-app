@@ -1,0 +1,160 @@
+.about-container {
+    padding: 20px;
+    background-color: var(--el-bg-color-page);
+
+    // 项目标题区域
+    .project-header {
+        margin-bottom: 24px;
+
+        .header-card {
+            background: linear-gradient(135deg, var(--el-color-primary-light-5) 0%, var(--el-color-primary) 100%);
+            border: none;
+            
+            h1 {
+                color: var(--el-color-white);
+                font-size: 36px;
+                margin: 0;
+                text-align: center;
+                font-weight: 600;
+                letter-spacing: 1px;
+            }
+
+            .subtitle {
+                color: var(--el-color-white);
+                text-align: center;
+                margin: 16px 0;
+                font-size: 18px;
+                opacity: 0.9;
+            }
+
+            .version-tag {
+                text-align: center;
+                margin: 16px 0;
+            }
+        }
+    }
+
+    // 技术栈概览
+    .tech-overview {
+        margin-bottom: 24px;
+
+        .tech-card {
+            height: 100%;
+            transition: all 0.3s;
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--el-box-shadow-light);
+            }
+
+            .tech-icon {
+                text-align: center;
+                margin-bottom: 16px;
+                color: var(--el-color-primary);
+            }
+
+            h3 {
+                text-align: center;
+                color: var(--el-text-color-primary);
+                font-size: 18px;
+                margin: 16px 0;
+                font-weight: 600;
+            }
+
+            .tech-list {
+                .tech-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 8px;
+                    margin-bottom: 8px;
+                    background-color: var(--el-fill-color-light);
+                    border-radius: 4px;
+
+                    &:hover {
+                        background-color: var(--el-fill-color);
+                        transform: translateX(4px);
+                    }
+
+                    .tech-name {
+                        color: var(--el-text-color-primary);
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+
+    // 项目特性
+    .features-section {
+        .card-header {
+            h2 {
+                font-size: 20px;
+                color: var(--el-text-color-primary);
+                margin: 0;
+                font-weight: 500;
+            }
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 24px;
+            height: 100%;
+
+            &:hover {
+                background-color: var(--el-fill-color-light);
+                transform: translateY(-4px);
+            }
+
+            .feature-icon {
+                color: var(--el-color-primary);
+                margin-bottom: 16px;
+            }
+
+            h3 {
+                color: var(--el-text-color-primary);
+                font-size: 16px;
+                margin: 16px 0;
+                font-weight: 600;
+            }
+
+            p {
+                color: var(--el-text-color-regular);
+                line-height: 1.6;
+                margin: 0;
+            }
+        }
+    }
+}
+
+// 响应式适配
+@media screen and (max-width: 768px) {
+    .about-container {
+        padding: 12px;
+
+        .project-header {
+            .header-card {
+                h1 {
+                    font-size: 24px;
+                }
+
+                .subtitle {
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .tech-overview {
+            .el-col {
+                margin-bottom: 16px;
+            }
+        }
+
+        .features-section {
+            .feature-item {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+        }
+    }
+}

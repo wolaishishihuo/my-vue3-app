@@ -1,0 +1,391 @@
+.dashboard-container {
+    padding: 20px;
+    background-color: var(--el-bg-color-page);
+
+    .el-row {
+        margin-bottom: 20px;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .el-card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        border: 1px solid var(--el-border-color-lighter);
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.9);
+        
+        &:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .el-card__header {
+            border-bottom: 1px solid var(--el-border-color-lighter);
+            padding: 16px 20px;
+            background-color: rgba(var(--el-color-primary-rgb), 0.02);
+
+            .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .title {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: var(--el-text-color-primary);
+                    position: relative;
+                    padding-left: 12px;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 4px;
+                        height: 16px;
+                        background: var(--el-color-primary);
+                        border-radius: 2px;
+                    }
+                }
+            }
+        }
+
+        .el-card__body {
+            padding: 20px;
+            height: calc(100% - 60px); // 减去header高度
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    // 欢迎卡片样式
+    .welcome-card {
+        background: linear-gradient(135deg, var(--el-color-primary-light-8) 0%, rgba(255,255,255,1) 100%);
+        height: 140px !important; // 固定欢迎卡片高度
+        
+        .welcome-content {
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .welcome-info {
+                h2 {
+                    font-size: 28px;
+                    color: var(--el-text-color-primary);
+                    margin-bottom: 12px;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                }
+
+                .subtitle {
+                    color: var(--el-text-color-secondary);
+                    font-size: 14px;
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+
+    // 用户信息卡片样式
+    .user-card {
+        height: 140px !important; // 与欢迎卡片保持一致
+
+        .user-info {
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+
+            .avatar-wrapper {
+                .el-avatar {
+                    border: 3px solid var(--el-color-primary-light-5);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        transform: scale(1.08) rotate(5deg);
+                        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+                    }
+                }
+            }
+
+            .info-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .nickname {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: var(--el-text-color-primary);
+                    margin: 0 0 12px 0;
+                }
+
+                .role-tags {
+                    margin-bottom: 12px;
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+
+                    .role-tag {
+                        border-radius: 4px;
+                        transition: all 0.3s ease;
+
+                        &:hover {
+                            transform: translateY(-2px);
+                        }
+                    }
+                }
+
+                .contact-info {
+                    .el-tag {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        transition: all 0.3s ease;
+                        
+                        &:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                        }
+
+                        .el-icon {
+                            margin-right: 4px;
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // 主要内容区域样式
+    .main-content {
+        height: calc(100vh - 300px);
+        .el-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        // 时间线卡片样式
+        .timeline-card {
+            flex: 1;
+            
+            .timeline-content {
+                h4 {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: var(--el-text-color-primary);
+                    margin: 0 0 8px 0;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        color: var(--el-color-primary);
+                        padding-left: 6px;
+                    }
+                }
+
+                p {
+                    color: var(--el-text-color-regular);
+                    margin-bottom: 12px;
+                    line-height: 1.6;
+                }
+
+                .timeline-footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 8px;
+
+                    .operator {
+                        color: var(--el-text-color-secondary);
+                        font-size: 13px;
+                    }
+                }
+            }
+        }
+
+        // 右侧卡片布局
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+
+            // 待办事项卡片样式
+            .todo-card {
+                flex: 1;
+                margin-bottom: 20px;
+                min-height: 300px;
+
+                .todo-list {
+                    max-height: 220px;
+                    overflow-y: auto;
+                    padding-right: 10px; // 为滚动条预留空间
+                    
+                    .todo-item {
+                        padding: 14px 12px;
+                        border-bottom: 1px solid var(--el-border-color-lighter);
+                        transition: all 0.3s ease;
+                        border-radius: 6px;
+                        margin-bottom: 8px; // 添加项目间距
+                        background-color: var(--el-bg-color-page);
+                        
+                        &:last-child {
+                            border-bottom: none;
+                        }
+
+                        &:hover {
+                            background-color: var(--el-fill-color-light);
+                            transform: translateX(6px);
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                        }
+
+                        .completed {
+                            text-decoration: line-through;
+                            color: var(--el-text-color-secondary);
+                            opacity: 0.8;
+                        }
+
+                        .todo-meta {
+                            margin-top: 10px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding-left: 24px;
+
+                            .time {
+                                color: var(--el-text-color-secondary);
+                                font-size: 13px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 项目进度卡片样式
+            .progress-card {
+                flex: 1;
+
+                .progress-list {
+                    max-height: 150px;
+                    overflow-y: auto;
+                    padding-right: 10px; // 为滚动条预留空间
+
+                    .progress-item {
+                        margin-bottom: 10px;
+                        padding: 10px;
+                        border-radius: 8px;
+                        transition: all 0.3s ease;
+                        background-color: var(--el-fill-color-blank);
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        &:hover {
+                            background-color: var(--el-fill-color-light);
+                            transform: translateX(8px);
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                        }
+
+                        .progress-info {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 12px;
+
+                            .name {
+                                font-weight: 500;
+                                color: var(--el-text-color-primary);
+                            }
+
+                            .percentage {
+                                color: var(--el-text-color-secondary);
+                                font-size: 14px;
+                                font-weight: 500;
+                            }
+                        }
+
+                        .el-progress {
+                            margin-top: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 响应式适配
+@media screen and (max-width: 1200px) {
+    .dashboard-container {
+        .el-row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .el-col {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        padding: 12px;
+
+        .welcome-card, .user-card {
+            height: auto !important;
+        }
+
+        .welcome-card {
+            .welcome-content {
+                flex-direction: column;
+                gap: 20px;
+
+                .welcome-info h2 {
+                    font-size: 24px;
+                }
+            }
+        }
+
+        .user-card {
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px;
+
+                .info-content {
+                    .role-tags {
+                        justify-content: center;
+                    }
+
+                    .contact-info {
+                        display: flex;
+                        justify-content: center;
+                    }
+                }
+            }
+        }
+
+        .main-content {
+            margin-top: 16px;
+
+            .timeline-card, .todo-card, .progress-card {
+                margin-bottom: 16px;
+                min-height: auto;
+            }
+        }
+    }
+}

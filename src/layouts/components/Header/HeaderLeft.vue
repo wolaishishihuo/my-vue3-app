@@ -1,7 +1,6 @@
 <template>
     <div class="logo">
         <SvgIcon @click="goHome" name="logo" :icon-style="{ width: '100px', height: '50px' }" />
-        <span class="logo-text">{{ title }}</span>
     </div>
 </template>
 

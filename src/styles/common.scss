@@ -7,6 +7,8 @@
     border-radius: 6px;
     box-shadow: 0 0 12px #0000000d;
     height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 /* 文字单行省略号 */
 .sle {

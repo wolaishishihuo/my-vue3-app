@@ -72,6 +72,7 @@ class HttpRequest {
                 if (error.message.indexOf('Network Error') !== -1) {
                     ElMessage.error('网络错误！请您稍后重试');
                 }
+                // 如果请求被取消，则直接拒绝该错误
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 }

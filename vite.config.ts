@@ -4,7 +4,13 @@ import { vitePlugins } from './build/plugins';
 import { creatProxy } from './build/proxy';
 import path from 'path';
 import { wrapperEnv } from './build/wrapperEnv';
-
+import pkg from './package.json';
+import { dayjs } from 'element-plus';
+const { version, dependencies, devDependencies, name } = pkg;
+const __APP_INFO__ = {
+    pkg: { dependencies, devDependencies, name, version },
+    lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
+};
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const root = process.cwd();
     const env = loadEnv(mode, root) as unknown as ViteEnv;
@@ -17,6 +23,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             alias: {
                 '@': path.resolve(__dirname, 'src')
             }
+        },
+        define: {
+            __APP_INFO__: JSON.stringify(__APP_INFO__)
         },
         css: {
             preprocessorOptions: {
