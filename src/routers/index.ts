@@ -70,8 +70,10 @@ router.beforeEach(async (to, from, next) => {
         }
 
         // 6. 权限验证
-        const hasAuth = hasPermission(to, authStore.authMenuListGet, userStore.userRoles, userStore.userPermissions);
+        const hasAuth = hasPermission(to, authStore.authMenuListGet, userStore.userRoles);
         if (!hasAuth) {
+            console.log(hasAuth);
+
             ElMessage.error('暂无访问权限');
             return next({ path: '/403' });
         }

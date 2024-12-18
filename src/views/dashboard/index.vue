@@ -120,8 +120,8 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+<script setup lang="ts" name="dashboard">
+import { ref, computed } from 'vue';
 import { Plus, Delete } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
 import { useTime } from '@/hooks/useTime';

@@ -11,7 +11,6 @@ export const permission: Directive = {
     mounted(el: HTMLElement, binding: DirectiveBinding) {
         const { value, modifiers } = binding;
         const authStore = useAuthStore();
-        console.log(value, modifiers);
         // 检查权限的函数
         const checkPermission = (permissions: string | string[]): boolean => {
             if (!permissions) {
