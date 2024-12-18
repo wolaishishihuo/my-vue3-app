@@ -15,8 +15,8 @@ export const useAuthStore = defineStore('auth', {
         // 菜单权限列表 ==> 这里的菜单没有经过任何处理
         authMenuListGet: state => state.authMenuList,
         authButtonListGet: state => state.buttonPermissions,
-        // 当前路由权限
-        currentRoutePermissions(): string[] {
+        // 当前路由按钮权限
+        currentRouteButtonPermissions(): string[] {
             return this.buttonPermissions[this.routeName] || [];
         }
     },
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
             if (this.permissionCache.has(cacheKey)) {
                 return this.permissionCache.get(cacheKey)!;
             }
-            const result = this.currentRoutePermissions.includes(permission);
+            const result = this.currentRouteButtonPermissions.includes(permission);
             this.permissionCache.set(cacheKey, result);
             return result;
         }

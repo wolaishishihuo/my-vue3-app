@@ -8,7 +8,6 @@
       "email": "admin@example.com",
       "phone": "13800138000",
       "roles": ["admin", "super_editor"],
-      "permissions": ["system:user:list", "system:user:create", "system:user:edit", "system:user:delete"],
       "status": 1,
       "createTime": "2024-01-01 00:00:00",
       "lastLoginTime": "2024-03-20 10:30:00"
