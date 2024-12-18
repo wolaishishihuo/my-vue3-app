@@ -5,7 +5,7 @@ export const HOME_URL: string = '/dashboard';
 export const LOGIN_URL: string = '/login';
 
 // 路由白名单地址
-export const ROUTER_WHITE_LIST: string[] = ['/500'];
+export const ROUTER_WHITE_LIST: string[] = ['/500', '/403', '/404'];
 
 // 高德地图 key
 export const AMAP_MAP_KEY: string = '';

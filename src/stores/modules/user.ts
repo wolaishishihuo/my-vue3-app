@@ -23,7 +23,6 @@ export const useUserStore = defineStore('user', {
         async getUserInfo() {
             try {
                 const { data } = await import('@/assets/json/userInfo.json');
-                console.log(data);
                 this.userInfo = data;
                 this.roles = data.roles;
                 this.permissions = data.permissions;
