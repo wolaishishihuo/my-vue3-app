@@ -10,6 +10,9 @@ export const ROUTER_WHITE_LIST: string[] = ['/500'];
 // 高德地图 key
 export const AMAP_MAP_KEY: string = '';
 
+// 天气key
+export const WEATHER_KEY: string = '98f4c54001b54549b586fdef05f83e45';
+
 // 公共错误代码
 export const COMMON_ERROR_CODE = '10001';
 // 无权限

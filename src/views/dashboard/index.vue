@@ -7,7 +7,7 @@
                     <div class="welcome-content">
                         <div class="welcome-info">
                             <h2>{{ greetingText }}，{{ userInfo?.username }}</h2>
-                            <p class="subtitle">今天是{{ nowTime }}，{{ weatherInfo }}</p>
+                            <p class="subtitle">今天是{{ nowTime }}，太原天气{{ weatherInfo.feelsLike }}°C，{{ weatherInfo.text }}</p>
                         </div>
                     </div>
                 </el-card>
@@ -118,50 +118,19 @@ import { Plus } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
-
-interface Activity {
-    id: string;
-    time: string;
-    title: string;
-    content: string;
-    operator: string;
-    type: 'success' | 'warning' | 'primary' | 'info' | 'danger';
-    color: string;
-    tag: string;
-    tagType: 'success' | 'warning' | 'primary' | 'info' | 'danger';
-    status: 'done' | 'pending';
-    hollow: boolean;
-}
-
-interface TodoItem {
-    id: string;
-    content: string;
-    completed: boolean;
-    deadline: string;
-    priority: 'success' | 'warning' | 'info' | 'primary' | 'danger';
-    priorityLabel: string;
-    createTime: string;
-}
-
-interface Project {
-    id: string;
-    name: string;
-    percentage: number;
-    status: '' | 'success' | 'exception' | 'warning';
-    startTime: string;
-    endTime: string;
-}
+import { Activity, TodoItem, Project } from './interface';
+import { useWeather } from '@/hooks/useWeather';
 
 // 用户信息
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 
-// 基础数据
+// 时间
 const greetingText = getTimeState();
 const { nowTime } = useTime();
 
-const weatherInfo = ref('晴朗 26℃');
-const timelineFilter = ref<'all' | 'pending' | 'done'>('all');
+// 天气信息
+const { weatherInfo } = useWeather('太原');
 
 // 项目动态数据
 const activities: Activity[] = [
@@ -266,6 +235,7 @@ const projects: Project[] = [
 ];
 
 // 计算属性：根据筛选条件过滤动态
+const timelineFilter = ref<'all' | 'pending' | 'done'>('all');
 const filteredActivities = computed(() => {
     if (timelineFilter.value === 'all') return activities;
     return activities.filter(activity => timelineFilter.value === activity.status);
