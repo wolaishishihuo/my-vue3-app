@@ -47,6 +47,7 @@ export const useAuthStore = defineStore('auth', {
         // 检查按钮权限
         hasButtonPermission(permission: string): boolean {
             const cacheKey = `${this.routeName}:${permission}`;
+
             if (this.permissionCache.has(cacheKey)) {
                 return this.permissionCache.get(cacheKey)!;
             }

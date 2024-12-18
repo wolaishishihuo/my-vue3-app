@@ -75,6 +75,7 @@ router.beforeEach(async (to, from, next) => {
             ElMessage.error('暂无访问权限');
             return next({ path: '/403' });
         }
+        authStore.setRouteName(to.name as string);
         next();
     } catch (error) {
         console.error('路由守卫错误:', error);

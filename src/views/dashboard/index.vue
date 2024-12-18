@@ -72,21 +72,29 @@
                     <template #header>
                         <div class="card-header">
                             <span class="title">待办事项</span>
-                            <el-button type="primary" link @click="addTodo">
+                            <el-button v-permission="['todo:add', 'todo:edit']" type="primary" link @click="addTodo">
                                 <el-icon><Plus /></el-icon>添加
                             </el-button>
                         </div>
                     </template>
                     <div class="todo-list">
                         <div v-for="(todo, index) in todos" :key="index" class="todo-item">
-                            <el-checkbox v-model="todo.completed" @change="handleTodoChange(todo)">
-                                <span :class="{ completed: todo.completed }">{{ todo.content }}</span>
-                            </el-checkbox>
+                            <div class="todo-content">
+                                <el-checkbox v-model="todo.completed" @change="handleTodoChange(todo)" :disabled="!hasPermission('todo:edit')">
+                                    <span :class="{ completed: todo.completed }">{{ todo.content }}</span>
+                                </el-checkbox>
+                                <div class="todo-actions">
+                                    <el-button v-permission="['todo:delete', 'todo:edit']" type="danger" link @click="confirmDelete(todo)">
+                                        <el-icon><Delete /></el-icon>
+                                    </el-button>
+                                </div>
+                            </div>
                             <div class="todo-meta">
                                 <el-tag size="small" :type="todo.priority">{{ todo.priorityLabel }}</el-tag>
                                 <span class="time">{{ todo.deadline }}</span>
                             </div>
                         </div>
+                        <div v-if="todos.length === 0" class="empty-text">暂无待办事项</div>
                     </div>
                 </el-card>
 
@@ -113,13 +121,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { Plus } from '@element-plus/icons-vue';
+import { ref, computed, onMounted } from 'vue';
+import { Plus, Delete } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
+import { useAuthStore } from '@/stores/modules/auth';
 import { Activity, TodoItem, Project } from './interface';
 import { useWeather } from '@/hooks/useWeather';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 // 用户信息
 const userStore = useUserStore();
@@ -234,7 +244,7 @@ const projects: Project[] = [
     }
 ];
 
-// 计算属性：根据筛选条件过滤动态
+// 计算属���：根据筛选条件过滤动态
 const timelineFilter = ref<'all' | 'pending' | 'done'>('all');
 const filteredActivities = computed(() => {
     if (timelineFilter.value === 'all') return activities;
@@ -243,6 +253,10 @@ const filteredActivities = computed(() => {
 
 // 方法：添加待办事项
 const addTodo = () => {
+    if (!hasPermission('todo:add')) {
+        ElMessage.warning('您没有添加待办事项的权限');
+        return;
+    }
     const newTodo: TodoItem = {
         id: crypto.randomUUID(),
         content: '新的待办事项',
@@ -253,15 +267,57 @@ const addTodo = () => {
         createTime: new Date().toISOString()
     };
     todos.value.unshift(newTodo);
+    ElMessage.success('添加成功');
 };
 
 // 方法：处理待办事项状态变化
 const handleTodoChange = (todo: TodoItem) => {
+    if (!hasPermission('todo:edit')) {
+        ElMessage.warning('您没有编辑待办事项的权限');
+        return;
+    }
     const index = todos.value.findIndex(item => item.id === todo.id);
     if (index !== -1) {
         todos.value[index] = { ...todo };
+        ElMessage.success(todo.completed ? '已完成' : '已取消完成');
         // 这里可以添加持久化存储或者发送到后端的逻辑
     }
+};
+
+// 确认删除对话框
+const confirmDelete = (todo: TodoItem) => {
+    ElMessageBox.confirm(`确定要删除待办事项 "${todo.content}" 吗？`, '删除确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    })
+        .then(() => {
+            deleteTodo(todo);
+        })
+        .catch(() => {
+            // 用户取消删除
+        });
+};
+
+// 删除待办事项
+const deleteTodo = (todo: TodoItem) => {
+    const index = todos.value.findIndex(item => item.id === todo.id);
+    if (index !== -1) {
+        todos.value.splice(index, 1);
+        ElMessage.success('删除成功');
+        // 这里可以添加持久化存储或者发送到后端的逻辑
+    }
+};
+
+// 在 setup 中添加权限控制
+const authStore = useAuthStore();
+
+// 检查按钮权限的方法
+const hasPermission = (permission: string | string[]) => {
+    if (Array.isArray(permission)) {
+        return permission.some(p => authStore.hasButtonPermission(p));
+    }
+    return authStore.hasButtonPermission(permission);
 };
 </script>
 

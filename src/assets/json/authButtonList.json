@@ -1,8 +1,11 @@
 {
   "code": 200,
   "data": {
-    "useProTable": ["add", "batchAdd", "export", "batchDelete", "status"],
-    "authButton": ["add", "edit", "delete", "import", "export"]
+    "dashboard": [
+      "todo:add",
+      "todo:edit",
+      "todo:delete"
+    ]
   },
   "msg": "成功"
 }

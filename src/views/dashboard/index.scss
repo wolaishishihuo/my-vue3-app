@@ -270,6 +270,35 @@
                                 font-size: 13px;
                             }
                         }
+
+                        .todo-content {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 8px;
+
+                            .todo-actions {
+                                opacity: 0;
+                                transition: opacity 0.3s ease;
+
+                                .el-button {
+                                    padding: 4px 8px;
+                                }
+                            }
+                        }
+
+                        &:hover {
+                            .todo-actions {
+                                opacity: 1;
+                            }
+                        }
+                    }
+
+                    .empty-text {
+                        text-align: center;
+                        color: var(--el-text-color-secondary);
+                        padding: 20px 0;
+                        font-size: 14px;
                     }
                 }
             }
