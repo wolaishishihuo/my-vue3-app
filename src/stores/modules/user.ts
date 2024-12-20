@@ -25,7 +25,6 @@ export const useUserStore = defineStore('user', {
                 const { data } = await import('@/assets/json/userInfo.json');
                 this.userInfo = data;
                 this.roles = data.roles;
-                this.permissions = data.permissions;
                 return data;
             } catch (error) {
                 return Promise.reject(error);

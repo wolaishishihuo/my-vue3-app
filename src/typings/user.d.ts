@@ -8,7 +8,6 @@ declare namespace User {
         email?: string;
         phone?: string;
         roles: string[]; // 角色列表
-        permissions: string[]; // 权限列表
         status: number; // 状态：0-禁用，1-启用
         createTime: string; // 创建时间
         lastLoginTime?: string; // 最后登录时间
