@@ -58,14 +58,10 @@ export interface UseSelectConfig {
 }
 
 export interface UseSelectProps<T = SelectOption> {
-    // 字段名配置
-    fieldNames: FieldNames;
     // Select组件配置
     config?: UseSelectConfig;
     // 远程数据获取函数
     fetchData?: (params: FetchParams) => Promise<FetchResult<T>>;
-    // 初始数据
-    initialOptions?: T[];
 }
 
 export interface UseSelectReturn<T> {

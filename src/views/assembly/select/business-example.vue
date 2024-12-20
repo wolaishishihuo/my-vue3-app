@@ -135,7 +135,6 @@ const fetchWeather = async (cityId: string) => {
 
 // 使用Select组件的Hook
 const { displayOptions, loading, currentPage, pageSize, total, handleSearch, handleSizeChange, handleCurrentChange, refresh } = useSelect<CityInfo>({
-    fieldNames,
     config: {
         remoteSearch: true,
         pagination: true,

@@ -106,8 +106,6 @@ const {
     handleSizeChange: localHandleSizeChange,
     handleCurrentChange: localHandleCurrentChange
 } = useSelect({
-    fieldNames,
-    initialOptions: localData,
     config: {
         localSearch: true,
         remoteSearch: false,
@@ -128,7 +126,6 @@ const {
     handleSizeChange: remoteHandleSizeChange,
     handleCurrentChange: remoteHandleCurrentChange
 } = useSelect({
-    fieldNames,
     config: {
         localSearch: false,
         remoteSearch: true,
