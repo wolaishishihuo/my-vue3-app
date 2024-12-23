@@ -172,16 +172,18 @@
 
     // 主要内容区域样式
     .main-content {
-        height: calc(100vh - 300px);
         .el-col {
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 300px);
+
         }
 
         // 时间线卡片样式
         .timeline-card {
             flex: 1;
-            
+            height: 100%;
+            overflow-y: auto;
             .timeline-content {
                 h4 {
                     font-size: 16px;
@@ -221,13 +223,11 @@
         .right-column {
             display: flex;
             flex-direction: column;
-            height: 100%;
 
             // 待办事项卡片样式
             .todo-card {
                 flex: 1;
                 margin-bottom: 20px;
-                min-height: 300px;
 
                 .todo-list {
                     max-height: 220px;

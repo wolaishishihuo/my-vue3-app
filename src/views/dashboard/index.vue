@@ -39,32 +39,46 @@
 
         <!-- 项目动态和待办事项 -->
         <el-row :gutter="20" class="main-content">
-            <el-col :span="16" class="left-column">
+            <el-col :span="16">
+                <!-- GitHub 提交记录卡片 -->
                 <el-card class="timeline-card">
                     <template #header>
                         <div class="card-header">
-                            <span class="title">项目动态</span>
+                            <span class="title">最近更新</span>
+                            <div class="header-right">
+                                <el-button v-if="!commitsLoading" :icon="Refresh" circle @click="fetchCommits()" />
+                                <el-button v-else circle loading />
+                            </div>
                         </div>
                     </template>
-                    <el-timeline>
-                        <el-timeline-item
-                            v-for="(activity, index) in filteredActivities"
-                            :key="index"
-                            :type="activity.type"
-                            :color="activity.color"
-                            :timestamp="activity.time"
-                            :hollow="activity.hollow"
-                        >
+
+                    <el-timeline v-if="!commitsError && commits.length > 0">
+                        <el-timeline-item v-for="commit in commits" :key="commit.sha" :timestamp="formatDate(commit.commit.author.date)" :type="getCommitType(commit.commit.message)">
                             <div class="timeline-content">
-                                <h4>{{ activity.title }}</h4>
-                                <p>{{ activity.content }}</p>
+                                <h4>
+                                    <el-link :href="commit.html_url" target="_blank" type="primary">
+                                        {{ formatCommitMessage(commit.commit.message) }}
+                                    </el-link>
+                                </h4>
                                 <div class="timeline-footer">
-                                    <el-tag size="small" :type="activity.tagType">{{ activity.tag }}</el-tag>
-                                    <span class="operator">{{ activity.operator }}</span>
+                                    <span class="operator">
+                                        <el-tag size="small" effect="plain">
+                                            {{ commit.commit.author.name }}
+                                        </el-tag>
+                                    </span>
+                                    <span class="commit-sha">
+                                        <el-tag size="small" type="info">
+                                            {{ commit.sha.substring(0, 7) }}
+                                        </el-tag>
+                                    </span>
                                 </div>
                             </div>
                         </el-timeline-item>
                     </el-timeline>
+
+                    <el-empty v-else-if="!commitsLoading && !commitsError && commits.length === 0" description="暂无提交记录" />
+
+                    <el-alert v-else-if="commitsError" :title="commitsError" type="error" show-icon />
                 </el-card>
             </el-col>
             <el-col :span="8" class="right-column">
@@ -122,14 +136,17 @@
 
 <script setup lang="ts" name="dashboard">
 import { ref, computed } from 'vue';
-import { Plus, Delete } from '@element-plus/icons-vue';
+import { Plus, Delete, Refresh } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
+import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
 import { Activity, TodoItem, Project } from './interface';
 import { useWeather } from '@/hooks/useWeather';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { dayjs, ElMessage, ElMessageBox } from 'element-plus';
+import { useGithubCommits } from '@/hooks/useGithubCommits';
+import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 
 // 用户信息
 const userStore = useUserStore();
@@ -141,49 +158,6 @@ const { nowTime } = useTime();
 
 // 天气信息
 const { weatherInfo } = useWeather('太原');
-
-// 项目动态数据
-const activities: Activity[] = [
-    {
-        id: crypto.randomUUID(),
-        time: '2023-12-18 10:00',
-        title: '发布新版本',
-        content: '系统已更新至 v2.0.0 版本，新增多项功能特性',
-        operator: '系统管理员',
-        type: 'success',
-        color: '#67C23A',
-        tag: '版本发布',
-        tagType: 'success',
-        status: 'done',
-        hollow: false
-    },
-    {
-        id: crypto.randomUUID(),
-        time: '2023-12-18 09:30',
-        title: '代码审核',
-        content: '完成用户管理模块代码审核，并提出优化建议',
-        operator: '技术主管',
-        type: 'warning',
-        color: '#E6A23C',
-        tag: '代码审核',
-        tagType: 'warning',
-        status: 'pending',
-        hollow: true
-    },
-    {
-        id: crypto.randomUUID(),
-        time: '2023-12-18 09:00',
-        title: '新功能开发',
-        content: '开始开发数据可视化功能，预计本周完成',
-        operator: '开发人员',
-        type: 'primary',
-        color: '#409EFF',
-        tag: '功能开发',
-        tagType: 'primary',
-        status: 'pending',
-        hollow: true
-    }
-];
 
 // 待办事项数据
 const todos = ref<TodoItem[]>([
@@ -244,13 +218,6 @@ const projects: Project[] = [
     }
 ];
 
-// 计算属���：根据筛选条件过滤动态
-const timelineFilter = ref<'all' | 'pending' | 'done'>('all');
-const filteredActivities = computed(() => {
-    if (timelineFilter.value === 'all') return activities;
-    return activities.filter(activity => timelineFilter.value === activity.status);
-});
-
 // 方法：添加待办事项
 const addTodo = () => {
     if (!hasPermission('todo:add')) {
@@ -280,7 +247,7 @@ const handleTodoChange = (todo: TodoItem) => {
     if (index !== -1) {
         todos.value[index] = { ...todo };
         ElMessage.success(todo.completed ? '已完成' : '已取消完成');
-        // 这里可以添加持久化存储或者发送到后端的逻辑
+        // 这里可以添加持久化存储或者发送到��端的逻辑
     }
 };
 
@@ -319,6 +286,9 @@ const hasPermission = (permission: string | string[]) => {
     }
     return authStore.hasButtonPermission(permission);
 };
+
+// GitHub 提交记录
+const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
 </script>
 
 <style scoped lang="scss">

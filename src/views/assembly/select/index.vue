@@ -1,4 +1,3 @@
-// src/views/assembly/select/index.vue
 <template>
     <div class="select-test-container">
         <el-card>
