@@ -47,5 +47,5 @@ const menuList = computed(() => {
 const activeMenu = computed(() => (route.meta.activeMenu ? route.meta.activeMenu : route.path) as string);
 </script>
 <style scoped lang="scss">
-@use './index.scss';
+@import './index.scss';
 </style>

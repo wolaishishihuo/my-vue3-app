@@ -142,9 +142,9 @@ import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
-import { Activity, TodoItem, Project } from './interface';
+import { TodoItem, Project } from './interface';
 import { useWeather } from '@/hooks/useWeather';
-import { dayjs, ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { useGithubCommits } from '@/hooks/useGithubCommits';
 import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 
@@ -164,7 +164,7 @@ const todos = ref<TodoItem[]>([
     {
         id: crypto.randomUUID(),
         content: '完成首页开发',
-        completed: false,
+        completed: true,
         deadline: '今天 18:00',
         priority: 'danger',
         priorityLabel: '紧急',
@@ -247,7 +247,6 @@ const handleTodoChange = (todo: TodoItem) => {
     if (index !== -1) {
         todos.value[index] = { ...todo };
         ElMessage.success(todo.completed ? '已完成' : '已取消完成');
-        // 这里可以添加持久化存储或者发送到��端的逻辑
     }
 };
 
@@ -292,5 +291,5 @@ const { commits, loading: commitsLoading, error: commitsError, fetchCommits, get
 </script>
 
 <style scoped lang="scss">
-@use './index.scss';
+@import './index.scss';
 </style>

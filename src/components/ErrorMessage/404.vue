@@ -15,5 +15,5 @@ const router = useRouter();
 </script>
 
 <style scoped lang="scss">
-@use './index.scss';
+@import './index.scss';
 </style>

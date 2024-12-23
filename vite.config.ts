@@ -6,6 +6,7 @@ import path from 'path';
 import { wrapperEnv } from './build/wrapperEnv';
 import pkg from './package.json';
 import { dayjs } from 'element-plus';
+import vue from '@vitejs/plugin-vue';
 const { version, dependencies, devDependencies, name } = pkg;
 const __APP_INFO__ = {
     pkg: { dependencies, devDependencies, name, version },
@@ -30,8 +31,15 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         css: {
             preprocessorOptions: {
                 scss: {
-                    // 配置 SCSS 预处理器选项
-                    api: 'modern' // 或 'modern'
+                    // 配置 SCSS 处理器选项
+                    api: 'modern', // 或 'modern'
+                    additionalData: `
+                        // 引入 SCSS 抽象文件
+                        @import "@/styles/abstracts/_variables.scss"; // 变量
+                        @import "@/styles/abstracts/_functions.scss"; // 函数
+                        @import "@/styles/abstracts/_mixins.scss"; // 混合
+                        @import "@/styles/abstracts/_placeholders.scss"; // 占位符
+                    `
                 }
             }
         },
