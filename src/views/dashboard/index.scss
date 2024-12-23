@@ -1,7 +1,5 @@
 .dashboard-container {
     padding: map-get($spacings, '5');
-    background-color: var(--el-bg-color-page);
-
     .el-row {
         margin-bottom: map-get($spacings, '5');
         

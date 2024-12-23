@@ -9,6 +9,7 @@
 6. [阴影效果](#阴影效果)
 7. [响应式设计](#响应式设计)
 8. [动画与过渡](#动画与过渡)
+9. [辅助工具类](#辅助工具类)
 
 ## 基础容器
 
@@ -19,16 +20,13 @@
 </div>
 ```
 
-### 卡片容器
-```html
-<div class="container-card">
-  <!-- 普通卡片内容 -->
-</div>
-
-<div class="container-card container-card--scroll">
-  <!-- 可滚动的卡片内容 -->
-</div>
-```
+容器默认样式:
+- 自适应内边距
+- Element Plus 背景色
+- 浅色边框
+- 大圆角
+- 轻微阴影
+- 自动垂直滚动
 
 ## 布局工具类
 
@@ -43,8 +41,15 @@
 <!-- 两端对齐 -->
 <div class="flex-between">...</div>
 
+<!-- 环绕对齐 -->
+<div class="flex-around">...</div>
+
 <!-- 垂直布局 -->
 <div class="flex-col">...</div>
+
+<!-- Flex 换行 -->
+<div class="flex-wrap">...</div>
+<div class="flex-nowrap">...</div>
 
 <!-- Flex 子元素 -->
 <div class="flex-grow">...</div>
@@ -52,62 +57,56 @@
 <div class="flex-no-shrink">...</div>
 ```
 
-### SCSS Mixins
-```scss
-// Flex 布局
-@include flex(row, space-between, center);
-@include flex(column, center, flex-start);
-
-// 绝对定位居中
-@include absolute-center();
-@include absolute-center('vertical');
-@include absolute-center('horizontal');
-```
-
 ## 间距系统
 
-### 预定义间距
-```scss
-// 在 SCSS 中使用
-margin-bottom: map-get($spacings, '4');  // 16px
-padding: map-get($spacings, '5');        // 20px
-gap: map-get($spacings, '2');           // 8px
-```
-
-### 工具类
+### 预设间距类
 ```html
 <!-- 外边距 -->
-<div class="m-4">...</div>
-<div class="mt-4">...</div>
-<div class="mb-4">...</div>
-<div class="mx-4">...</div>
-<div class="my-4">...</div>
+<div class="m-{size}">...</div>
+<div class="mt-{size}">...</div>
+<div class="mr-{size}">...</div>
+<div class="mb-{size}">...</div>
+<div class="ml-{size}">...</div>
+<div class="mx-{size}">...</div>
+<div class="my-{size}">...</div>
 
 <!-- 内边距 -->
-<div class="p-4">...</div>
-<div class="pt-4">...</div>
-<div class="pb-4">...</div>
-<div class="px-4">...</div>
-<div class="py-4">...</div>
+<div class="p-{size}">...</div>
+<div class="pt-{size}">...</div>
+<div class="pr-{size}">...</div>
+<div class="pb-{size}">...</div>
+<div class="pl-{size}">...</div>
+<div class="px-{size}">...</div>
+<div class="py-{size}">...</div>
 ```
+
+### 精确像素间距
+```html
+<!-- 0-100px的精确间距 -->
+<div class="mt{n}">...</div>
+<div class="mr{n}">...</div>
+<div class="mb{n}">...</div>
+<div class="ml{n}">...</div>
+<div class="pt{n}">...</div>
+<div class="pr{n}">...</div>
+<div class="pb{n}">...</div>
+<div class="pl{n}">...</div>
+```
+其中 n 为 0-100 的整数。
 
 ## 文本样式
-
-### 文本大小
-```scss
-// 在 SCSS 中使用
-font-size: map-get($font-sizes, 'sm');   // 14px
-font-size: map-get($font-sizes, 'base'); // 16px
-font-size: map-get($font-sizes, 'lg');   // 18px
-font-size: map-get($font-sizes, 'xl');   // 20px
-```
 
 ### 文本工具类
 ```html
 <!-- 文本截断 -->
 <div class="text-truncate">单行截断...</div>
+<div class="text-sle">单行截断...</div>
 <div class="text-truncate-2">两行截断...</div>
+<div class="text-mle">两行截断...</div>
 <div class="text-truncate-3">三行截断...</div>
+
+<!-- 文本换行 -->
+<div class="text-break">文本换行</div>
 
 <!-- 文本对齐 -->
 <div class="text-left">左对齐</div>
@@ -115,85 +114,55 @@ font-size: map-get($font-sizes, 'xl');   // 20px
 <div class="text-right">右对齐</div>
 ```
 
-### SCSS Mixins
-```scss
-// 文本截断
-@include text-truncate(1);  // 单行截断
-@include text-truncate(2);  // 两行截断
+### 字体大小
+```html
+<!-- 使用预设的字体大小 -->
+<div class="text-{size}">...</div>
 ```
 
 ## 颜色系统
 
-### Element Plus 变量
-```scss
-// 主题色
-color: var(--el-color-primary);
-background-color: var(--el-bg-color);
-border-color: var(--el-border-color-light);
+### 主题色
+```html
+<!-- 文本颜色 -->
+<div class="text-{color}">...</div>
 
-// 文本色
-color: var(--el-text-color-primary);
-color: var(--el-text-color-regular);
-color: var(--el-text-color-secondary);
+<!-- 背景颜色 -->
+<div class="bg-{color}">...</div>
 ```
 
-### 渐变效果
-```scss
-// 渐变背景
-@include gradient(var(--el-color-primary-light-5), var(--el-color-primary), 135deg);
+### 中性色
+```html
+<!-- 文本颜色 -->
+<div class="text-{neutral}">...</div>
+
+<!-- 背景颜色 -->
+<div class="bg-{neutral}">...</div>
 ```
 
 ## 阴影效果
 
-### 预定义阴影
-```scss
-// 在 SCSS 中使用
-@include shadow('sm');    // 轻微阴影
-@include shadow('base'); // 基础阴影
-@include shadow('md');   // 中等阴影
-@include shadow('lg');   // 大阴影
-@include shadow('xl');   // 特大阴影
+### 预设阴影
+```html
+<!-- 使用预设的阴影 -->
+<div class="shadow-{size}">...</div>
 ```
 
 ## 响应式设计
 
-### 断点系统
-```scss
-// 在 SCSS 中使用
-@media screen and (max-width: map-get($breakpoints, 'sm')) { ... }  // 640px
-@media screen and (max-width: map-get($breakpoints, 'md')) { ... }  // 768px
-@media screen and (max-width: map-get($breakpoints, 'lg')) { ... }  // 1024px
-@media screen and (max-width: map-get($breakpoints, 'xl')) { ... }  // 1280px
-```
+### 响应式工具类
+```html
+<!-- 响应式显示/隐藏 -->
+<div class="hidden-{breakpoint}-up">在特定断点以上隐藏</div>
+<div class="visible-{breakpoint}-up">在特定断点以上显示</div>
 
-### SCSS Mixins
-```scss
-// ��应式断点
-@include respond-to('sm') {
-  // 平板样式
-}
-
-@include respond-to('md') {
-  // 小屏幕样式
-}
-
-@include respond-to('lg') {
-  // 大屏幕样式
-}
+<!-- 响应式容器 -->
+<div class="container-{breakpoint}">响应式宽度的容器</div>
 ```
 
 ## 动画与过渡
 
 ### 过渡效果
-```scss
-// 基础过渡
-@include transition();
-
-// 自定义过渡
-@include transition(transform, 0.2s, ease-out);
-```
-
-### 工具类
 ```html
 <!-- 基础过渡 -->
 <div class="transition">...</div>
@@ -205,68 +174,42 @@ color: var(--el-text-color-secondary);
 <div class="transition-slow">...</div>
 ```
 
-## 最佳实践
+## 辅助工具类
 
-### 1. 组件样式结构
-```scss
-.component-container {
-    // 1. 布局属性
-    @include flex(column);
-    padding: map-get($spacings, '5');
-    
-    // 2. 视觉属性
-    background-color: var(--el-bg-color);
-    @include shadow('sm');
-    border-radius: map-get($border-radius, 'lg');
-    
-    // 3. 文本样式
-    color: var(--el-text-color-primary);
-    font-size: map-get($font-sizes, 'base');
-    
-    // 4. 交互效果
-    @include transition();
-    
-    &:hover {
-        @include shadow('md');
-        transform: translateY(-2px);
-    }
-}
-```
-
-### 2. 响应式布局示例
-```scss
-.responsive-component {
-    padding: map-get($spacings, '5');
-    
-    @include respond-to('lg') {
-        padding: map-get($spacings, '4');
-    }
-    
-    @include respond-to('md') {
-        padding: map-get($spacings, '3');
-    }
-    
-    @include respond-to('sm') {
-        padding: map-get($spacings, '2');
-    }
-}
-```
-
-### 3. 表单布局示例
+### 鼠标样式
 ```html
-<div class="container-card">
-    <form class="flex-col">
-        <div class="form-group mb-4">
-            <label class="text-sm text-gray-600 mb-2">用户名</label>
-            <input type="text" class="form-input" />
-        </div>
-        
-        <div class="flex-between mt-6">
-            <button class="btn-secondary">取消</button>
-            <button class="btn-primary">提交</button>
-        </div>
-    </form>
-</div>
+<div class="cursor-pointer">指针样式</div>
+<div class="cursor-not-allowed">禁用样式</div>
+<div class="cursor-wait">等待样式</div>
+<div class="cursor-text">文本样式</div>
+<div class="cursor-move">移动样式</div>
+<div class="cursor-grab">抓取样式</div>
+```
+
+### 定位类
+```html
+<div class="position-relative">相对定位</div>
+<div class="position-absolute">绝对定位</div>
+<div class="position-fixed">固定定位</div>
+<div class="position-sticky">粘性定位</div>
+```
+
+### 溢出控制
+```html
+<div class="overflow-hidden">隐藏溢出</div>
+<div class="overflow-auto">自动滚动</div>
+<div class="overflow-scroll">始终滚动</div>
+<div class="overflow-visible">显示溢出</div>
+```
+
+### 清除浮动
+```html
+<div class="clearfix">...</div>
+```
+
+### z-index 层级
+```html
+<div class="z-{level}">控制层级</div>
 ```
 
 ## 注意事项

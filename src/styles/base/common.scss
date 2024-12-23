@@ -8,8 +8,9 @@
   border: 1px solid var(--el-border-color-light);
   border-radius: map-get($border-radius, 'lg');
   @include shadow('sm');
-  max-height: calc(100vh - 100px);
   overflow-y: auto;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 /* Flex 布局工具类
