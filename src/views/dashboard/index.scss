@@ -1,9 +1,9 @@
 .dashboard-container {
-    padding: 20px;
+    padding: map-get($spacings, '5');
     background-color: var(--el-bg-color-page);
 
     .el-row {
-        margin-bottom: 20px;
+        margin-bottom: map-get($spacings, '5');
         
         &:last-child {
             margin-bottom: 0;
@@ -11,33 +11,31 @@
     }
 
     .el-card {
-        border-radius: 12px;
-        transition: all 0.3s ease;
+        border-radius: map-get($border-radius, 'lg');
+        @include transition();
         border: 1px solid var(--el-border-color-lighter);
         backdrop-filter: blur(10px);
         background-color: rgba(255, 255, 255, 0.9);
         
         &:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            @include shadow('lg');
             transform: translateY(-2px);
         }
 
         .el-card__header {
             border-bottom: 1px solid var(--el-border-color-lighter);
-            padding: 16px 20px;
+            padding: map-get($spacings, '4') map-get($spacings, '5');
             background-color: rgba(var(--el-color-primary-rgb), 0.02);
 
             .card-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+                @include flex(row, space-between, center);
 
                 .title {
-                    font-size: 16px;
+                    font-size: map-get($font-sizes, 'lg');
                     font-weight: 600;
                     color: var(--el-text-color-primary);
                     position: relative;
-                    padding-left: 12px;
+                    padding-left: map-get($spacings, '3');
 
                     &::before {
                         content: '';
@@ -48,44 +46,41 @@
                         width: 4px;
                         height: 16px;
                         background: var(--el-color-primary);
-                        border-radius: 2px;
+                        border-radius: map-get($border-radius, 'sm');
                     }
                 }
             }
         }
 
         .el-card__body {
-            padding: 20px;
-            height: calc(100% - 60px); // 减去header高度
-            display: flex;
-            flex-direction: column;
+            padding: map-get($spacings, '5');
+            height: calc(100% - 60px);
+            @include flex(column);
         }
     }
 
     // 欢迎卡片样式
     .welcome-card {
-        background: linear-gradient(135deg, var(--el-color-primary-light-8) 0%, rgba(255,255,255,1) 100%);
-        height: 140px !important; // 固定欢迎卡片高度
+        @include gradient(var(--el-color-primary-light-8), rgba(255,255,255,1), 135deg);
+        height: 140px !important;
         
         .welcome-content {
             height: 100%;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: map-get($spacings, '5');
+            @include flex(column, center);
 
             .welcome-info {
                 h2 {
-                    font-size: 28px;
+                    font-size: map-get($font-sizes, '3xl');
                     color: var(--el-text-color-primary);
-                    margin-bottom: 12px;
+                    margin-bottom: map-get($spacings, '3');
                     font-weight: 600;
                     letter-spacing: 1px;
                 }
 
                 .subtitle {
                     color: var(--el-text-color-secondary);
-                    font-size: 14px;
+                    font-size: map-get($font-sizes, 'sm');
                     font-weight: 600;
                     opacity: 0.8;
                 }
@@ -95,50 +90,47 @@
 
     // 用户信息卡片样式
     .user-card {
-        height: 140px !important; // 与欢迎卡片保持一致
+        height: 140px !important;
 
         .user-info {
             height: 100%;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 24px;
+            padding: map-get($spacings, '5');
+            @include flex(row, flex-start, center);
+            gap: map-get($spacings, '6');
 
             .avatar-wrapper {
                 .el-avatar {
                     border: 3px solid var(--el-color-primary-light-5);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                    transition: all 0.3s ease;
+                    @include shadow('sm');
+                    @include transition();
 
                     &:hover {
                         transform: scale(1.08) rotate(5deg);
-                        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+                        @include shadow('md');
                     }
                 }
             }
 
             .info-content {
                 flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
+                @include flex(column, center);
 
                 .nickname {
-                    font-size: 20px;
+                    font-size: map-get($font-sizes, 'xl');
                     font-weight: 600;
                     color: var(--el-text-color-primary);
-                    margin: 0 0 12px 0;
+                    margin: 0 0 map-get($spacings, '3') 0;
                 }
 
                 .role-tags {
-                    margin-bottom: 12px;
-                    display: flex;
-                    gap: 8px;
+                    margin-bottom: map-get($spacings, '3');
+                    @include flex(row);
+                    gap: map-get($spacings, '2');
                     flex-wrap: wrap;
 
                     .role-tag {
-                        border-radius: 4px;
-                        transition: all 0.3s ease;
+                        border-radius: map-get($border-radius, 'sm');
+                        @include transition();
 
                         &:hover {
                             transform: translateY(-2px);
@@ -148,21 +140,20 @@
 
                 .contact-info {
                     .el-tag {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 6px;
-                        padding: 8px 12px;
-                        border-radius: 6px;
-                        transition: all 0.3s ease;
+                        @include flex(row, flex-start, center);
+                        gap: map-get($spacings, '2');
+                        padding: map-get($spacings, '2') map-get($spacings, '3');
+                        border-radius: map-get($border-radius, 'md');
+                        @include transition();
                         
                         &:hover {
                             transform: translateY(-2px);
-                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                            @include shadow('sm');
                         }
 
                         .el-icon {
-                            margin-right: 4px;
-                            font-size: 14px;
+                            margin-right: map-get($spacings, '1');
+                            font-size: map-get($font-sizes, 'sm');
                         }
                     }
                 }
@@ -173,10 +164,8 @@
     // 主要内容区域样式
     .main-content {
         .el-col {
-            display: flex;
-            flex-direction: column;
+            @include flex(column);
             height: calc(100vh - 300px);
-
         }
 
         // 时间线卡片样式
@@ -184,36 +173,35 @@
             flex: 1;
             height: 100%;
             overflow-y: auto;
+            
             .timeline-content {
                 h4 {
-                    font-size: 16px;
+                    font-size: map-get($font-sizes, 'lg');
                     font-weight: 600;
                     color: var(--el-text-color-primary);
-                    margin: 0 0 8px 0;
+                    margin: 0 0 map-get($spacings, '2') 0;
                     cursor: pointer;
-                    transition: all 0.3s ease;
+                    @include transition();
 
                     &:hover {
                         color: var(--el-color-primary);
-                        padding-left: 6px;
+                        padding-left: map-get($spacings, '2');
                     }
                 }
 
                 p {
                     color: var(--el-text-color-regular);
-                    margin-bottom: 12px;
+                    margin-bottom: map-get($spacings, '3');
                     line-height: 1.6;
                 }
 
                 .timeline-footer {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-top: 8px;
+                    @include flex(row, space-between, center);
+                    margin-top: map-get($spacings, '2');
 
                     .operator {
                         color: var(--el-text-color-secondary);
-                        font-size: 13px;
+                        font-size: map-get($font-sizes, 'sm');
                     }
                 }
             }
@@ -221,25 +209,24 @@
 
         // 右侧卡片布局
         .right-column {
-            display: flex;
-            flex-direction: column;
+            @include flex(column);
 
             // 待办事项卡片样式
             .todo-card {
                 flex: 1;
-                margin-bottom: 20px;
+                margin-bottom: map-get($spacings, '5');
 
                 .todo-list {
                     max-height: 220px;
                     overflow-y: auto;
-                    padding-right: 10px; // 为滚动条预留空间
+                    padding-right: map-get($spacings, '3');
                     
                     .todo-item {
-                        padding: 14px 12px;
+                        padding: map-get($spacings, '3');
                         border-bottom: 1px solid var(--el-border-color-lighter);
-                        transition: all 0.3s ease;
-                        border-radius: 6px;
-                        margin-bottom: 8px; // 添加项目间距
+                        @include transition();
+                        border-radius: map-get($border-radius, 'md');
+                        margin-bottom: map-get($spacings, '2');
                         background-color: var(--el-bg-color-page);
                         
                         &:last-child {
@@ -248,57 +235,27 @@
 
                         &:hover {
                             background-color: var(--el-fill-color-light);
-                            transform: translateX(6px);
-                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-                        }
-
-                        .completed {
-                            text-decoration: line-through;
-                            color: var(--el-text-color-secondary);
-                            opacity: 0.8;
-                        }
-
-                        .todo-meta {
-                            margin-top: 10px;
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            padding-left: 24px;
-
-                            .time {
-                                color: var(--el-text-color-secondary);
-                                font-size: 13px;
-                            }
                         }
 
                         .todo-content {
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            margin-bottom: 8px;
+                            @include flex(row, space-between, center);
+                            margin-bottom: map-get($spacings, '2');
 
-                            .todo-actions {
-                                opacity: 0;
-                                transition: opacity 0.3s ease;
-
-                                .el-button {
-                                    padding: 4px 8px;
-                                }
+                            .completed {
+                                text-decoration: line-through;
+                                color: var(--el-text-color-secondary);
                             }
                         }
 
-                        &:hover {
-                            .todo-actions {
-                                opacity: 1;
+                        .todo-meta {
+                            @include flex(row, space-between, center);
+                            margin-top: map-get($spacings, '2');
+
+                            .time {
+                                color: var(--el-text-color-secondary);
+                                font-size: map-get($font-sizes, 'sm');
                             }
                         }
-                    }
-
-                    .empty-text {
-                        text-align: center;
-                        color: var(--el-text-color-secondary);
-                        padding: 20px 0;
-                        font-size: 14px;
                     }
                 }
             }
@@ -308,46 +265,26 @@
                 flex: 1;
 
                 .progress-list {
-                    max-height: 150px;
-                    overflow-y: auto;
-                    padding-right: 10px; // 为滚动条预留空间
-
                     .progress-item {
-                        margin-bottom: 10px;
-                        padding: 10px;
-                        border-radius: 8px;
-                        transition: all 0.3s ease;
-                        background-color: var(--el-fill-color-blank);
+                        margin-bottom: map-get($spacings, '4');
 
                         &:last-child {
                             margin-bottom: 0;
                         }
 
-                        &:hover {
-                            background-color: var(--el-fill-color-light);
-                            transform: translateX(8px);
-                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-                        }
-
                         .progress-info {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 12px;
+                            @include flex(row, space-between, center);
+                            margin-bottom: map-get($spacings, '2');
 
                             .name {
-                                font-weight: 500;
                                 color: var(--el-text-color-primary);
+                                font-weight: 500;
                             }
 
                             .percentage {
                                 color: var(--el-text-color-secondary);
-                                font-size: 14px;
-                                font-weight: 500;
+                                font-size: map-get($font-sizes, 'sm');
                             }
-                        }
-
-                        .el-progress {
-                            margin-top: 10px;
                         }
                     }
                 }
