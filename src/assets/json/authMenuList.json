@@ -62,7 +62,7 @@
           "name": "assemblySelect",
           "component": "/assembly/select/index",
           "meta": {
-            "title": "select",
+            "title": "Select组件",
             "isLink": "",
             "isHide": false,
             "isFull": false,

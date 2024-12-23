@@ -13,7 +13,7 @@ export interface ResultData<T = any> extends Result {
 }
 // 分页请求响应参数
 export interface PageResult<T = any> {
-    list: T[];
+    data: T[];
     total: number;
     pageNum: number;
     pageSize: number;
