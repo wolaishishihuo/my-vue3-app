@@ -1,0 +1,99 @@
+/* Reset.scss */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-family-base;
+  line-height: 1.5;
+  color: map-get($neutrals, 'gray-900');
+  background-color: map-get($neutrals, 'white');
+}
+
+// 移除列表样式
+ul, ol {
+  list-style: none;
+}
+
+// 移除链接下划线
+a {
+  color: inherit;
+  text-decoration: none;
+  
+  &:hover {
+    color: map-get($colors, 'primary');
+  }
+}
+
+// 图片响应式
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// 表单元素重置
+button, input, optgroup, select, textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// 移除 input type number 的箭头
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+// 表格重置
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// 移除默认样式
+[hidden] {
+  display: none !important;
+}
+
+// 焦点轮廓
+:focus-visible {
+  outline: 2px solid map-get($colors, 'primary');
+  outline-offset: 2px;
+}
+
+// 选中文本
+::selection {
+  background-color: map-get($colors, 'primary');
+  color: map-get($neutrals, 'white');
+}
+
+// 滚动条样式
+body {
+  @include scrollbar();
+} 

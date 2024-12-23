@@ -1,0 +1,249 @@
+/* 布局组件
+-------------------------------------------------- */
+
+// 基础容器
+.container {
+  @include container();
+  background-color: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: map-get($border-radius, 'lg');
+  @include shadow('sm');
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+/* Flex 布局工具类
+-------------------------------------------------- */
+.flex {
+  @include flex();
+  
+  &-col { @include flex(column); }
+  &-center { @include flex(row, center, center); }
+  &-between { @include flex(row, space-between, center); }
+  &-around { @include flex(row, space-around, center); }
+  &-wrap { flex-wrap: wrap; }
+  &-nowrap { flex-wrap: nowrap; }
+  
+  // Flex 子元素
+  &-grow { flex-grow: 1; }
+  &-shrink { flex-shrink: 1; }
+  &-no-shrink { flex-shrink: 0; }
+}
+
+/* 文本工具类
+-------------------------------------------------- */
+// 文本截断
+.text {
+  &-truncate, &-sle {
+    @include text-truncate(1);
+  }
+  
+  &-truncate-2, &-mle {
+    @include text-truncate(2);
+  }
+  
+  &-truncate-3 {
+    @include text-truncate(3);
+  }
+  
+  // 文本换行
+  &-break {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+  
+  // 文本对齐
+  &-left { text-align: left; }
+  &-center { text-align: center; }
+  &-right { text-align: right; }
+}
+
+// 字体大小
+@each $key, $value in $font-sizes {
+  .text-#{$key} {
+    font-size: $value;
+  }
+}
+
+/* 颜色系统
+-------------------------------------------------- */
+// 主题色
+@each $key, $value in $colors {
+  .text-#{$key} {
+    color: $value;
+  }
+  
+  .bg-#{$key} {
+    background-color: $value;
+  }
+}
+
+// 中性色
+@each $key, $value in $neutrals {
+  .text-#{$key} {
+    color: $value;
+  }
+  
+  .bg-#{$key} {
+    background-color: $value;
+  }
+}
+
+/* 间距系统
+-------------------------------------------------- */
+// 使用预定义的间距
+@each $key, $value in $spacings {
+  .m-#{$key} { margin: $value; }
+  .mt-#{$key} { margin-top: $value; }
+  .mr-#{$key} { margin-right: $value; }
+  .mb-#{$key} { margin-bottom: $value; }
+  .ml-#{$key} { margin-left: $value; }
+  .mx-#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+  .my-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+  
+  .p-#{$key} { padding: $value; }
+  .pt-#{$key} { padding-top: $value; }
+  .pr-#{$key} { padding-right: $value; }
+  .pb-#{$key} { padding-bottom: $value; }
+  .pl-#{$key} { padding-left: $value; }
+  .px-#{$key} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+  .py-#{$key} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+}
+
+// 像素级别的精确间距（用于特殊情况）
+@for $i from 0 through 100 {
+  .mt#{$i} { margin-top: #{$i}px !important; }
+  .mr#{$i} { margin-right: #{$i}px !important; }
+  .mb#{$i} { margin-bottom: #{$i}px !important; }
+  .ml#{$i} { margin-left: #{$i}px !important; }
+  .pt#{$i} { padding-top: #{$i}px !important; }
+  .pr#{$i} { padding-right: #{$i}px !important; }
+  .pb#{$i} { padding-bottom: #{$i}px !important; }
+  .pl#{$i} { padding-left: #{$i}px !important; }
+}
+
+/* 边框和阴影
+-------------------------------------------------- */
+// 圆角
+@each $key, $value in $border-radius {
+  .rounded-#{$key} {
+    border-radius: $value;
+  }
+}
+
+// 阴影
+@each $key, $value in $box-shadows {
+  .shadow-#{$key} {
+    @include shadow($key);
+  }
+}
+
+/* 滚动条样式
+-------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--el-border-color-darker);
+  border-radius: map-get($border-radius, 'full');
+}
+
+/* 响应式工具
+-------------------------------------------------- */
+@each $breakpoint in map-keys($breakpoints) {
+  @include respond-to($breakpoint) {
+    .hidden-#{$breakpoint}-up { display: none; }
+    .visible-#{$breakpoint}-up { display: block; }
+    
+    // 响应式容器
+    .container-#{$breakpoint} {
+      max-width: map-get($breakpoints, $breakpoint);
+      margin: 0 auto;
+    }
+  }
+}
+
+/* 动画和过渡
+-------------------------------------------------- */
+.transition {
+  @include transition();
+  
+  &-fast { @include transition(all, 0.2s); }
+  &-slow { @include transition(all, 0.4s); }
+}
+
+/* 鼠标样式
+-------------------------------------------------- */
+.cursor {
+  &-pointer { cursor: pointer; }
+  &-not-allowed { cursor: not-allowed; }
+  &-wait { cursor: wait; }
+  &-text { cursor: text; }
+  &-move { cursor: move; }
+  &-grab { cursor: grab; }
+}
+
+/* Element Plus 集成
+-------------------------------------------------- */
+// NProgress 样式
+#nprogress {
+  .bar {
+    background: var(--el-color-primary) !important;
+  }
+  
+  .spinner-icon {
+    border-top-color: var(--el-color-primary) !important;
+    border-left-color: var(--el-color-primary) !important;
+  }
+  
+  .peg {
+    box-shadow:
+      0 0 10px var(--el-color-primary),
+      0 0 5px var(--el-color-primary) !important;
+  }
+}
+
+/* 辅助类
+-------------------------------------------------- */
+.clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+.position {
+  &-relative { position: relative; }
+  &-absolute { position: absolute; }
+  &-fixed { position: fixed; }
+  &-sticky { position: sticky; }
+}
+
+.overflow {
+  &-hidden { overflow: hidden; }
+  &-auto { overflow: auto; }
+  &-scroll { overflow: scroll; }
+  &-visible { overflow: visible; }
+}
+
+// z-index 工具类
+@each $key, $value in $z-indexes {
+  .z-#{$key} {
+    z-index: $value;
+  }
+}

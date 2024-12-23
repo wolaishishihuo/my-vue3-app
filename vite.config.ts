@@ -35,10 +35,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
                     api: 'modern', // 或 'modern'
                     additionalData: `
                         // 引入 SCSS 抽象文件
-                        @import "@/styles/abstracts/_variables.scss"; // 变量
-                        @import "@/styles/abstracts/_functions.scss"; // 函数
-                        @import "@/styles/abstracts/_mixins.scss"; // 混合
-                        @import "@/styles/abstracts/_placeholders.scss"; // 占位符
+                        @import "@/styles/abstracts/variables.scss"; // 变量
+                        @import "@/styles/abstracts/mixins.scss"; // 混合
+              
                     `
                 }
             }
