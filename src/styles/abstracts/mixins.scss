@@ -1,4 +1,13 @@
-// 响应式断点
+/**
+ * 响应式断点混合
+ * @param {String} $breakpoint - 断点名称 (sm | md | lg | xl | 2xl)
+ * @example
+ *   .element {
+ *     @include respond-to('md') {
+ *       width: 50%;
+ *     }
+ *   }
+ */
 @mixin respond-to($breakpoint) {
   @if map-has-key($breakpoints, $breakpoint) {
     @media (min-width: map-get($breakpoints, $breakpoint)) {
@@ -9,7 +18,17 @@
   }
 }
 
-// Flex 布局助手
+/**
+ * Flex 布局助手
+ * @param {String} $direction - flex-direction 属性 (row | column | row-reverse | column-reverse)
+ * @param {String} $justify - justify-content 属性 (flex-start | flex-end | center | space-between | space-around)
+ * @param {String} $align - align-items 属性 (flex-start | flex-end | center | stretch | baseline)
+ * @param {String} $wrap - flex-wrap 属性 (nowrap | wrap | wrap-reverse)
+ * @example
+ *   .element {
+ *     @include flex(column, center, center);
+ *   }
+ */
 @mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
   display: flex;
   flex-direction: $direction;
@@ -18,7 +37,17 @@
   flex-wrap: $wrap;
 }
 
-// 文本截断
+/**
+ * 文本截断
+ * @param {Number} $lines - 要显示的行数，1 为单行截断，大于 1 为多行截断
+ * @example
+ *   .single-line {
+ *     @include text-truncate(1);
+ *   }
+ *   .multi-line {
+ *     @include text-truncate(2);
+ *   }
+ */
 @mixin text-truncate($lines: 1) {
   @if $lines == 1 {
     overflow: hidden;
@@ -32,7 +61,16 @@
   }
 }
 
-// 滚动条样式
+/**
+ * 自定义滚动条样式
+ * @param {Length} $width - 滚动条宽度
+ * @param {Color} $track-color - 滚动条轨道颜色
+ * @param {Color} $thumb-color - 滚动条滑块颜色
+ * @example
+ *   .scrollable {
+ *     @include scrollbar(8px, #eee, #999);
+ *   }
+ */
 @mixin scrollbar($width: 6px, $track-color: #f1f1f1, $thumb-color: #888) {
   &::-webkit-scrollbar {
     width: $width;
@@ -48,13 +86,29 @@
   }
 }
 
-// 渐变背景
+/**
+ * 渐变背景
+ * @param {Color} $start-color - 渐变起始颜色
+ * @param {Color} $end-color - 渐变结束颜色
+ * @param {String} $direction - 渐变方向 (to right | to left | to bottom | to top | 45deg)
+ * @example
+ *   .gradient-bg {
+ *     @include gradient(#ff0000, #00ff00, to bottom);
+ *   }
+ */
 @mixin gradient($start-color, $end-color, $direction: to right) {
   background: $start-color;
   background: linear-gradient($direction, $start-color, $end-color);
 }
 
-// 阴影效果
+/**
+ * 阴影效果
+ * @param {String} $level - 阴影级别 (none | sm | base | md | lg | xl | 2xl | inner)
+ * @example
+ *   .card {
+ *     @include shadow('lg');
+ *   }
+ */
 @mixin shadow($level: 'base') {
   $shadows: (
     'none': none,
@@ -75,12 +129,28 @@
   }
 }
 
-// 动画过渡
+/**
+ * 动画过渡效果
+ * @param {String} $properties - 过渡属性 (all | transform | opacity | background 等)
+ * @param {Time} $duration - 过渡持续时间
+ * @param {String} $timing - 过渡时间函数 (ease | ease-in | ease-out | ease-in-out | linear)
+ * @example
+ *   .animated {
+ *     @include transition(transform, 0.5s, ease);
+ *   }
+ */
 @mixin transition($properties: all, $duration: 0.3s, $timing: ease-in-out) {
   transition: $properties $duration $timing;
 }
 
-// 绝对定位居中
+/**
+ * 绝对定位居中
+ * @param {String} $position - 居中方向 (both | vertical | horizontal)
+ * @example
+ *   .centered {
+ *     @include absolute-center('both');
+ *   }
+ */
 @mixin absolute-center($position: both) {
   position: absolute;
   
@@ -97,14 +167,29 @@
   }
 }
 
-// 网格系统
+/**
+ * 网格系统
+ * @param {Number} $columns - 网格列数
+ * @param {Length} $gap - 网格间距
+ * @example
+ *   .grid-container {
+ *     @include grid(3, 1rem);
+ *   }
+ */
 @mixin grid($columns: 12, $gap: map-get($spacings, '4')) {
   display: grid;
   grid-template-columns: repeat($columns, 1fr);
   gap: $gap;
 }
 
-// 响应式容器
+/**
+ * 响应式容器
+ * @param {Length} $padding - 容器左右内边距
+ * @example
+ *   .container {
+ *     @include container(1rem);
+ *   }
+ */
 @mixin container($padding: null) {
   width: 100%;
   margin-right: auto;

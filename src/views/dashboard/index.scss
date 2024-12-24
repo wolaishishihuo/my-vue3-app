@@ -1,8 +1,9 @@
 .dashboard-container {
     padding: map-get($spacings, '5');
+    
     .el-row {
         margin-bottom: map-get($spacings, '5');
-        
+
         &:last-child {
             margin-bottom: 0;
         }
@@ -10,10 +11,10 @@
 
     .el-card {
         border-radius: map-get($border-radius, 'lg');
-        @include transition();
         border: 1px solid var(--el-border-color-lighter);
         backdrop-filter: blur(10px);
         background-color: rgba(255, 255, 255, 0.9);
+        @include transition();
         
         &:hover {
             @include shadow('lg');
@@ -21,8 +22,8 @@
         }
 
         .el-card__header {
-            border-bottom: 1px solid var(--el-border-color-lighter);
             padding: map-get($spacings, '4') map-get($spacings, '5');
+            border-bottom: 1px solid var(--el-border-color-lighter);
             background-color: rgba(var(--el-color-primary-rgb), 0.02);
 
             .card-header {
@@ -60,7 +61,7 @@
     // 欢迎卡片样式
     .welcome-card {
         @include gradient(var(--el-color-primary-light-8), rgba(255,255,255,1), 135deg);
-        height: 140px !important;
+        height: 160px;
         
         .welcome-content {
             height: 100%;
@@ -88,8 +89,7 @@
 
     // 用户信息卡片样式
     .user-card {
-        height: 140px !important;
-
+        height: 160px;
         .user-info {
             height: 100%;
             padding: map-get($spacings, '5');
@@ -163,7 +163,7 @@
     .main-content {
         .el-col {
             @include flex(column);
-            height: calc(100vh - 300px);
+            height: 100%;
         }
 
         // 时间线卡片样式
@@ -213,12 +213,11 @@
             .todo-card {
                 flex: 1;
                 margin-bottom: map-get($spacings, '5');
-
                 .todo-list {
                     max-height: 220px;
                     overflow-y: auto;
                     padding-right: map-get($spacings, '3');
-                    
+
                     .todo-item {
                         padding: map-get($spacings, '3');
                         border-bottom: 1px solid var(--el-border-color-lighter);
@@ -290,5 +289,8 @@
         }
     }
 }
+
+
+
 
 

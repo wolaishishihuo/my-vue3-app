@@ -37,7 +37,7 @@
     }
     .classic-content {
       display: flex;
-      height: calc(100% - 55px);
+      height: calc(100vh - 55px);
       background-color: #f0f2f6;
       :deep(.el-aside) {
         width: auto;
@@ -61,6 +61,7 @@
       .classic-main {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
     }
   }

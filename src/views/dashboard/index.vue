@@ -6,7 +6,7 @@
                 <el-card class="welcome-card">
                     <div class="welcome-content">
                         <div class="welcome-info">
-                            <h2>{{ greetingText }}，{{ userInfo?.username }}</h2>
+                            <h2>{{ greetingText }}，{{ userStore.userInfo?.username }}</h2>
                             <p class="subtitle">今天是{{ nowTime }}，太原天气{{ weatherInfo.feelsLike }}°C，{{ weatherInfo.text }}</p>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
 
 <script setup lang="ts" name="dashboard">
 import { ref, computed } from 'vue';
-import { Plus, Delete, Refresh } from '@element-plus/icons-vue';
+import { Plus, Delete, Refresh, Message, UserFilled } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
 import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
@@ -204,7 +204,7 @@ const projects: Project[] = [
         id: crypto.randomUUID(),
         name: '数据分析',
         percentage: 70,
-        status: '',
+        status: 'warning',
         startTime: '2023-12-01',
         endTime: '2024-01-31'
     },
@@ -271,14 +271,11 @@ const deleteTodo = (todo: TodoItem) => {
     if (index !== -1) {
         todos.value.splice(index, 1);
         ElMessage.success('删除成功');
-        // 这里可以添加持久化存储或者发送到后端的逻辑
     }
 };
 
-// 在 setup 中添加权限控制
+// 权限控制
 const authStore = useAuthStore();
-
-// 检查按钮权限的方法
 const hasPermission = (permission: string | string[]) => {
     if (Array.isArray(permission)) {
         return permission.some(p => authStore.hasButtonPermission(p));
@@ -288,6 +285,18 @@ const hasPermission = (permission: string | string[]) => {
 
 // GitHub 提交记录
 const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
+
+// 获取角色对应的标签类型
+const getRoleType = (role?: string): 'danger' | 'success' | 'warning' | 'info' | 'primary' => {
+    if (!role) return 'info';
+
+    const roleTypes: Record<string, 'danger' | 'success' | 'warning' | 'info' | 'primary'> = {
+        admin: 'danger',
+        editor: 'warning',
+        user: 'info'
+    };
+    return roleTypes[role.toLowerCase()] || 'info';
+};
 </script>
 
 <style scoped lang="scss">
