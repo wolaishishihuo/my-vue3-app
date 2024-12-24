@@ -7,24 +7,41 @@
  * - 如果环境变量名是"VITE_PORT"，则其值会被转换为数字。
  * - 如果环境变量名是"VITE_PROXY"，则尝试将其值解析为JSON对象。
  */
-export function wrapperEnv(envConf: Record<string, any>): ViteEnv {
-    const ret: any = {};
-    for (const envName of Object.keys(envConf)) {
-        // 替换环境变量值中的换行符，并根据字符串值转换为布尔值或保持原样
-        let realName = envConf[envName].replace(/\\n/g, '\n');
-        realName = realName === 'true' ? true : realName === 'false' ? false : realName;
+export const wrapperEnv = (envConf: Record<string, string>): Record<string, any> => {
+    const ret: Record<string, any> = {};
 
-        // 如果环境变量名指定，进行特殊类型转换
-        if (envName === 'VITE_PORT') realName = Number(realName);
-        if (envName === 'VITE_PROXY') {
-            try {
-                // 尝试将环境变量值解析为JSON
-                realName = JSON.parse(realName);
-            } catch (error) {
-                // 解析失败时，不做处理，保持原样
-            }
+    for (const envName of Object.keys(envConf)) {
+        let realName = envConf[envName].replace(/\\n/g, '\n');
+
+        // 处理布尔值
+        if (realName === 'true') {
+            ret[envName] = true;
+            continue;
         }
+        if (realName === 'false') {
+            ret[envName] = false;
+            continue;
+        }
+
+        // 处理端口号
+        if (envName === 'VITE_PORT') {
+            ret[envName] = Number(realName);
+            continue;
+        }
+
+        // 处理代理配置
+        if (envName === 'VITE_PROXY' && realName) {
+            try {
+                ret[envName] = JSON.parse(realName.replace(/'/g, '"'));
+            } catch (error) {
+                ret[envName] = [];
+            }
+            continue;
+        }
+
+        // 默认字符串处理
         ret[envName] = realName;
+        process.env[envName] = realName;
     }
     return ret;
-}
+};

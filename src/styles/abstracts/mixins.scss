@@ -82,7 +82,7 @@
   
   &::-webkit-scrollbar-thumb {
     background: $thumb-color;
-    border-radius: $width / 2;
+    border-radius: calc($width / 2);
   }
 }
 
@@ -167,20 +167,6 @@
   }
 }
 
-/**
- * 网格系统
- * @param {Number} $columns - 网格列数
- * @param {Length} $gap - 网格间距
- * @example
- *   .grid-container {
- *     @include grid(3, 1rem);
- *   }
- */
-@mixin grid($columns: 12, $gap: map-get($spacings, '4')) {
-  display: grid;
-  grid-template-columns: repeat($columns, 1fr);
-  gap: $gap;
-}
 
 /**
  * 响应式容器
@@ -219,4 +205,11 @@
   @include respond-to('2xl') {
     max-width: map-get($breakpoints, '2xl');
   }
+}
+
+
+@mixin circle($width) {
+    width: $width;
+    height: $width;
+    border-radius: calc($width / 2);
 } 
