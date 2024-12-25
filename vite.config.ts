@@ -51,7 +51,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         build: {
             outDir: 'dist',
             minify: 'esbuild',
-            sourcemap: false,
+            sourcemap: true,
             reportCompressedSize: false,
             chunkSizeWarningLimit: 2000,
             rollupOptions: {

@@ -162,7 +162,7 @@ const { weatherInfo } = useWeather('太原');
 // 待办事项数据
 const todos = ref<TodoItem[]>([
     {
-        id: crypto.randomUUID(),
+        id: '1',
         content: '完成首页开发',
         completed: true,
         deadline: '今天 18:00',
@@ -171,7 +171,7 @@ const todos = ref<TodoItem[]>([
         createTime: new Date().toISOString()
     },
     {
-        id: crypto.randomUUID(),
+        id: '2',
         content: '代码审核',
         completed: true,
         deadline: '今天 12:00',
@@ -180,7 +180,7 @@ const todos = ref<TodoItem[]>([
         createTime: new Date().toISOString()
     },
     {
-        id: crypto.randomUUID(),
+        id: '3',
         content: '项目周报',
         completed: false,
         deadline: '明天 10:00',
@@ -193,7 +193,7 @@ const todos = ref<TodoItem[]>([
 // 项目进度数据
 const projects: Project[] = [
     {
-        id: crypto.randomUUID(),
+        id: '1',
         name: '用户中心',
         percentage: 90,
         status: 'success',
@@ -201,7 +201,7 @@ const projects: Project[] = [
         endTime: '2023-12-31'
     },
     {
-        id: crypto.randomUUID(),
+        id: '2',
         name: '数据分析',
         percentage: 70,
         status: 'warning',
@@ -209,7 +209,7 @@ const projects: Project[] = [
         endTime: '2024-01-31'
     },
     {
-        id: crypto.randomUUID(),
+        id: '4',
         name: '支付系统',
         percentage: 30,
         status: 'exception',
@@ -225,7 +225,7 @@ const addTodo = () => {
         return;
     }
     const newTodo: TodoItem = {
-        id: crypto.randomUUID(),
+        id: String(todos.value.length + 1),
         content: '新的待办事项',
         completed: false,
         deadline: '待设置',
@@ -285,18 +285,6 @@ const hasPermission = (permission: string | string[]) => {
 
 // GitHub 提交记录
 const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
-
-// 获取角色对应的标签类型
-const getRoleType = (role?: string): 'danger' | 'success' | 'warning' | 'info' | 'primary' => {
-    if (!role) return 'info';
-
-    const roleTypes: Record<string, 'danger' | 'success' | 'warning' | 'info' | 'primary'> = {
-        admin: 'danger',
-        editor: 'warning',
-        user: 'info'
-    };
-    return roleTypes[role.toLowerCase()] || 'info';
-};
 </script>
 
 <style scoped lang="scss">
