@@ -69,7 +69,86 @@ npm run build
 
 ## 4. Nginx 配置
 
-### 4.1 安装 Nginx
+### 4.1 全局配置
+在 `/etc/nginx/nginx.conf` 文件中添加或修改以下全局配置：
+
+```nginx
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    # 基本配置
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # 日志配置
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    # Gzip 压缩配置
+    gzip on;
+    gzip_min_length 1024;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss image/svg+xml;
+    gzip_proxied any;
+    gzip_vary on;
+    gzip_disable "msie6";
+
+    # 静态资源预压缩支持
+    gzip_static on;
+    brotli on;
+    brotli_static on;
+    brotli_comp_level 6;
+    brotli_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+
+    # 服务端块
+    server {
+        listen 80;
+        server_name your-domain.com;
+
+        # 静态文件路径
+        root /var/www/your-project;
+        index index.html;
+
+        # 默认静态文件处理
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        # 配置缓存静态资源
+        location ~* \.(?:ico|css|js|gif|jpe?g|png|woff|woff2|eot|ttf|svg|otf|map|webp|avif|mp4|webm|ogv|ogg|m4a|mp3)$ {
+            expires 6M;
+            access_log off;
+            add_header Cache-Control "public, immutable";
+        }
+
+        # 禁止访问隐藏文件
+        location ~ /\. {
+            deny all;
+        }
+
+        # 错误页
+        error_page 404 /404.html;
+        location = /404.html {
+            root /var/www/your-project;
+        }
+    }
+}
+```
+
+### 4.2 安装 Nginx
 \`\`\`bash
 # CentOS 系统
 yum install -y nginx
@@ -78,7 +157,7 @@ yum install -y nginx
 apt install -y nginx
 \`\`\`
 
-### 4.2 配置 Nginx
+### 4.3 配置 Nginx
 1. 进入 Nginx 配置目录：
 \`\`\`bash
 cd /etc/nginx/conf.d
@@ -89,21 +168,19 @@ cd /etc/nginx/conf.d
 vim my-vue3-app.conf
 \`\`\`
 
-3. 添加配置内容：
+3. 添加项目特定配置内容：
 \`\`\`nginx
 server {
     listen 80;
-    server_name your-server-ip;  # 替换为你的服务器IP或域名
+    server_name your-server-ip;
     
     root /www/wwwroot/my-vue3-app;
     index index.html;
     
-    # 处理 Vue Router 的 history 模式
     location / {
         try_files $uri $uri/ /index.html;
     }
     
-    # 静态资源缓存
     location /assets {
         expires 7d;
         add_header Cache-Control "public, no-transform";
@@ -111,7 +188,7 @@ server {
 }
 \`\`\`
 
-### 4.3 启动服务
+### 4.4 启动服务
 \`\`\`bash
 # 测试配置
 nginx -t
@@ -183,4 +260,4 @@ tail -f /var/log/nginx/access.log   # 访问日志
 
 # 查看 Nginx 状态
 systemctl status nginx
-\`\`\` 
+\`\`\`
