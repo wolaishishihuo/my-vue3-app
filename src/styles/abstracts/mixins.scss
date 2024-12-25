@@ -185,26 +185,6 @@
     padding-right: $padding;
     padding-left: $padding;
   }
-  
-  @include respond-to('sm') {
-    max-width: map-get($breakpoints, 'sm');
-  }
-  
-  @include respond-to('md') {
-    max-width: map-get($breakpoints, 'md');
-  }
-  
-  @include respond-to('lg') {
-    max-width: map-get($breakpoints, 'lg');
-  }
-  
-  @include respond-to('xl') {
-    max-width: map-get($breakpoints, 'xl');
-  }
-  
-  @include respond-to('2xl') {
-    max-width: map-get($breakpoints, '2xl');
-  }
 }
 
 

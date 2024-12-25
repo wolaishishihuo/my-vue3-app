@@ -58,7 +58,12 @@ export default () => {
         // // tabsStore.setTabs([]);
         // // keepAliveStore.setKeepAliveName([]);
         // // 跳转到首页
-        router.push(HOME_URL);
+        const redirect = router.currentRoute.value.query.redirect;
+        if (redirect) {
+            router.push(redirect as string);
+        } else {
+            router.push(HOME_URL);
+        }
     };
 
     const monitorEnter = (cb: () => void) => {
