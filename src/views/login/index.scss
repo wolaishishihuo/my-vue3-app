@@ -4,6 +4,7 @@
     background-color: #eeeeee;
     background-image: url('@/assets/images/login_bg.svg');
     background-size: cover;
+    @include flex(row, center, center);
 
     .login-box {
         position: relative;
@@ -38,6 +39,7 @@
                 font-weight: bold;
                 color: var(--el-text-color-primary);
                 white-space: nowrap;
+                margin-bottom: map-get($spacings, '4');
             }
 
             .el-form-item {
@@ -47,7 +49,7 @@
             .login-btn {
                 width: 100%;
                 margin-top: 40px;
-
+                @include flex('', center);
                 .el-button {
                     width: 185px;
                     background-color: var(--el-color-primary);
@@ -72,6 +74,7 @@
                 margin-top: 20px;
                 font-size: map-get($font-sizes, 'sm');
                 gap: 20px;
+                @include flex(row, '', center);
             }
         }
     }
