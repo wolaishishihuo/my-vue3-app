@@ -5,5 +5,5 @@ import 'element-plus/theme-chalk/dark/css-vars.css';
 // svg icons
 import 'virtual:svg-icons-register';
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css
-
+import '@/assets/css/app.css';
 export const setupAssets = () => ({});

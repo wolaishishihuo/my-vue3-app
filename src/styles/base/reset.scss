@@ -101,7 +101,4 @@ table {
   color: map-get($neutrals, 'white');
 }
 
-// 滚动条样式
-body {
-  @include scrollbar();
-} 
+
