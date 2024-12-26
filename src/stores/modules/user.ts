@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { resetRouter } from '@/routers';
+import router, { resetRouter } from '@/routers';
 import piniaPersistConfig from '../helper';
 
 export const useUserStore = defineStore('user', {
@@ -34,6 +34,7 @@ export const useUserStore = defineStore('user', {
         async logout() {
             this.resetUserInfo();
             resetRouter();
+            router.push('/login');
         },
         // 重置用户信息
         resetUserInfo() {

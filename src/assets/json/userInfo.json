@@ -4,7 +4,7 @@
       "id": "1",
       "username": "admin",
       "nickname": "管理员",
-      "avatar": "https://avatars.githubusercontent.com/u/1234567",
+      "avatar": "https://loremflickr.com/800/600",
       "email": "admin@example.com",
       "phone": "13800138000",
       "roles": ["admin", "super_editor"],

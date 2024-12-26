@@ -7,7 +7,7 @@
       align-items: center;
       justify-content: space-between;
       height: 55px;
-      padding: 0 15px 0 15px;
+      padding: 0 map-get($spacings, '6');
       background-color: var(--el-bg-color);
       border-bottom: 1px solid var(--el-border-color);
       .header-lf {
