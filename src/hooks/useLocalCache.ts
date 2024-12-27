@@ -1,12 +1,15 @@
 import { watch } from 'vue';
 import { useStorage } from '@vueuse/core';
+import { LOCAL_CACHE_KEY, LOCAL_CACHE_EXPIRY_TIME } from '@/config';
 
 interface CacheItem<T> {
     value: T;
     timestamp: number;
 }
 
-export const useLocalCache = <T>(localKey: string, expiryTime?: number) => {
+// 本地缓存
+export const useLocalCache = <T>(args?: { localKey?: string; expiryTime?: number }) => {
+    const { localKey = LOCAL_CACHE_KEY, expiryTime = LOCAL_CACHE_EXPIRY_TIME } = args || {};
     const storage = useStorage<Map<string, CacheItem<T>>>(localKey, new Map());
 
     const setCache = (key: string, value: T) => {

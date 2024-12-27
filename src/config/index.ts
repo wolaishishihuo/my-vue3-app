@@ -27,3 +27,7 @@ export const AMAP_CONFIG = {
     key: '5101582d67647dd57024b7c1fcdd0d6f',
     securityJsCode: '59733ab1249dcdb45819a835f6769ea9'
 };
+
+// 本地缓存
+export const LOCAL_CACHE_KEY = 'my-vue3-app-cache';
+export const LOCAL_CACHE_EXPIRY_TIME = 1000 * 60 * 60 * 24; // 24小时

@@ -34,7 +34,7 @@ export const useAMapLocationWeather = (): UseAMapLocationWeatherReturn => {
     const locationInfo = ref<LocationInfo | null>(null);
     const weatherInfo = ref<WeatherInfo | null>(null);
     const error = ref<string | null>(null);
-    const { setCache, getCache } = useLocalCache('amap-location-weather');
+    const { setCache, getCache } = useLocalCache();
     const userStore = useUserStore();
 
     const { execute, isLoading } = useAsyncState(

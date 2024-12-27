@@ -1,5 +1,6 @@
 import { ref, onMounted } from 'vue';
 import { getRepositoryCommits } from '@/api/github';
+import { useLocalCache } from './useLocalCache';
 
 export interface CommitInfo {
     sha: string;
@@ -18,6 +19,10 @@ export function useGithubCommits(owner: string, repo: string) {
     const commits = ref<CommitInfo[]>([]);
     const loading = ref(false);
     const error = ref<string | null>(null);
+    const { getCache, setCache } = useLocalCache({
+        // 1小时
+        expiryTime: 1000 * 60 * 60 * 1
+    });
 
     const fetchCommits = async (page = 1, perPage = 10) => {
         loading.value = true;
@@ -30,6 +35,7 @@ export function useGithubCommits(owner: string, repo: string) {
                 per_page: perPage
             });
             commits.value = response as CommitInfo[];
+            setCache('commits', commits.value);
         } catch (err: any) {
             error.value = err.message || '获取提交记录失败';
             console.error('Failed to fetch commits:', err);
@@ -53,7 +59,12 @@ export function useGithubCommits(owner: string, repo: string) {
         return message.split('\n')[0];
     };
     onMounted(() => {
-        fetchCommits();
+        const cachedCommits = getCache('commits');
+        if (cachedCommits) {
+            commits.value = cachedCommits as CommitInfo[];
+        } else {
+            fetchCommits();
+        }
     });
 
     return {
