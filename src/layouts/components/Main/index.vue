@@ -45,10 +45,10 @@ function createComponentWrapper(component, route) {
 
 <style scoped lang="scss">
 .el-main {
-    height: 100%;
-    overflow: hidden;
-    padding: map-get($spacings, '5');
     box-sizing: border-box;
+    height: 100%;
+    padding: map-get($spacings, '5');
+    overflow: hidden;
     background-color: var(--el-bg-color-page);
 }
 </style>

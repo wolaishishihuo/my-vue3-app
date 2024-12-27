@@ -69,13 +69,13 @@
         <el-card class="reply-form">
             <h3>发表回复</h3>
             <div class="editor-container">
-                <Toolbar :editor="editorRef" :default-config="toolbarConfig" style="border: 1px solid #ccc" />
+                <Toolbar :editor="editorRef" :default-config="toolbarConfig" style="border: 1px solid #cccccc" />
                 <Editor
                     v-model="newReply.content"
                     :default-config="editorConfig"
                     @on-created="handleCreated"
                     @on-change="handleChange"
-                    style="height: 400px; overflow-y: hidden; border: 1px solid #ccc; margin-top: 10px"
+                    style="height: 400px; margin-top: 10px; overflow-y: hidden; border: 1px solid #cccccc"
                 />
             </div>
             <div class="reply-actions">
@@ -286,5 +286,5 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import './index.scss';
+@import './index';
 </style>

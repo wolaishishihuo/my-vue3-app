@@ -73,6 +73,7 @@ const techStacks = [
         icon: 'Connection',
         items: [
             { name: 'Element Plus', version: dependencies['element-plus'] },
+            { name: 'Tailwind CSS', version: devDependencies['tailwindcss'] },
             { name: 'Wang Editor', version: dependencies['@wangeditor/editor'] }
         ]
     },
@@ -82,6 +83,7 @@ const techStacks = [
         items: [
             { name: 'Vite', version: devDependencies.vite },
             { name: 'ESLint', version: devDependencies.eslint },
+            { name: 'Stylelint', version: devDependencies.stylelint },
             { name: 'Prettier', version: devDependencies.prettier }
         ]
     }
@@ -122,5 +124,5 @@ const features = [
 ];
 </script>
 <style scoped lang="scss">
-@import './index.scss';
+@import './index';
 </style>
