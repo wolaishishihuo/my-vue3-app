@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia';
 import router, { resetRouter } from '@/routers';
 import piniaPersistConfig from '../helper';
+import { getIpAddress } from '@/api/common';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         token: '',
         userInfo: null as User.UserInfo | null,
         roles: [] as string[],
-        permissions: [] as string[]
+        permissions: [] as string[],
+        ipAddress: ''
     }),
     getters: {
         isLogin: state => !!state.token,
@@ -30,6 +32,17 @@ export const useUserStore = defineStore('user', {
                 return Promise.reject(error);
             }
         },
+        // 获取ip地址
+        async getIpAddress() {
+            try {
+                const response = await getIpAddress();
+                console.log(response);
+                this.ipAddress = response.ip;
+            } catch (err) {
+                console.error('获取IP失败:', err);
+                throw err;
+            }
+        },
         // 登出
         async logout() {
             this.resetUserInfo();
@@ -44,5 +57,5 @@ export const useUserStore = defineStore('user', {
             this.permissions = [];
         }
     },
-    persist: piniaPersistConfig('user-store', ['token', 'userInfo'])
+    persist: piniaPersistConfig('user-store', ['token', 'userInfo', 'ipAddress'])
 });

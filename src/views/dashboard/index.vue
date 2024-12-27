@@ -7,7 +7,12 @@
                     <div class="welcome-content">
                         <div class="welcome-info">
                             <h2>{{ greetingText }}，{{ userStore.userInfo?.username }}</h2>
-                            <p class="subtitle">今天是{{ nowTime }}，太原天气{{ weatherInfo.feelsLike }}°C，{{ weatherInfo.text }}</p>
+                            <p class="subtitle">
+                                今天是:<span class="highlight">{{ ` ${nowTime}, ` }}</span> 当前所在地: <span class="highlight">{{ `${locationInfo?.province} ${locationInfo?.city}, ` }}</span> 天气:
+                                <span class="highlight">{{ `${weatherInfo?.weather}, ` }}</span> 温度: <span class="highlight">{{ `${weatherInfo?.temperature}°C, ` }}</span> 风力:
+                                <span class="highlight">{{ `${weatherInfo?.windpower}级, ` }}</span> 湿度: <span class="highlight">{{ `${weatherInfo?.humidity}, ` }}</span> 风向:
+                                <span class="highlight">{{ `${weatherInfo?.winddirection} ` }}</span>
+                            </p>
                         </div>
                     </div>
                 </el-card>
@@ -136,17 +141,17 @@
 
 <script setup lang="ts" name="dashboard">
 import { ref, computed } from 'vue';
-import { Plus, Delete, Refresh, Message, UserFilled } from '@element-plus/icons-vue';
+import { Plus, Delete, Refresh, Message } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
 import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
 import { TodoItem, Project } from './interface';
-import { useWeather } from '@/hooks/useWeather';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useGithubCommits } from '@/hooks/useGithubCommits';
 import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
+import { useAMapLocationWeather } from '@/hooks/useAMapLocationWeather';
 
 // 用户信息
 const userStore = useUserStore();
@@ -156,8 +161,8 @@ const userInfo = computed(() => userStore.userInfo);
 const greetingText = getTimeState();
 const { nowTime } = useTime();
 
-// 天气信息
-const { weatherInfo } = useWeather('太原');
+// 获取当前地址天气信息
+const { locationInfo, weatherInfo } = useAMapLocationWeather();
 
 // 待办事项数据
 const todos = ref<TodoItem[]>([

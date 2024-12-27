@@ -82,6 +82,10 @@
                     font-size: map-get($font-sizes, 'sm');
                     font-weight: 600;
                     opacity: 0.8;
+                    .highlight {
+                        font-weight: bold;
+                        color: #007BFF; // 你可以根据需要调整颜色
+                    }
                 }
             }
         }
