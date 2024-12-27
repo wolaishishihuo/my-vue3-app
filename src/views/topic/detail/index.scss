@@ -1,30 +1,25 @@
 .topic-detail-container {
-    padding: 20px;
     max-width: 1000px;
+    padding: 20px;
     margin: 0 auto;
-
     .topic-main {
         margin-bottom: 20px;
-
         .topic-header {
             h1 {
-                margin: 0 0 16px 0;
+                margin: 0 0 16px;
             }
-
             .topic-meta {
                 display: flex;
-                align-items: center;
                 gap: 12px;
-                color: #666;
+                align-items: center;
                 margin-bottom: 20px;
+                color: #666666;
             }
         }
-
         .topic-content {
-            line-height: 1.6;
             margin: 20px 0;
+            line-height: 1.6;
         }
-
         .topic-tags {
             margin-top: 16px;
             .el-tag {
@@ -32,35 +27,28 @@
             }
         }
     }
-
     .reply-section {
         margin-bottom: 20px;
-
         h2 {
             margin-bottom: 16px;
         }
-
         .reply-item {
             margin-bottom: 16px;
-
             .reply-header {
                 display: flex;
-                align-items: center;
                 gap: 12px;
+                align-items: center;
                 margin-bottom: 12px;
-                color: #666;
+                color: #666666;
             }
-
             .reply-content {
                 line-height: 1.6;
             }
         }
     }
-
     .reply-form {
         h3 {
             margin-bottom: 16px;
         }
-    
     }
 }

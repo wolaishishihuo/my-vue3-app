@@ -7,7 +7,7 @@ interface CacheItem<T> {
     timestamp: number;
 }
 
-// 本地缓存
+// 本地缓存管理
 export const useLocalCache = <T>(args?: { localKey?: string; expiryTime?: number }) => {
     const { localKey = LOCAL_CACHE_KEY, expiryTime = LOCAL_CACHE_EXPIRY_TIME } = args || {};
     const storage = useStorage<Map<string, CacheItem<T>>>(localKey, new Map());

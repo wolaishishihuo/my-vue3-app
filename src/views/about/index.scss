@@ -1,34 +1,31 @@
 .about-container {
     padding: map-get($spacings, '5');
-    
+
     // 项目标题区域
     .project-header {
         margin-bottom: map-get($spacings, '6');
-
         .header-card {
             @include gradient(var(--el-color-primary-light-5), var(--el-color-primary), 135deg);
+
             border: none;
-            
             h1 {
-                color: var(--el-color-white);
-                font-size: map-get($font-sizes, '4xl');
                 margin: 0;
-                text-align: center;
+                font-size: map-get($font-sizes, '4xl');
                 font-weight: 600;
+                color: var(--el-color-white);
+                text-align: center;
                 letter-spacing: 1px;
             }
-
             .subtitle {
-                color: var(--el-color-white);
-                text-align: center;
                 margin: map-get($spacings, '4') 0;
                 font-size: map-get($font-sizes, 'xl');
+                color: var(--el-color-white);
+                text-align: center;
                 opacity: 0.9;
             }
-
             .version-tag {
-                text-align: center;
                 margin: map-get($spacings, '4') 0;
+                text-align: center;
             }
         }
     }
@@ -36,47 +33,44 @@
     // 技术栈概览
     .tech-overview {
         margin-bottom: map-get($spacings, '6');
-
         .tech-card {
             height: 100%;
-            @include transition();
 
+            @include transition;
             &:hover {
                 transform: translateY(-5px);
+
                 @include shadow('md');
             }
-
             .tech-icon {
-                text-align: center;
                 margin-bottom: map-get($spacings, '4');
                 color: var(--el-color-primary);
-            }
-
-            h3 {
                 text-align: center;
-                color: var(--el-text-color-primary);
-                font-size: map-get($font-sizes, 'xl');
-                margin: map-get($spacings, '4') 0;
-                font-weight: 600;
             }
-
+            h3 {
+                margin: map-get($spacings, '4') 0;
+                font-size: map-get($font-sizes, 'xl');
+                font-weight: 600;
+                color: var(--el-text-color-primary);
+                text-align: center;
+            }
             .tech-list {
                 .tech-item {
                     @include flex(row, space-between, center);
+
                     padding: map-get($spacings, '2');
                     margin-bottom: map-get($spacings, '2');
                     background-color: var(--el-fill-color-light);
                     border-radius: map-get($border-radius, 'sm');
-                    @include transition();
 
+                    @include transition;
                     &:hover {
                         background-color: var(--el-fill-color);
                         transform: translateX(4px);
                     }
-
                     .tech-name {
-                        color: var(--el-text-color-primary);
                         font-weight: 500;
+                        color: var(--el-text-color-primary);
                     }
                 }
             }
@@ -87,40 +81,36 @@
     .features-section {
         .card-header {
             h2 {
-                font-size: map-get($font-sizes, 'xl');
-                color: var(--el-text-color-primary);
                 margin: 0;
+                font-size: map-get($font-sizes, 'xl');
                 font-weight: 500;
+                color: var(--el-text-color-primary);
             }
         }
-
         .feature-item {
-            text-align: center;
-            padding: map-get($spacings, '6');
             height: 100%;
-            @include transition();
+            padding: map-get($spacings, '6');
+            text-align: center;
 
+            @include transition;
             &:hover {
                 background-color: var(--el-fill-color-light);
                 transform: translateY(-4px);
             }
-
             .feature-icon {
-                color: var(--el-color-primary);
                 margin-bottom: map-get($spacings, '4');
+                color: var(--el-color-primary);
             }
-
             h3 {
-                color: var(--el-text-color-primary);
-                font-size: map-get($font-sizes, 'lg');
                 margin: map-get($spacings, '4') 0;
+                font-size: map-get($font-sizes, 'lg');
                 font-weight: 600;
+                color: var(--el-text-color-primary);
             }
-
             p {
-                color: var(--el-text-color-regular);
-                line-height: 1.6;
                 margin: 0;
+                line-height: 1.6;
+                color: var(--el-text-color-regular);
             }
         }
     }
@@ -130,25 +120,21 @@
 @media screen and (max-width: map-get($breakpoints, 'md')) {
     .about-container {
         padding: map-get($spacings, '3');
-
         .project-header {
             .header-card {
                 h1 {
                     font-size: map-get($font-sizes, '2xl');
                 }
-
                 .subtitle {
                     font-size: map-get($font-sizes, 'lg');
                 }
             }
         }
-
         .tech-overview {
             .el-col {
                 margin-bottom: map-get($spacings, '4');
             }
         }
-
         .features-section {
             .feature-item {
                 padding: map-get($spacings, '4');

@@ -4,8 +4,8 @@
     background-color: #eeeeee;
     background-image: url('@/assets/images/login_bg.svg');
     background-size: cover;
-    @include flex(row, center, center);
 
+    @include flex(row, center, center);
     .login-box {
         position: relative;
         box-sizing: border-box;
@@ -14,41 +14,38 @@
         padding: 0 50px;
         background-color: rgb(255 255 255 / 80%);
         border-radius: map-get($border-radius, 'lg');
-        @include flex(row, space-around, center);
 
+        @include flex(row, space-around, center);
         .login-left {
             width: 685px;
             margin-right: 10px;
-
             &-img {
                 width: 100%;
                 height: 100%;
             }
         }
-
         .login-form {
             width: 420px;
             padding: 50px 40px 45px;
             background-color: var(--el-bg-color);
             border-radius: map-get($border-radius, 'lg');
-            @include shadow('lg');
 
+            @include shadow('lg');
             .logo-text {
                 margin: 0;
+                margin-bottom: map-get($spacings, '4');
                 font-size: map-get($font-sizes, '2xl');
                 font-weight: bold;
                 color: var(--el-text-color-primary);
                 white-space: nowrap;
-                margin-bottom: map-get($spacings, '4');
             }
-
             .el-form-item {
                 margin-bottom: 40px;
             }
-
             .login-btn {
                 width: 100%;
                 margin-top: 40px;
+
                 @include flex('', center);
                 .el-button {
                     width: 185px;
@@ -56,24 +53,22 @@
                     border-color: var(--el-color-primary);
                 }
             }
-
             .login-signup {
                 width: 100%;
                 margin-top: 20px;
                 font-size: map-get($font-sizes, 'sm');
             }
-
             .login-back {
-                font-size: map-get($font-sizes, 'xl');
                 margin-bottom: 10px;
+                font-size: map-get($font-sizes, 'xl');
                 color: var(--el-color-primary);
             }
-
             .login-externalLinkIcons {
+                gap: 20px;
                 width: 100%;
                 margin-top: 20px;
                 font-size: map-get($font-sizes, 'sm');
-                gap: 20px;
+
                 @include flex(row, '', center);
             }
         }

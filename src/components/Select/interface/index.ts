@@ -28,15 +28,3 @@ export interface UseSelectReturn<T = any> {
     handleCurrentChange: (page: number) => void;
     refresh: () => Promise<void>;
 }
-
-// 缓存相关类型
-export interface CacheOptions {
-    enable: boolean;
-    maxAge?: number;
-    maxSize?: number;
-}
-
-export interface CacheItem<T = any> {
-    data: T;
-    timestamp: number;
-}

@@ -1,90 +1,83 @@
 .dashboard-container {
     padding: map-get($spacings, '5');
-    
     .el-row {
         margin-bottom: map-get($spacings, '5');
-
         &:last-child {
             margin-bottom: 0;
         }
     }
-
     .el-card {
-        border-radius: map-get($border-radius, 'lg');
-        border: 1px solid var(--el-border-color-lighter);
+        background-color: rgb(255 255 255 / 90%);
         backdrop-filter: blur(10px);
-        background-color: rgba(255, 255, 255, 0.9);
-        @include transition();
-        
+        border: 1px solid var(--el-border-color-lighter);
+        border-radius: map-get($border-radius, 'lg');
+
+        @include transition;
         &:hover {
             @include shadow('lg');
+
             transform: translateY(-2px);
         }
-
         .el-card__header {
             padding: map-get($spacings, '4') map-get($spacings, '5');
-            border-bottom: 1px solid var(--el-border-color-lighter);
             background-color: rgba(var(--el-color-primary-rgb), 0.02);
-
+            border-bottom: 1px solid var(--el-border-color-lighter);
             .card-header {
                 @include flex(row, space-between, center);
-
                 .title {
+                    position: relative;
+                    padding-left: map-get($spacings, '3');
                     font-size: map-get($font-sizes, 'lg');
                     font-weight: 600;
                     color: var(--el-text-color-primary);
-                    position: relative;
-                    padding-left: map-get($spacings, '3');
-
                     &::before {
-                        content: '';
                         position: absolute;
-                        left: 0;
                         top: 50%;
-                        transform: translateY(-50%);
+                        left: 0;
                         width: 4px;
                         height: 16px;
+                        content: '';
                         background: var(--el-color-primary);
                         border-radius: map-get($border-radius, 'sm');
+                        transform: translateY(-50%);
                     }
                 }
             }
         }
-
         .el-card__body {
-            padding: map-get($spacings, '5');
             height: calc(100% - 60px);
+            padding: map-get($spacings, '5');
+
             @include flex(column);
         }
     }
 
     // 欢迎卡片样式
     .welcome-card {
-        @include gradient(var(--el-color-primary-light-8), rgba(255,255,255,1), 135deg);
+        @include gradient(var(--el-color-primary-light-8), rgba(255, 255, 255, 1), 135deg);
+
         height: 160px;
-        
         .welcome-content {
             height: 100%;
             padding: map-get($spacings, '5');
-            @include flex(column, center);
 
+            @include flex(column, center);
             .welcome-info {
                 h2 {
-                    font-size: map-get($font-sizes, '3xl');
-                    color: var(--el-text-color-primary);
                     margin-bottom: map-get($spacings, '3');
+                    font-size: map-get($font-sizes, '3xl');
                     font-weight: 600;
+                    color: var(--el-text-color-primary);
                     letter-spacing: 1px;
                 }
-
                 .subtitle {
-                    color: var(--el-text-color-secondary);
                     font-size: map-get($font-sizes, 'sm');
                     font-weight: 600;
+                    color: var(--el-text-color-secondary);
                     opacity: 0.8;
                     .highlight {
                         font-weight: bold;
-                        color: #007BFF; // 你可以根据需要调整颜色
+                        color: #007bff; // 你可以根据需要调整颜色
                     }
                 }
             }
@@ -95,64 +88,63 @@
     .user-card {
         height: 160px;
         .user-info {
+            gap: map-get($spacings, '6');
             height: 100%;
             padding: map-get($spacings, '5');
-            @include flex(row, flex-start, center);
-            gap: map-get($spacings, '6');
 
+            @include flex(row, flex-start, center);
             .avatar-wrapper {
                 .el-avatar {
                     border: 3px solid var(--el-color-primary-light-5);
-                    @include shadow('sm');
-                    @include transition();
 
+                    @include shadow('sm');
+                    @include transition;
                     &:hover {
                         transform: scale(1.08) rotate(5deg);
+
                         @include shadow('md');
                     }
                 }
             }
-
             .info-content {
                 flex: 1;
-                @include flex(column, center);
 
+                @include flex(column, center);
                 .nickname {
+                    margin: 0 0 map-get($spacings, '3');
                     font-size: map-get($font-sizes, 'xl');
                     font-weight: 600;
                     color: var(--el-text-color-primary);
-                    margin: 0 0 map-get($spacings, '3') 0;
                 }
-
                 .role-tags {
-                    margin-bottom: map-get($spacings, '3');
-                    @include flex(row);
-                    gap: map-get($spacings, '2');
                     flex-wrap: wrap;
+                    gap: map-get($spacings, '2');
+                    margin-bottom: map-get($spacings, '3');
 
+                    @include flex(row);
                     .role-tag {
                         border-radius: map-get($border-radius, 'sm');
-                        @include transition();
 
+                        @include transition;
                         &:hover {
                             transform: translateY(-2px);
                         }
                     }
                 }
-
                 .contact-info {
                     .el-tag {
                         @include flex(row, flex-start, center);
+
                         gap: map-get($spacings, '2');
                         padding: map-get($spacings, '2') map-get($spacings, '3');
                         border-radius: map-get($border-radius, 'md');
-                        @include transition();
-                        
+
+                        @include transition;
                         &:hover {
                             transform: translateY(-2px);
+
                             @include shadow('sm');
                         }
-
                         .el-icon {
                             margin-right: map-get($spacings, '1');
                             font-size: map-get($font-sizes, 'sm');
@@ -167,6 +159,7 @@
     .main-content {
         .el-col {
             @include flex(column);
+
             height: 100%;
         }
 
@@ -175,35 +168,32 @@
             flex: 1;
             height: 100%;
             overflow-y: auto;
-            
             .timeline-content {
                 h4 {
+                    margin: 0 0 map-get($spacings, '2');
                     font-size: map-get($font-sizes, 'lg');
                     font-weight: 600;
                     color: var(--el-text-color-primary);
-                    margin: 0 0 map-get($spacings, '2') 0;
                     cursor: pointer;
-                    @include transition();
 
+                    @include transition;
                     &:hover {
-                        color: var(--el-color-primary);
                         padding-left: map-get($spacings, '2');
+                        color: var(--el-color-primary);
                     }
                 }
-
                 p {
-                    color: var(--el-text-color-regular);
                     margin-bottom: map-get($spacings, '3');
                     line-height: 1.6;
+                    color: var(--el-text-color-regular);
                 }
-
                 .timeline-footer {
                     @include flex(row, space-between, center);
-                    margin-top: map-get($spacings, '2');
 
+                    margin-top: map-get($spacings, '2');
                     .operator {
-                        color: var(--el-text-color-secondary);
                         font-size: map-get($font-sizes, 'sm');
+                        color: var(--el-text-color-secondary);
                     }
                 }
             }
@@ -219,42 +209,38 @@
                 margin-bottom: map-get($spacings, '5');
                 .todo-list {
                     max-height: 220px;
-                    overflow-y: auto;
                     padding-right: map-get($spacings, '3');
-
+                    overflow-y: auto;
                     .todo-item {
                         padding: map-get($spacings, '3');
-                        border-bottom: 1px solid var(--el-border-color-lighter);
-                        @include transition();
-                        border-radius: map-get($border-radius, 'md');
                         margin-bottom: map-get($spacings, '2');
                         background-color: var(--el-bg-color-page);
-                        
+                        border-bottom: 1px solid var(--el-border-color-lighter);
+                        border-radius: map-get($border-radius, 'md');
+
+                        @include transition;
                         &:last-child {
                             border-bottom: none;
                         }
-
                         &:hover {
                             background-color: var(--el-fill-color-light);
                         }
-
                         .todo-content {
                             @include flex(row, space-between, center);
-                            margin-bottom: map-get($spacings, '2');
 
+                            margin-bottom: map-get($spacings, '2');
                             .completed {
-                                text-decoration: line-through;
                                 color: var(--el-text-color-secondary);
+                                text-decoration: line-through;
                             }
                         }
-
                         .todo-meta {
                             @include flex(row, space-between, center);
-                            margin-top: map-get($spacings, '2');
 
+                            margin-top: map-get($spacings, '2');
                             .time {
-                                color: var(--el-text-color-secondary);
                                 font-size: map-get($font-sizes, 'sm');
+                                color: var(--el-text-color-secondary);
                             }
                         }
                     }
@@ -264,27 +250,23 @@
             // 项目进度卡片样式
             .progress-card {
                 flex: 1;
-
                 .progress-list {
                     .progress-item {
                         margin-bottom: map-get($spacings, '4');
-
                         &:last-child {
                             margin-bottom: 0;
                         }
-
                         .progress-info {
                             @include flex(row, space-between, center);
+
                             margin-bottom: map-get($spacings, '2');
-
                             .name {
-                                color: var(--el-text-color-primary);
                                 font-weight: 500;
+                                color: var(--el-text-color-primary);
                             }
-
                             .percentage {
-                                color: var(--el-text-color-secondary);
                                 font-size: map-get($font-sizes, 'sm');
+                                color: var(--el-text-color-secondary);
                             }
                         }
                     }
@@ -293,8 +275,3 @@
         }
     }
 }
-
-
-
-
-

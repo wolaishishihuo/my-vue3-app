@@ -31,10 +31,9 @@
  */
 @mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
     display: flex;
-    flex-direction: $direction;
-    justify-content: $justify;
+    flex-flow: $direction $wrap;
     align-items: $align;
-    flex-wrap: $wrap;
+    justify-content: $justify;
 }
 
 /**
@@ -55,9 +54,9 @@
         white-space: nowrap;
     } @else {
         display: -webkit-box;
+        overflow: hidden;
         -webkit-line-clamp: $lines;
         -webkit-box-orient: vertical;
-        overflow: hidden;
     }
 }
 
@@ -71,37 +70,34 @@
  *     @include scrollbar(8px, #eee, #999);
  *   }
  */
- @mixin scrollbar($width: 6px, $track-color: null, $thumb-color: null) {
-  &::-webkit-scrollbar {
-      width: $width;
-  }
-  
-  @if $track-color {
-      &::-webkit-scrollbar-track {
-          background: $track-color;
-      }
-  }
-  
-  &::-webkit-scrollbar-thumb {
-      border-radius: calc($width / 2);
-      background: rgba(144, 147, 153, 0.3);
-      transition: background 0.2s ease-in-out;
-      
-      &:hover {
-          background: rgba(144, 147, 153, 0.5);
-      }
-  }
-  
-  // 只有当明确传入 thumb-color 时才使用自定义颜色
-  @if $thumb-color {
-      &::-webkit-scrollbar-thumb {
-          background: rgba($thumb-color, 0.3);
-          
-          &:hover {
-              background: rgba($thumb-color, 0.5);
-          }
-      }
-  }
+@mixin scrollbar($width: 6px, $track-color: null, $thumb-color: null) {
+    &::-webkit-scrollbar {
+        width: $width;
+    }
+
+    @if $track-color {
+        &::-webkit-scrollbar-track {
+            background: $track-color;
+        }
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgb(144 147 153 / 30%);
+        border-radius: calc($width / 2);
+        transition: background 0.2s ease-in-out;
+        &:hover {
+            background: rgb(144 147 153 / 50%);
+        }
+    }
+
+    // 只有当明确传入 thumb-color 时才使用自定义颜色
+    @if $thumb-color {
+        &::-webkit-scrollbar-thumb {
+            background: rgba($thumb-color, 0.3);
+            &:hover {
+                background: rgba($thumb-color, 0.5);
+            }
+        }
+    }
 }
 
 /**
@@ -143,6 +139,7 @@
         box-shadow: #{map-get($shadows, $level)};
     } @else {
         @warn "Shadow level '#{$level}' not found. Using 'base' instead.";
+
         box-shadow: #{map-get($shadows, 'base')};
     }
 }

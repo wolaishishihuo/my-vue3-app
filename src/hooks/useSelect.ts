@@ -1,7 +1,8 @@
 import { Ref, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
-import type { UseSelectReturn, SelectConfig, FetchParams, CacheOptions } from '@/components/Select/interface';
+import type { UseSelectReturn, SelectConfig, FetchParams } from '@/components/Select/interface';
 import { PageResult } from '@/http/interface';
+import { useLocalCache } from './useLocalCache';
 
 const defaultConfig: Required<SelectConfig> = {
     pageSize: 10,
@@ -11,46 +12,6 @@ const defaultConfig: Required<SelectConfig> = {
     transform: data => data
 };
 
-// 缓存管理
-class Cache {
-    private store = new Map<string, any>();
-    private maxSize: number;
-    private maxAge: number;
-
-    constructor(options: CacheOptions) {
-        this.maxSize = options.maxSize || 100;
-        this.maxAge = options.maxAge || 5 * 60 * 1000; // 默认5分钟
-    }
-
-    get(key: string) {
-        const item = this.store.get(key);
-        if (!item) return null;
-
-        if (Date.now() - item.timestamp > this.maxAge) {
-            this.store.delete(key);
-            return null;
-        }
-
-        return item.data;
-    }
-
-    set(key: string, value: any) {
-        if (this.store.size >= this.maxSize) {
-            const firstKey = this.store.keys().next().value;
-            this.store.delete(firstKey);
-        }
-
-        this.store.set(key, {
-            data: value,
-            timestamp: Date.now()
-        });
-    }
-
-    clear() {
-        this.store.clear();
-    }
-}
-
 export function useSelect<T extends Record<string, any>>({
     fetchData,
     config = {}
@@ -59,8 +20,10 @@ export function useSelect<T extends Record<string, any>>({
     config?: SelectConfig;
 }): UseSelectReturn<T> {
     const finalConfig = { ...defaultConfig, ...config };
-    const cache = new Cache({ enable: finalConfig.cache });
-
+    const { getCache, setCache } = useLocalCache<{ data: T[]; total: number }>({
+        localKey: 'select-cache',
+        expiryTime: 1000 * 60 * 5 // 5分钟
+    });
     // 状态管理
     const loading = ref(false);
     const currentPage = ref(finalConfig.initialPage);
@@ -73,7 +36,7 @@ export function useSelect<T extends Record<string, any>>({
         currentQuery.value = query;
         const cacheKey = `${query}_${currentPage.value}_${pageSize.value}`;
         if (finalConfig.cache) {
-            const cachedData = cache.get(cacheKey);
+            const cachedData = getCache(cacheKey);
             if (cachedData) {
                 displayOptions.value = cachedData.data;
                 total.value = cachedData.total;
@@ -96,7 +59,7 @@ export function useSelect<T extends Record<string, any>>({
             total.value = totalCount;
 
             if (finalConfig.cache) {
-                cache.set(cacheKey, { data: transformedData, total: totalCount });
+                setCache(cacheKey, { data: transformedData, total: totalCount });
             }
         } catch (error) {
             console.error('Failed to fetch data:', error);
