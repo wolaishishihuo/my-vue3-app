@@ -146,54 +146,111 @@ import { getTimeState } from '@/utils';
 import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
-import { useAuthStore } from '@/stores/modules/auth';
 import { TodoItem, Project } from './interface';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useGithubCommits } from '@/hooks/useGithubCommits';
 import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 import { useAMapLocationWeather } from '@/hooks/useAMapLocationWeather';
+import { useAuthButtons } from '@/hooks/useAuthButtons';
 
 // 用户信息
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 
-// 时间
 const greetingText = getTimeState();
 const { nowTime } = useTime();
-
-// 获取当前地址天气信息
 const { locationInfo, weatherInfo } = useAMapLocationWeather();
+const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
+const { todos, addTodo, handleTodoChange, confirmDelete } = useTodo();
+const { hasPermission } = useAuthButtons();
 
-// 待办事项数据
-const todos = ref<TodoItem[]>([
-    {
-        id: '1',
-        content: '完成首页开发',
-        completed: true,
-        deadline: '今天 18:00',
-        priority: 'danger',
-        priorityLabel: '紧急',
-        createTime: new Date().toISOString()
-    },
-    {
-        id: '2',
-        content: '代码审核',
-        completed: true,
-        deadline: '今天 12:00',
-        priority: 'warning',
-        priorityLabel: '重要',
-        createTime: new Date().toISOString()
-    },
-    {
-        id: '3',
-        content: '项目周报',
-        completed: false,
-        deadline: '明天 10:00',
-        priority: 'info',
-        priorityLabel: '普通',
-        createTime: new Date().toISOString()
-    }
-]);
+// 待办事项
+function useTodo() {
+    // 待办事项数据
+    const todos = ref<TodoItem[]>([
+        {
+            id: '1',
+            content: '完成首页开发',
+            completed: true,
+            deadline: '今天 18:00',
+            priority: 'danger',
+            priorityLabel: '紧急',
+            createTime: new Date().toISOString()
+        },
+        {
+            id: '2',
+            content: '代码审核',
+            completed: true,
+            deadline: '今天 12:00',
+            priority: 'warning',
+            priorityLabel: '重要',
+            createTime: new Date().toISOString()
+        },
+        {
+            id: '3',
+            content: '项目周报',
+            completed: false,
+            deadline: '明天 10:00',
+            priority: 'info',
+            priorityLabel: '普通',
+            createTime: new Date().toISOString()
+        }
+    ]);
+
+    // 方法：添加待办事项
+    const addTodo = () => {
+        if (!hasPermission('todo:add')) {
+            ElMessage.warning('您没有添加待办事项的权限');
+            return;
+        }
+        const newTodo: TodoItem = {
+            id: String(todos.value.length + 1),
+            content: '新的待办事项',
+            completed: false,
+            deadline: '待设置',
+            priority: 'info',
+            priorityLabel: '普通',
+            createTime: new Date().toISOString()
+        };
+        todos.value.unshift(newTodo);
+        ElMessage.success('添加成功');
+    };
+    // 方法：处理待办事项状态变化
+    const handleTodoChange = (todo: TodoItem) => {
+        if (!hasPermission('todo:edit')) {
+            ElMessage.warning('您没有编辑待办事项的权限');
+            return;
+        }
+        const index = todos.value.findIndex(item => item.id === todo.id);
+        if (index !== -1) {
+            todos.value[index] = { ...todo };
+            ElMessage.success(todo.completed ? '已完成' : '已取消完成');
+        }
+    };
+    // 删除待办事项
+    const deleteTodo = (todo: TodoItem) => {
+        const index = todos.value.findIndex(item => item.id === todo.id);
+        if (index !== -1) {
+            todos.value.splice(index, 1);
+            ElMessage.success('删除成功');
+        }
+    };
+    // 确认删除对话框
+    const confirmDelete = (todo: TodoItem) => {
+        ElMessageBox.confirm(`确定要删除待办事项 "${todo.content}" 吗？`, '删除确认', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        })
+            .then(() => {
+                deleteTodo(todo);
+            })
+            .catch(() => {
+                // 用户取消删除
+            });
+    };
+    return { todos, addTodo, handleTodoChange, deleteTodo, confirmDelete };
+}
 
 // 项目进度数据
 const projects: Project[] = [
@@ -222,74 +279,6 @@ const projects: Project[] = [
         endTime: '2024-02-28'
     }
 ];
-
-// 方法：添加待办事项
-const addTodo = () => {
-    if (!hasPermission('todo:add')) {
-        ElMessage.warning('您没有添加待办事项的权限');
-        return;
-    }
-    const newTodo: TodoItem = {
-        id: String(todos.value.length + 1),
-        content: '新的待办事项',
-        completed: false,
-        deadline: '待设置',
-        priority: 'info',
-        priorityLabel: '普通',
-        createTime: new Date().toISOString()
-    };
-    todos.value.unshift(newTodo);
-    ElMessage.success('添加成功');
-};
-
-// 方法：处理待办事项状态变化
-const handleTodoChange = (todo: TodoItem) => {
-    if (!hasPermission('todo:edit')) {
-        ElMessage.warning('您没有编辑待办事项的权限');
-        return;
-    }
-    const index = todos.value.findIndex(item => item.id === todo.id);
-    if (index !== -1) {
-        todos.value[index] = { ...todo };
-        ElMessage.success(todo.completed ? '已完成' : '已取消完成');
-    }
-};
-
-// 确认删除对话框
-const confirmDelete = (todo: TodoItem) => {
-    ElMessageBox.confirm(`确定要删除待办事项 "${todo.content}" 吗？`, '删除确认', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-    })
-        .then(() => {
-            deleteTodo(todo);
-        })
-        .catch(() => {
-            // 用户取消删除
-        });
-};
-
-// 删除待办事项
-const deleteTodo = (todo: TodoItem) => {
-    const index = todos.value.findIndex(item => item.id === todo.id);
-    if (index !== -1) {
-        todos.value.splice(index, 1);
-        ElMessage.success('删除成功');
-    }
-};
-
-// 权限控制
-const authStore = useAuthStore();
-const hasPermission = (permission: string | string[]) => {
-    if (Array.isArray(permission)) {
-        return permission.some(p => authStore.hasButtonPermission(p));
-    }
-    return authStore.hasButtonPermission(permission);
-};
-
-// GitHub 提交记录
-const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
 </script>
 
 <style scoped lang="scss">
