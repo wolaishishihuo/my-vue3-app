@@ -1,15 +1,6 @@
 import { ElNotification } from 'element-plus';
 import { useThrottleFn } from '@vueuse/core';
 
-interface ErrorWithStatus {
-    status?: number;
-    request?: {
-        status?: number;
-    };
-    name: string;
-    message: string;
-}
-
 const errorMap: Record<string, string> = {
     InternalError: 'Javascript引擎内部错误',
     ReferenceError: '未找到对象',
@@ -30,7 +21,7 @@ const showNotification = useThrottleFn((title: string, message: string) => {
     });
 }, 300);
 
-const errorHandler = (error: ErrorWithStatus) => {
+const errorHandler = (error: any) => {
     // 过滤 HTTP 请求错误
     if (error?.status || error?.request?.status || error?.request?.status === 0) {
         return false;
