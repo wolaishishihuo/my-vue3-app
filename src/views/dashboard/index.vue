@@ -99,17 +99,20 @@
                     <div class="todo-list">
                         <div v-for="(todo, index) in todos" :key="index" class="todo-item">
                             <div class="todo-content">
-                                <el-checkbox v-model="todo.completed" @change="handleTodoChange(todo)" :disabled="!hasPermission('todo:edit')">
+                                <el-checkbox v-model="todo.completed" @change="handleTodoChange(todo)" v-permission="['todo:delete', 'todo:edit']">
                                     <span :class="{ completed: todo.completed }">{{ todo.content }}</span>
                                 </el-checkbox>
                                 <div class="todo-actions">
+                                    <el-button :disabled="todo.completed" v-permission="['todo:delete', 'todo:edit']" type="primary" link @click="editTodo(todo)">
+                                        <el-icon><Edit /></el-icon>
+                                    </el-button>
                                     <el-button v-permission="['todo:delete', 'todo:edit']" type="danger" link @click="confirmDelete(todo)">
                                         <el-icon><Delete /></el-icon>
                                     </el-button>
                                 </div>
                             </div>
                             <div class="todo-meta">
-                                <el-tag size="small" :type="todo.priority">{{ todo.priorityLabel }}</el-tag>
+                                <el-tag size="small" :type="todo.priority">{{ todo.priority }}</el-tag>
                                 <span class="time">{{ todo.deadline }}</span>
                             </div>
                         </div>
@@ -136,67 +139,85 @@
                 </el-card>
             </el-col>
         </el-row>
+
+        <!-- 编辑待办事项 -->
+        <el-dialog v-model="editTodoDialog" title="编辑待办事项" class="w-full max-w-md mx-auto" width="auto">
+            <el-form :model="editTodoForm" label-width="100px" class="space-y-4" :rules="rules">
+                <el-form-item label="标题" prop="content" :rules="[{ required: true, message: '标题不能为空', trigger: 'blur' }]">
+                    <el-input v-model="editTodoForm.content" class="w-[220px]" />
+                </el-form-item>
+                <el-form-item label="截止日期" prop="deadline" :rules="[{ required: true, message: '请选择截止日期', trigger: 'change' }]">
+                    <el-date-picker class="w-[220px]" v-model="editTodoForm.deadline" type="datetime" />
+                </el-form-item>
+                <el-form-item label="优先级" prop="priority" :rules="[{ required: true, message: '请选择优先级', trigger: 'change' }]">
+                    <el-select v-model="editTodoForm.priority" placeholder="请选择优先级" class="w-[220px]">
+                        <el-option label="成功" value="success" />
+                        <el-option label="警告" value="warning" />
+                        <el-option label="信息" value="info" />
+                        <el-option label="主要" value="primary" />
+                        <el-option label="危险" value="danger" />
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <div class="flex justify-end space-x-2">
+                    <el-button type="primary" @click="saveEditTodo" class="bg-blue-500 hover:bg-blue-600 text-white">保存</el-button>
+                    <el-button @click="editTodoDialog = false" class="bg-gray-500 hover:bg-gray-600 text-white">取消</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts" name="dashboard">
 import { ref, computed } from 'vue';
-import { Plus, Delete, Refresh, Message } from '@element-plus/icons-vue';
+import { Plus, Delete, Refresh, Message, Edit } from '@element-plus/icons-vue';
 import { getTimeState } from '@/utils';
 import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
 import { TodoItem, Project } from './interface';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox, ElInput, ElSelect, ElOption } from 'element-plus';
 import { useGithubCommits } from '@/hooks/useGithubCommits';
 import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 import { useAMapLocationWeather } from '@/hooks/useAMapLocationWeather';
-import { useAuthButtons } from '@/hooks/useAuthButtons';
-
+import useAuthButtons from '@/hooks/useAuthButtons';
+import useLocalCache from '@/hooks/useLocalCache';
 // 用户信息
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
+const { getCache, setCache } = useLocalCache<TodoItem[]>();
 
 const greetingText = getTimeState();
 const { nowTime } = useTime();
 const { locationInfo, weatherInfo } = useAMapLocationWeather();
 const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
-const { todos, addTodo, handleTodoChange, confirmDelete } = useTodo();
+const { todos, addTodo, handleTodoChange, confirmDelete, editTodo, editTodoDialog, editTodoForm, saveEditTodo } = useTodo();
 const { hasPermission } = useAuthButtons();
 
 // 待办事项
 function useTodo() {
     // 待办事项数据
-    const todos = ref<TodoItem[]>([
-        {
-            id: '1',
-            content: '完成首页开发',
-            completed: true,
-            deadline: '今天 18:00',
-            priority: 'danger',
-            priorityLabel: '紧急',
-            createTime: new Date().toISOString()
-        },
-        {
-            id: '2',
-            content: '代码审核',
-            completed: true,
-            deadline: '今天 12:00',
-            priority: 'warning',
-            priorityLabel: '重要',
-            createTime: new Date().toISOString()
-        },
-        {
-            id: '3',
-            content: '项目周报',
-            completed: false,
-            deadline: '明天 10:00',
-            priority: 'info',
-            priorityLabel: '普通',
-            createTime: new Date().toISOString()
-        }
-    ]);
+    const todos = ref<TodoItem[]>([]);
+    const editTodoDialog = ref(false);
+    const editTodoForm = ref<TodoItem>({
+        id: '',
+        content: '',
+        completed: false,
+        deadline: '',
+        priority: 'info',
+        priorityLabel: '普通',
+        createTime: new Date().toISOString()
+    });
 
+    // 从缓存中获取
+    const getTodos = () => {
+        const cachedTodos = getCache('todos');
+        if (cachedTodos) {
+            todos.value = cachedTodos;
+        }
+    };
+    getTodos();
     // 方法：添加待办事项
     const addTodo = () => {
         if (!hasPermission('todo:add')) {
@@ -215,6 +236,7 @@ function useTodo() {
         todos.value.unshift(newTodo);
         ElMessage.success('添加成功');
     };
+
     // 方法：处理待办事项状态变化
     const handleTodoChange = (todo: TodoItem) => {
         if (!hasPermission('todo:edit')) {
@@ -224,32 +246,54 @@ function useTodo() {
         const index = todos.value.findIndex(item => item.id === todo.id);
         if (index !== -1) {
             todos.value[index] = { ...todo };
+            setCache('todos', todos.value);
             ElMessage.success(todo.completed ? '已完成' : '已取消完成');
         }
     };
+
+    // 方法：编辑待办事项
+    const editTodo = (todo: TodoItem) => {
+        if (!hasPermission('todo:edit')) {
+            ElMessage.warning('您没有编辑待办事项的权限');
+            return;
+        }
+        editTodoDialog.value = true;
+        editTodoForm.value = { ...todo };
+    };
+
+    const saveEditTodo = () => {
+        const index = todos.value.findIndex(item => item.id === editTodoForm.value.id);
+        if (index !== -1) {
+            todos.value[index] = { ...editTodoForm.value };
+            setCache('todos', todos.value);
+            editTodoDialog.value = false;
+            getTodos();
+            ElMessage.success('编辑成功');
+        }
+    };
+
     // 删除待办事项
     const deleteTodo = (todo: TodoItem) => {
         const index = todos.value.findIndex(item => item.id === todo.id);
         if (index !== -1) {
             todos.value.splice(index, 1);
             ElMessage.success('删除成功');
+            setCache('todos', todos.value);
         }
     };
+
     // 确认删除对话框
     const confirmDelete = (todo: TodoItem) => {
         ElMessageBox.confirm(`确定要删除待办事项 "${todo.content}" 吗？`, '删除确认', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
-        })
-            .then(() => {
-                deleteTodo(todo);
-            })
-            .catch(() => {
-                // 用户取消删除
-            });
+        }).then(() => {
+            deleteTodo(todo);
+        });
     };
-    return { todos, addTodo, handleTodoChange, deleteTodo, confirmDelete };
+
+    return { todos, addTodo, handleTodoChange, deleteTodo, confirmDelete, editTodo, editTodoDialog, editTodoForm, saveEditTodo };
 }
 
 // 项目进度数据
@@ -279,6 +323,13 @@ const projects: Project[] = [
         endTime: '2024-02-28'
     }
 ];
+
+// 表单验证规则
+const rules = {
+    content: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
+    deadline: [{ required: true, message: '请选择截止日期', trigger: 'change' }],
+    priority: [{ required: true, message: '请选择优先级', trigger: 'change' }]
+};
 </script>
 <style scoped lang="scss">
 @import './index';

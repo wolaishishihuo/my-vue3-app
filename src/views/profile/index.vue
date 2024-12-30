@@ -21,6 +21,20 @@
                 <el-button type="success" class="mr-2">保存</el-button>
                 <el-button type="danger">注销</el-button>
             </div>
+            <el-divider></el-divider>
+            <div class="todo-list mt-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">待办事项</h3>
+                <el-table :data="todoList" style="width: 100%">
+                    <el-table-column prop="task" label="任务" width="180"></el-table-column>
+                    <el-table-column prop="status" label="状态" width="100"></el-table-column>
+                    <el-table-column label="操作">
+                        <template #default="scope">
+                            <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
+                            <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
         </el-card>
     </div>
 </template>
@@ -33,6 +47,20 @@ const userStore = useUserStore();
 const avatarUrl = computed(() => userStore.userInfo?.avatar);
 const userName = ref(userStore.userInfo?.username || '张三');
 const userEmail = ref(userStore.userInfo?.email || 'zhangsan@example.com');
+
+const todoList = ref([
+    { task: '完成项目报告', status: '进行中' },
+    { task: '更新个人资料', status: '未开始' },
+    { task: '参加团队会议', status: '已完成' }
+]);
+
+function handleEdit(row) {
+    console.log('编辑任务:', row);
+}
+
+function handleDelete(row) {
+    console.log('删除任务:', row);
+}
 </script>
 
 <style scoped lang="scss"></style>

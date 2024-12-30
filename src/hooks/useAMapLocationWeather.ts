@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores/modules/user';
 import { ref, onMounted } from 'vue';
 import { useAsyncState } from '@vueuse/core';
 import type { Ref } from 'vue';
-import { useLocalCache } from './useLocalCache';
+import useLocalCache from './useLocalCache';
 
 interface LocationInfo {
     province: string;

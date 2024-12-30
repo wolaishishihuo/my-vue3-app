@@ -2,7 +2,7 @@ import { Ref, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import type { UseSelectReturn, SelectConfig, FetchParams } from '@/components/Select/interface';
 import { PageResult } from '@/http/interface';
-import { useLocalCache } from './useLocalCache';
+import useLocalCache from './useLocalCache';
 
 const defaultConfig: Required<SelectConfig> = {
     pageSize: 10,

@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/modules/auth';
 
 // 按钮权限控制
-export const useAuthButtons = () => {
+export default function useAuthButtons() {
     const authStore = useAuthStore();
     const hasPermission = (permission: string | string[]) => {
         if (Array.isArray(permission)) {
@@ -10,4 +10,4 @@ export const useAuthButtons = () => {
         return authStore.hasButtonPermission(permission);
     };
     return { hasPermission };
-};
+}

@@ -1,6 +1,6 @@
 import { ref, onMounted } from 'vue';
 import { getRepositoryCommits } from '@/api/github';
-import { useLocalCache } from './useLocalCache';
+import useLocalCache from './useLocalCache';
 
 export interface CommitInfo {
     sha: string;

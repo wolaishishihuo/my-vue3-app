@@ -201,7 +201,6 @@ const handleReset = () => {
 <style scoped lang="scss">
 .select-test-container {
     padding: 20px;
-
     .card-header {
         h2 {
             margin: 0;
@@ -209,18 +208,15 @@ const handleReset = () => {
             font-weight: 500;
         }
     }
-
     .form-item-help {
         margin-top: 8px;
     }
-
     .test-actions {
-        margin-top: 20px;
         display: flex;
         gap: 12px;
         justify-content: flex-end;
+        margin-top: 20px;
     }
-
     :deep(.el-form-item) {
         margin-bottom: 24px;
     }
