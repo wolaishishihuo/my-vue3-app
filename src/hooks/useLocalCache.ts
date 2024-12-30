@@ -7,42 +7,43 @@ interface CacheItem<T> {
     timestamp: number;
 }
 
-// 本地缓存管理
+// 创建一个全局的storage实例
+const globalStorage = useStorage<Map<string, CacheItem<any>>>(LOCAL_CACHE_KEY, new Map());
+
 export default function useLocalCache<T>(args?: { localKey?: string; expiryTime?: number }) {
-    const { localKey = LOCAL_CACHE_KEY, expiryTime = LOCAL_CACHE_EXPIRY_TIME } = args || {};
-    const storage = useStorage<Map<string, CacheItem<T>>>(localKey, new Map());
+    const { expiryTime = LOCAL_CACHE_EXPIRY_TIME } = args || {};
 
     const setCache = (key: string, value: T) => {
         const timestamp = Date.now();
-        storage.value.set(key, { value, timestamp });
+        globalStorage.value.set(key, { value, timestamp });
     };
 
     const getCache = (key: string): T | null => {
-        const item = storage.value.get(key);
+        const item = globalStorage.value.get(key);
         if (item) {
             if (expiryTime && Date.now() - item.timestamp > expiryTime) {
-                storage.value.delete(key);
+                globalStorage.value.delete(key);
                 return null;
             }
-            return item.value;
+            return item.value as T;
         }
         return null;
     };
 
     const deleteCache = (key: string) => {
-        storage.value.delete(key);
+        globalStorage.value.delete(key);
     };
 
     const clearCache = () => {
-        storage.value.clear();
+        globalStorage.value.clear();
     };
 
-    // 监听缓存变化并更新 localStorage
+    // 监听全局缓存变化
     watch(
-        storage,
+        globalStorage,
         newCache => {
             try {
-                localStorage.setItem(localKey, JSON.stringify(Array.from(newCache.entries())));
+                localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(Array.from(newCache.entries())));
             } catch (error) {
                 console.error('Failed to update localStorage:', error);
             }

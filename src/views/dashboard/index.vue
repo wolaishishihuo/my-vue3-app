@@ -8,7 +8,7 @@
                         <div class="welcome-info">
                             <h2>{{ greetingText }}，{{ userStore.userInfo?.username }}</h2>
                             <p class="subtitle">
-                                今天是:<span class="highlight">{{ ` ${nowTime}, ` }}</span> 当前所在地: <span class="highlight">{{ `${locationInfo?.province} ${locationInfo?.city}, ` }}</span> 天气:
+                                今天是:<span class="highlight">{{ ` ${nowTime}, ` }}</span> 当前所在地: <span class="highlight">{{ `${weatherInfo?.province} ${weatherInfo?.city}, ` }}</span> 天气:
                                 <span class="highlight">{{ `${weatherInfo?.weather}, ` }}</span> 温度: <span class="highlight">{{ `${weatherInfo?.temperature}°C, ` }}</span> 风力:
                                 <span class="highlight">{{ `${weatherInfo?.windpower}级, ` }}</span> 湿度: <span class="highlight">{{ `${weatherInfo?.humidity}, ` }}</span> 风向:
                                 <span class="highlight">{{ `${weatherInfo?.winddirection} ` }}</span>
@@ -194,7 +194,7 @@ const userInfo = computed(() => userStore.userInfo);
 // 时间和天气信息
 const greetingText = getTimeState();
 const { nowTime } = useTime();
-const { locationInfo, weatherInfo } = useAMapLocationWeather();
+const { weatherInfo } = useAMapLocationWeather();
 
 // 获取GitHub提交记录
 const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits();
