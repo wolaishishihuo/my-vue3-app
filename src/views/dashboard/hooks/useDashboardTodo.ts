@@ -1,12 +1,48 @@
-import { ref, shallowRef } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { TodoItem } from '@/types/dashboard';
 import { Priority, PriorityMap } from '@/types/dashboard';
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus';
+import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus';
 import useLocalCache from '@/hooks/useLocalCache';
 import useAuthButtons from '@/hooks/useAuthButtons';
+import { CACHE_KEYS } from '@/config';
+// 默认待办事项
+const DEFAULT_TODO: TodoItem = {
+    id: '1',
+    content: '首页开发',
+    completed: true,
+    deadline: '2024-01-01',
+    priority: Priority.Success,
+    priorityLabel: PriorityMap[Priority.Success],
+    createTime: new Date().toISOString()
+};
+
+// 表单验证规则
+const TODO_RULES: FormRules = {
+    content: [
+        {
+            required: true,
+            message: '标题不能为空',
+            trigger: 'blur'
+        }
+    ],
+    deadline: [
+        {
+            required: true,
+            message: '请选择截止日期',
+            trigger: 'change'
+        }
+    ],
+    priority: [
+        {
+            required: true,
+            message: '请选择优先级',
+            trigger: 'change'
+        }
+    ]
+};
 
 export function useDashboardTodo() {
-    const todos = shallowRef<TodoItem[]>([]);
+    const todos = ref<TodoItem[]>([]);
     const editTodoDialog = ref(false);
     const { getCache, setCache } = useLocalCache<TodoItem[]>({
         // 1年以后过期
@@ -15,6 +51,8 @@ export function useDashboardTodo() {
     const { hasPermission } = useAuthButtons();
     const editTodoFormRef = ref<FormInstance | null>(null);
 
+    // 使用计算属性获取新的 ID
+    const newTodoId = computed(() => String(todos.value.length + 1));
     const editTodoForm = ref<TodoItem>({
         id: '',
         content: '',
@@ -24,116 +62,91 @@ export function useDashboardTodo() {
         priorityLabel: PriorityMap[Priority.Info],
         createTime: new Date().toISOString()
     });
-
+    // 监听todos的变化，并缓存到本地
+    watch(todos, () => {
+        setCache(CACHE_KEYS.todoKey, todos.value);
+    });
+    // 权限检查包装器
+    const withPermission = (action: string, callback: () => void) => {
+        if (!hasPermission(`todo:${action}`)) {
+            ElMessage.warning(`您没有${action === 'add' ? '添加' : '编辑'}待办事项的权限`);
+            return false;
+        }
+        callback();
+        return true;
+    };
     const getTodos = () => {
-        const cachedTodos = getCache('todos');
-        todos.value = cachedTodos || [
-            {
-                id: '1',
-                content: '首页开发',
-                completed: true,
-                deadline: '2024-01-01',
-                priority: Priority.Success,
-                priorityLabel: PriorityMap[Priority.Success],
-                createTime: new Date().toISOString()
-            }
-        ];
+        const cachedTodos = getCache(CACHE_KEYS.todoKey);
+        todos.value = cachedTodos || [DEFAULT_TODO];
     };
     getTodos();
 
     const addTodo = () => {
-        if (!hasPermission('todo:add')) {
-            ElMessage.warning('您没有添加待办事项的权限');
-            return;
-        }
-        const newTodo: TodoItem = {
-            id: String(todos.value.length + 1),
-            content: '新的待办事项',
-            completed: false,
-            deadline: '待设置',
-            priority: Priority.Info,
-            priorityLabel: PriorityMap[Priority.Info],
-            createTime: new Date().toISOString()
-        };
-        todos.value.unshift(newTodo);
-        setCache('todos', todos.value);
-        ElMessage.success('添加成功');
+        withPermission('add', () => {
+            const newTodo: TodoItem = {
+                id: newTodoId.value,
+                content: '新的待办事项',
+                completed: false,
+                deadline: '待设置',
+                priority: Priority.Info,
+                priorityLabel: PriorityMap[Priority.Info],
+                createTime: new Date().toISOString()
+            };
+            todos.value.unshift(newTodo);
+            ElMessage.success('添加成功');
+        });
     };
     // 方法：处理待办事项状态变化
     const handleTodoChange = (todo: TodoItem) => {
-        if (!hasPermission('todo:edit')) {
-            ElMessage.warning('您没有编辑待办事项的权限');
-            return;
-        }
-        const index = todos.value.findIndex(item => item.id === todo.id);
-        if (index !== -1) {
-            todos.value[index] = { ...todo };
-            setCache('todos', todos.value);
-            ElMessage.success(todo.completed ? '已完成' : '已取消完成');
-        }
+        withPermission('edit', () => {
+            const index = todos.value.findIndex(item => item.id === todo.id);
+            if (index !== -1) {
+                todos.value[index] = { ...todo };
+                ElMessage.success(todo.completed ? '已完成' : '已取消完成');
+            }
+        });
     };
 
     // 方法：编辑待办事项
     const editTodo = (todo: TodoItem) => {
-        if (!hasPermission('todo:edit')) {
-            ElMessage.warning('您没有编辑待办事项的权限');
-            return;
-        }
-        editTodoDialog.value = true;
-        editTodoForm.value = { ...todo };
-    };
-    // 验证表单的辅助函数
-    const validateForm = async () => {
-        if (!editTodoFormRef.value) return false;
-        return await editTodoFormRef.value.validate();
+        withPermission('edit', () => {
+            editTodoDialog.value = true;
+            editTodoForm.value = { ...todo };
+        });
     };
 
     // 保存编辑的待办事项
     const saveEditTodo = async () => {
         try {
-            const valid = await validateForm();
+            if (!editTodoFormRef.value) return;
+            const valid = await editTodoFormRef.value.validate();
             if (!valid) return;
 
             const index = todos.value.findIndex(item => item.id === editTodoForm.value.id);
             if (index !== -1) {
                 editTodoForm.value.priorityLabel = PriorityMap[editTodoForm.value.priority as keyof typeof PriorityMap];
                 todos.value[index] = { ...editTodoForm.value };
-                setCache('todos', todos.value);
                 editTodoDialog.value = false;
-                getTodos();
                 ElMessage.success('编辑成功');
             }
-        } catch (error) {
+        } catch {
             ElMessage.error('保存失败，请重试');
         }
     };
 
     // 删除待办事项
     const deleteTodo = (todo: TodoItem) => {
-        const index = todos.value.findIndex(item => item.id === todo.id);
-        if (index !== -1) {
-            todos.value.splice(index, 1);
-            ElMessage.success('删除成功');
-            setCache('todos', todos.value);
-        }
-    };
-
-    // 确认删除对话框
-    const confirmDelete = (todo: TodoItem) => {
         ElMessageBox.confirm(`确定要删除待办事项 "${todo.content}" 吗？`, '删除确认', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            deleteTodo(todo);
+            const index = todos.value.findIndex(item => item.id === todo.id);
+            if (index !== -1) {
+                todos.value.splice(index, 1);
+                ElMessage.success('删除成功');
+            }
         });
-    };
-
-    // 表单验证规则
-    const editTodoRules = {
-        content: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
-        deadline: [{ required: true, message: '请选择截止日期', trigger: 'change' }],
-        priority: [{ required: true, message: '请选择优先级', trigger: 'change' }]
     };
 
     return {
@@ -145,8 +158,8 @@ export function useDashboardTodo() {
         handleTodoChange,
         editTodo,
         saveEditTodo,
-        confirmDelete,
         getTodos,
-        editTodoRules
+        deleteTodo,
+        TODO_RULES
     };
 }

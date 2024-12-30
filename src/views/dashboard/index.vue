@@ -112,7 +112,7 @@
                                     <el-button :disabled="todo.completed" v-permission="['todo:delete', 'todo:edit']" type="primary" link @click="editTodo(todo)">
                                         <el-icon><Edit /></el-icon>
                                     </el-button>
-                                    <el-button v-permission="['todo:delete', 'todo:edit']" type="danger" link @click="confirmDelete(todo)">
+                                    <el-button v-permission="['todo:delete', 'todo:edit']" type="danger" link @click="deleteTodo(todo)">
                                         <el-icon><Delete /></el-icon>
                                     </el-button>
                                 </div>
@@ -148,7 +148,7 @@
 
         <!-- 编辑待办事项 -->
         <el-dialog v-model="editTodoDialog" title="编辑待办事项" class="w-full max-w-md mx-auto" width="auto">
-            <el-form ref="editTodoFormRef" :model="editTodoForm" label-width="100px" class="space-y-4" :rules="editTodoRules">
+            <el-form ref="editTodoFormRef" :model="editTodoForm" label-width="100px" class="space-y-4" :rules="TODO_RULES">
                 <el-form-item label="标题" prop="content" :rules="[{ required: true, message: '标题不能为空', trigger: 'blur' }]">
                     <el-input v-model="editTodoForm.content" class="w-[220px]" />
                 </el-form-item>
@@ -200,7 +200,7 @@ const { weatherInfo } = useAMapLocationWeather();
 const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits();
 
 // 待办事项
-const { todos, addTodo, handleTodoChange, confirmDelete, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoRules, editTodoFormRef } = useDashboardTodo();
+const { todos, addTodo, handleTodoChange, deleteTodo, TODO_RULES, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoFormRef } = useDashboardTodo();
 
 // 项目进度数据
 const { projects } = useDashboardProject();

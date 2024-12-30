@@ -1,4 +1,4 @@
-import router, { resetRouter } from '@/routers/index';
+import router from '@/routers/index';
 import { ElNotification } from 'element-plus';
 import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
@@ -27,8 +27,6 @@ export const initDynamicRouter = async () => {
             router.replace(LOGIN_URL);
             return Promise.reject('No permission');
         }
-        // 添加路由前先删除所有动态路由
-        resetRouter();
         // 动态添加路由
         authStore.flatMenuListGet.forEach(menu => {
             if (menu.component && typeof menu.component === 'string') {
@@ -40,6 +38,8 @@ export const initDynamicRouter = async () => {
                 router.addRoute('layout', menu as unknown as RouteRecordRaw);
             }
         });
+        console.log(router.getRoutes());
+
         // 最后添加 404 路由
         router.addRoute({
             path: '/:pathMatch(.*)*',

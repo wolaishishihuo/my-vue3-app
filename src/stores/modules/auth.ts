@@ -30,9 +30,14 @@ export const useAuthStore = defineStore('auth', {
 
         // 获取菜单权限列表
         async getAuthMenuList() {
-            const { data } = await import('@/assets/json/authMenuList.json');
-            this.authMenuList = data;
-            return this.authMenuList;
+            try {
+                // 确保菜单数据加载完成
+                const { data } = await import('@/assets/json/authMenuList.json');
+                this.authMenuList = data;
+                return Promise.resolve(data);
+            } catch (error) {
+                return Promise.reject(error);
+            }
         },
         setRouteName(routeName: string) {
             this.routeName = routeName;

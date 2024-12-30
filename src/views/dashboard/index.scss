@@ -208,7 +208,7 @@
                 flex: 1;
                 margin-bottom: map-get($spacings, '5');
                 .todo-list {
-                    max-height: 220px;
+                    max-height: 380px;
                     padding-right: map-get($spacings, '3');
                     overflow-y: auto;
                     .todo-item {

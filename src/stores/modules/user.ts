@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import router, { resetRouter } from '@/routers';
 import piniaPersistConfig from '../helper';
 import useLocalCache from '@/hooks/useLocalCache';
+import { EXCLUDE_CACHE_KEYS } from '@/config';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -26,6 +27,7 @@ export const useUserStore = defineStore('user', {
                 const { data } = await import('@/assets/json/userInfo.json');
                 this.userInfo = data;
                 this.roles = data.roles;
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
                 return data;
             } catch (error) {
                 return Promise.reject(error);
@@ -45,7 +47,7 @@ export const useUserStore = defineStore('user', {
             this.permissions = [];
             // 清除本地缓存
             const { clearCache } = useLocalCache();
-            clearCache();
+            clearCache(EXCLUDE_CACHE_KEYS);
         }
     },
     persist: piniaPersistConfig('user-store', ['token', 'userInfo'])

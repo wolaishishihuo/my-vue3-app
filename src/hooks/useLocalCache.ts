@@ -34,8 +34,19 @@ export default function useLocalCache<T>(args?: { expiryTime?: number }) {
         globalStorage.value.delete(key);
     };
 
-    const clearCache = () => {
+    const clearCache = (excludeKeys: string[] = []) => {
+        if (excludeKeys.length === 0) {
+            globalStorage.value.clear();
+            return;
+        }
+        const entries = Array.from(globalStorage.value.entries());
         globalStorage.value.clear();
+        // 重新设置需要保留的缓存项
+        entries.forEach(([key, value]) => {
+            if (excludeKeys.includes(key)) {
+                globalStorage.value.set(key, value);
+            }
+        });
     };
 
     // 监听全局缓存变化

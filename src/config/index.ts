@@ -31,3 +31,11 @@ export const AMAP_CONFIG = {
 // 本地缓存
 export const LOCAL_CACHE_KEY = 'my-vue3-app-cache';
 export const LOCAL_CACHE_EXPIRY_TIME = 1000 * 60 * 60 * 24; // 24小时
+
+// 缓存keys
+export const CACHE_KEYS = {
+    todoKey: 'todos'
+};
+
+// 需要排除的缓存key
+export const EXCLUDE_CACHE_KEYS: string[] = [CACHE_KEYS.todoKey];
