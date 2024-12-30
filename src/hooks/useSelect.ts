@@ -21,7 +21,6 @@ export function useSelect<T extends Record<string, any>>({
 }): UseSelectReturn<T> {
     const finalConfig = { ...defaultConfig, ...config };
     const { getCache, setCache } = useLocalCache<{ data: T[]; total: number }>({
-        localKey: 'select-cache',
         expiryTime: 1000 * 60 * 5 // 5分钟
     });
     // 状态管理

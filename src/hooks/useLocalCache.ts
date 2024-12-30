@@ -10,7 +10,7 @@ interface CacheItem<T> {
 // 创建一个全局的storage实例
 const globalStorage = useStorage<Map<string, CacheItem<any>>>(LOCAL_CACHE_KEY, new Map());
 
-export default function useLocalCache<T>(args?: { localKey?: string; expiryTime?: number }) {
+export default function useLocalCache<T>(args?: { expiryTime?: number }) {
     const { expiryTime = LOCAL_CACHE_EXPIRY_TIME } = args || {};
 
     const setCache = (key: string, value: T) => {

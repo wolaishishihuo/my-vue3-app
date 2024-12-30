@@ -8,7 +8,10 @@ import useAuthButtons from '@/hooks/useAuthButtons';
 export function useDashboardTodo() {
     const todos = shallowRef<TodoItem[]>([]);
     const editTodoDialog = ref(false);
-    const { getCache, setCache } = useLocalCache<TodoItem[]>();
+    const { getCache, setCache } = useLocalCache<TodoItem[]>({
+        // 1年以后过期
+        expiryTime: 1000 * 60 * 60 * 24 * 365
+    });
     const { hasPermission } = useAuthButtons();
     const editTodoFormRef = ref<FormInstance | null>(null);
 
