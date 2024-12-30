@@ -1,50 +1,46 @@
 // 基础容器
 .container {
-  @include container();
-  height: calc(100vh - 100px);
-  padding: map-get($spacings, '5');
-  background-color: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-light);
-  border-radius: map-get($border-radius, 'lg');
-  @include shadow('sm');
-  @include scrollbar();
-  overflow-y: auto;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  background-color: var(--el-bg-color);
+    @include container;
+
+    box-sizing: border-box;
+    height: calc(100vh - 100px);
+    padding: map-get($spacings, '5');
+    overflow: hidden auto;
+    background-color: var(--el-bg-color);
+    border: 1px solid var(--el-border-color-light);
+    border-radius: map-get($border-radius, 'lg');
+
+    @include shadow('sm');
+    @include scrollbar;
 }
 
 // 对于有滚动条的元素都应用样式
 .scrollable {
-  @include scrollbar();
-  overflow: auto;
-}
+    @include scrollbar;
 
+    overflow: auto;
+}
 #nprogress {
-  .bar {
-    background: var(--el-color-primary) !important;
-  }
-  
-  .spinner-icon {
-    border-top-color: var(--el-color-primary) !important;
-    border-left-color: var(--el-color-primary) !important;
-  }
-  
-  .peg {
-    box-shadow:
-      0 0 10px var(--el-color-primary),
-      0 0 5px var(--el-color-primary) !important;
-  }
+    .bar {
+        background: var(--el-color-primary) !important;
+    }
+    .spinner-icon {
+        border-top-color: var(--el-color-primary) !important;
+        border-left-color: var(--el-color-primary) !important;
+    }
+    .peg {
+        box-shadow:
+            0 0 10px var(--el-color-primary),
+            0 0 5px var(--el-color-primary) !important;
+    }
 }
 
 /* 辅助类
 -------------------------------------------------- */
 .clearfix {
-  &::after {
-    content: '';
-    display: table;
-    clear: both;
-  }
+    &::after {
+        display: table;
+        clear: both;
+        content: '';
+    }
 }
-
-

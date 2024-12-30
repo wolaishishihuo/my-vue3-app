@@ -1,7 +1,7 @@
 import { ref, shallowRef } from 'vue';
 import type { TodoItem } from '@/types/dashboard';
 import { Priority, PriorityMap } from '@/types/dashboard';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox, FormInstance } from 'element-plus';
 import useLocalCache from '@/hooks/useLocalCache';
 import useAuthButtons from '@/hooks/useAuthButtons';
 
@@ -10,6 +10,7 @@ export function useDashboardTodo() {
     const editTodoDialog = ref(false);
     const { getCache, setCache } = useLocalCache<TodoItem[]>();
     const { hasPermission } = useAuthButtons();
+    const editTodoFormRef = ref<FormInstance | null>(null);
 
     const editTodoForm = ref<TodoItem>({
         id: '',
@@ -35,6 +36,7 @@ export function useDashboardTodo() {
             }
         ];
     };
+    getTodos();
 
     const addTodo = () => {
         if (!hasPermission('todo:add')) {
@@ -77,16 +79,29 @@ export function useDashboardTodo() {
         editTodoDialog.value = true;
         editTodoForm.value = { ...todo };
     };
+    // 验证表单的辅助函数
+    const validateForm = async () => {
+        if (!editTodoFormRef.value) return false;
+        return await editTodoFormRef.value.validate();
+    };
 
-    const saveEditTodo = () => {
-        const index = todos.value.findIndex(item => item.id === editTodoForm.value.id);
-        if (index !== -1) {
-            editTodoForm.value.priorityLabel = PriorityMap[editTodoForm.value.priority as keyof typeof PriorityMap];
-            todos.value[index] = { ...editTodoForm.value };
-            setCache('todos', todos.value);
-            editTodoDialog.value = false;
-            getTodos();
-            ElMessage.success('编辑成功');
+    // 保存编辑的待办事项
+    const saveEditTodo = async () => {
+        try {
+            const valid = await validateForm();
+            if (!valid) return;
+
+            const index = todos.value.findIndex(item => item.id === editTodoForm.value.id);
+            if (index !== -1) {
+                editTodoForm.value.priorityLabel = PriorityMap[editTodoForm.value.priority as keyof typeof PriorityMap];
+                todos.value[index] = { ...editTodoForm.value };
+                setCache('todos', todos.value);
+                editTodoDialog.value = false;
+                getTodos();
+                ElMessage.success('编辑成功');
+            }
+        } catch (error) {
+            ElMessage.error('保存失败，请重试');
         }
     };
 
@@ -119,6 +134,7 @@ export function useDashboardTodo() {
     };
 
     return {
+        editTodoFormRef,
         todos,
         editTodoDialog,
         editTodoForm,

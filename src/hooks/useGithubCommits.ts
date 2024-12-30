@@ -1,6 +1,7 @@
 import { ref, onMounted } from 'vue';
 import { getRepositoryCommits } from '@/api/github';
 import useLocalCache from './useLocalCache';
+import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 
 export interface CommitInfo {
     sha: string;
@@ -15,7 +16,7 @@ export interface CommitInfo {
     html_url: string;
 }
 
-export function useGithubCommits(owner: string, repo: string) {
+export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
     const commits = ref<CommitInfo[]>([]);
     const loading = ref(false);
     const error = ref<string | null>(null);

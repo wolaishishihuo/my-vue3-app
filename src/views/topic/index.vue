@@ -158,38 +158,30 @@ onMounted(() => {
 <style scoped lang="scss">
 .discuss-container {
     padding: 20px;
-
     .create-topic {
         margin-bottom: 20px;
     }
-
     .topic-list {
         .topic-item {
             margin-bottom: 16px;
             cursor: pointer;
-
             &:hover {
-                box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+                box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
             }
         }
-
         .topic-header {
             display: flex;
-            align-items: center;
             gap: 16px;
+            align-items: center;
         }
-
         .topic-info {
             flex: 1;
-
             h3 {
-                margin: 0 0 8px 0;
+                margin: 0 0 8px;
             }
-
             .topic-meta {
-                color: #999;
                 font-size: 14px;
-
+                color: #999999;
                 span {
                     margin-right: 16px;
                 }

@@ -148,7 +148,7 @@
 
         <!-- 编辑待办事项 -->
         <el-dialog v-model="editTodoDialog" title="编辑待办事项" class="w-full max-w-md mx-auto" width="auto">
-            <el-form :model="editTodoForm" label-width="100px" class="space-y-4" :rules="editTodoRules">
+            <el-form ref="editTodoFormRef" :model="editTodoForm" label-width="100px" class="space-y-4" :rules="editTodoRules">
                 <el-form-item label="标题" prop="content" :rules="[{ required: true, message: '标题不能为空', trigger: 'blur' }]">
                     <el-input v-model="editTodoForm.content" class="w-[220px]" />
                 </el-form-item>
@@ -182,13 +182,11 @@ import { getTimeState } from '@/utils';
 import { formatDate } from '@/utils/time';
 import { useTime } from '@/hooks/useTime';
 import { useUserStore } from '@/stores/modules/user';
-import { ElInput, ElSelect, ElOption } from 'element-plus';
 import { useGithubCommits } from '@/hooks/useGithubCommits';
-import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 import { useAMapLocationWeather } from '@/hooks/useAMapLocationWeather';
 import { useDashboardTodo } from './hooks/useDashboardTodo';
-import { PriorityMap } from '@/types/dashboard';
 import { useDashboardProject } from './hooks/useDashboadrProject';
+import { PriorityMap } from '@/types/dashboard';
 
 // 用户信息
 const userStore = useUserStore();
@@ -199,10 +197,10 @@ const { nowTime } = useTime();
 const { locationInfo, weatherInfo } = useAMapLocationWeather();
 
 // 获取GitHub提交记录
-const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits(GITHUB_OWNER, GITHUB_REPO);
+const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits();
 
 // 待办事项
-const { todos, addTodo, handleTodoChange, confirmDelete, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoRules } = useDashboardTodo();
+const { todos, addTodo, handleTodoChange, confirmDelete, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoRules, editTodoFormRef } = useDashboardTodo();
 
 // 项目进度数据
 const { projects } = useDashboardProject();
