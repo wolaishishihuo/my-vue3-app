@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="visible" v-bind="$attrs">
+    <el-dialog v-model="visible">
         <div class="p-4">
             <p>这是一个基础模态框示例</p>
             <p>用于展示最基本的模态框功能</p>

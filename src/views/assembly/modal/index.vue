@@ -19,7 +19,7 @@ const { modalManager } = useModal();
 // 基础模态框
 const openBasicModal = async () => {
     const modalId = await modalManager.open(() => import('./components/BasicModal.vue'), {
-        title: '基础模态框',
+        title: '基础模态框1',
         width: '500px',
         lockScroll: false,
         onConfirm: () => {
@@ -29,6 +29,9 @@ const openBasicModal = async () => {
         onCancel: () => {
             console.log('取消');
             modalManager.close(modalId);
+        },
+        onClose: () => {
+            console.log('关闭');
         }
     });
 };
