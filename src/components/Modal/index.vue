@@ -4,7 +4,7 @@
             <component :is="instance.component?.default" v-model:visible="instance.visible" v-bind="processAttributes(instance)" />
             <template #fallback>
                 <div class="flex items-center justify-center min-h-[200px]">
-                    <el-spinner />
+                    <el-loading />
                 </div>
             </template>
         </Suspense>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useModal } from '@/hooks/useModal';
-
+import { ElLoading } from 'element-plus';
 defineOptions({
     inheritAttrs: false
 });

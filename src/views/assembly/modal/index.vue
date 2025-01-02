@@ -56,7 +56,7 @@ const openDataModal = async () => {
 // 表单模态框
 const openFormModal = async () => {
     const modalId = await modalManager.open(() => import('./components/FormModal.vue'), {
-        formData: { name: '', email: '', age: '' },
+        formData: { name: '', email: '', age: 0 },
         onConfirm: async formData => {
             try {
                 console.log('提交的表单数据:', formData);

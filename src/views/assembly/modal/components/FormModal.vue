@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="visible" :title="title" :width="width" :lock-scroll="false">
+    <el-dialog v-model="visible" :lock-scroll="false">
         <el-form ref="formRef" :model="form" :rules="rules" label-width="80px" class="p-4">
             <el-form-item label="姓名" prop="name">
                 <el-input v-model="form.name" />
@@ -61,8 +61,12 @@ const visible = computed({
 
 const handleConfirm = async () => {
     if (!formRef.value) return;
-    await formRef.value.validate();
-    emit('confirm', form.value);
+    try {
+        await formRef.value.validate();
+        emit('confirm', form.value);
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const handleCancel = () => emit('cancel');
