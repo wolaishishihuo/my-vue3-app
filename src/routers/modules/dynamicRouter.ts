@@ -38,8 +38,6 @@ export const initDynamicRouter = async () => {
                 router.addRoute('layout', menu as unknown as RouteRecordRaw);
             }
         });
-        console.log(router.getRoutes());
-
         // 最后添加 404 路由
         router.addRoute({
             path: '/:pathMatch(.*)*',

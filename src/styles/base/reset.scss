@@ -1,104 +1,107 @@
 /* Reset.scss */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 html,
 body,
 #app {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
-
 html {
-  font-size: 16px;
-  scroll-behavior: smooth;
+    font-size: 16px;
+    scroll-behavior: smooth;
 }
-
 body {
-  font-family: $font-family-base;
-  line-height: 1.5;
-  color: map-get($neutrals, 'gray-900');
-  background-color: map-get($neutrals, 'white');
+    font-family: $font-family-base;
+    line-height: 1.5;
+    color: map-get($neutrals, 'gray-900');
+    background-color: map-get($neutrals, 'white');
 }
 
 // 移除列表样式
-ul, ol {
-  list-style: none;
+ul,
+ol {
+    list-style: none;
 }
 
 // 移除链接下划线
 a {
-  color: inherit;
-  text-decoration: none;
-  
-  &:hover {
-    color: map-get($colors, 'primary');
-  }
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+        color: map-get($colors, 'primary');
+    }
 }
 
 // 图片响应式
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
 // 表单元素重置
-button, input, optgroup, select, textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
+button,
+input,
+optgroup,
+select,
+textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
 }
-
 button {
-  border: none;
-  background: none;
-  cursor: pointer;
-  
-  &:disabled {
-    cursor: not-allowed;
-  }
+    cursor: pointer;
+    background: none;
+    border: none;
+    &:disabled {
+        cursor: not-allowed;
+    }
 }
 
 // 移除 input type number 的箭头
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    margin: 0;
+    appearance: none;
 }
-
-input[type="number"] {
-  -moz-appearance: textfield;
+input[type='number'] {
+    appearance: textfield;
 }
 
 // 表格重置
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
 
 // 移除默认样式
 [hidden] {
-  display: none !important;
+    display: none !important;
 }
 
 // 焦点轮廓
 :focus-visible {
-  outline: 2px solid map-get($colors, 'primary');
-  outline-offset: 2px;
+    outline: 2px solid map-get($colors, 'primary');
+    outline-offset: 2px;
 }
 
 // 选中文本
 ::selection {
-  background-color: map-get($colors, 'primary');
-  color: map-get($neutrals, 'white');
+    color: map-get($neutrals, 'white');
+    background-color: map-get($colors, 'primary');
 }
-
-

@@ -11,3 +11,14 @@ export function getTimeState() {
     if (hours >= 18 && hours <= 24) return '晚上好 🌛';
     if (hours >= 0 && hours <= 6) return '凌晨好 🌛';
 }
+
+/**
+ * @description 生成唯一ID
+ * @param {String} prefix - 前缀
+ * @returns {String}
+ */
+export const generateUniqueId = (prefix = 'modal'): string => {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 10000);
+    return `${prefix}-${timestamp}-${random}`;
+};

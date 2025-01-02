@@ -119,7 +119,7 @@
                             </div>
                             <div class="todo-meta">
                                 <el-tag size="small" :type="todo.priority" effect="plain">{{ PriorityMap[todo.priority] }}</el-tag>
-                                <span class="time">{{ todo.deadline }}</span>
+                                <span class="time"> 截止日期:{{ todo.deadline }}</span>
                             </div>
                         </div>
                         <div v-if="todos.length === 0" class="empty-text">暂无待办事项</div>
