@@ -24,23 +24,23 @@ export default () => {
         captchaKey: ''
     });
     const login = (formEl: FormInstance | undefined) => {
-        validateAndCallApi(formEl, loginForm, login);
+        validateAndCallApi(formEl, loginForm, loginApi);
     };
 
     const register = (formEl: FormInstance | undefined) => {
-        validateAndCallApi(formEl, registerForm, register);
+        validateAndCallApi(formEl, registerForm, registerApi);
     };
     const validateAndCallApi = async (formEl: FormInstance | undefined, form: any, api: any) => {
         formEl!.validate(async valid => {
             if (!valid) return;
             loading.value = true;
             try {
-                // const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
-                const data = {
-                    access_token: 'admin123',
-                    token_type: 'Bearer',
-                    expires_in: 3600
-                };
+                const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
+                // const data = {
+                //     access_token: 'admin123',
+                //     token_type: 'Bearer',
+                //     expires_in: 3600
+                // };
                 await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
                 successCallback(data);
             } finally {

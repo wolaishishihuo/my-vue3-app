@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { FormInstance } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import type { ModalProps, ModalEmits } from '@/components/Modal/interface';
 
 interface FormData {
@@ -45,7 +45,7 @@ const emit = defineEmits<ModalEmits>();
 const formRef = ref<FormInstance>();
 const form = ref<FormData>({ ...props.formData });
 
-const rules = {
+const rules: FormRules = {
     name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
     email: [
         { required: true, message: '请输入邮箱', trigger: 'blur' },
