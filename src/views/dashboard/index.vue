@@ -106,7 +106,7 @@
                         <div v-for="(todo, index) in todos" :key="index" class="todo-item">
                             <div class="todo-content">
                                 <el-checkbox v-model="todo.completed" @change="handleTodoChange(todo)" v-permission="['todo:delete', 'todo:edit']">
-                                    <span :class="{ completed: todo.completed }">{{ todo.content }}</span>
+                                    <span :class="{ completed: todo.completed }">{{ todo.title }}</span>
                                 </el-checkbox>
                                 <div class="todo-actions">
                                     <el-button :disabled="todo.completed" v-permission="['todo:delete', 'todo:edit']" type="primary" link @click="editTodo(todo)">
@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                             <div class="todo-meta">
-                                <el-tag size="small" :type="todo.priority" effect="plain">{{ PriorityMap[todo.priority] }}</el-tag>
+                                <el-tag size="small" :type="PriorityMap[todo.priority]" effect="plain">{{ PriorityMapJson[todo.priority] }}</el-tag>
                                 <span class="time"> 截止日期:{{ todo.deadline }}</span>
                             </div>
                         </div>
@@ -149,19 +149,15 @@
         <!-- 编辑待办事项 -->
         <el-dialog v-model="editTodoDialog" title="编辑待办事项" class="w-full max-w-md mx-auto" width="auto">
             <el-form ref="editTodoFormRef" :model="editTodoForm" label-width="100px" class="space-y-4" :rules="TODO_RULES">
-                <el-form-item label="标题" prop="content" :rules="[{ required: true, message: '标题不能为空', trigger: 'blur' }]">
-                    <el-input v-model="editTodoForm.content" class="w-[220px]" />
+                <el-form-item label="标题" prop="title" :rules="[{ required: true, message: '标题不能为空', trigger: 'blur' }]">
+                    <el-input v-model="editTodoForm.title" class="w-[220px]" />
                 </el-form-item>
                 <el-form-item label="截止日期" prop="deadline" :rules="[{ required: true, message: '请选择截止日期', trigger: 'change' }]">
                     <el-date-picker class="w-[220px]" v-model="editTodoForm.deadline" type="datetime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
                 </el-form-item>
                 <el-form-item label="优先级" prop="priority" :rules="[{ required: true, message: '请选择优先级', trigger: 'change' }]">
                     <el-select v-model="editTodoForm.priority" placeholder="请选择优先级" class="w-[220px]">
-                        <el-option label="成功" value="success" />
-                        <el-option label="警告" value="warning" />
-                        <el-option label="信息" value="info" />
-                        <el-option label="主要" value="primary" />
-                        <el-option label="危险" value="danger" />
+                        <el-option v-for="item in Object.keys(PriorityMapJson)" :key="item" :label="PriorityMapJson[item]" :value="Number(item)" />
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -186,7 +182,7 @@ import { useGithubCommits } from '@/hooks/useGithubCommits';
 import { useAMapLocationWeather } from '@/hooks/useAMapLocationWeather';
 import { useDashboardTodo } from './hooks/useDashboardTodo';
 import { useDashboardProject } from './hooks/useDashboadrProject';
-import { PriorityMap } from '@/types/dashboard';
+import { PriorityMap, PriorityMapJson } from '@/types/dashboard';
 
 // 用户信息
 const userStore = useUserStore();
@@ -198,9 +194,8 @@ const { weatherInfo } = useAMapLocationWeather();
 
 // 获取GitHub提交记录
 const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits();
-
 // 待办事项
-const { todos, addTodo, handleTodoChange, deleteTodo, TODO_RULES, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoFormRef } = useDashboardTodo();
+const { todos, addTodo, handleTodoChange, deleteTodo, TODO_RULES, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoFormRef } = useDashboardTodo(userInfo.value!);
 
 // 项目进度数据
 const { projects } = useDashboardProject();

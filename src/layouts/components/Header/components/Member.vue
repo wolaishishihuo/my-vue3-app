@@ -4,7 +4,7 @@
             <el-avatar :size="25" :src="avatarUrl" class="avatar" />
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleUserCenter">
                         <el-icon>
                             <User />
                         </el-icon>
@@ -25,10 +25,16 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/modules/user';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 const userStore = useUserStore();
 const avatarUrl = computed(() => userStore.userInfo?.avatar || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png');
 const handleLogout = () => {
     userStore.logout();
+};
+const handleUserCenter = () => {
+    router.push('/profile');
 };
 </script>
 <style scoped lang="scss">

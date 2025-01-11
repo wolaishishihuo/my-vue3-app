@@ -12,21 +12,21 @@ export interface Activity {
     hollow: boolean;
 }
 export const enum Priority {
-    Success = 'success',
-    Warning = 'warning',
-    Info = 'info',
-    Primary = 'primary',
-    Danger = 'danger'
+    Info = 0,
+    Success = 1,
+    Warning = 2,
+    Primary = 3,
+    Danger = 4
 }
 
 export interface TodoItem {
     id: string;
-    content: string;
+    userId?: string;
+    title: string;
+    status: 0 | 1;
     completed: boolean;
     deadline: string;
-    priority: Priority;
-    priorityLabel: string;
-    createTime: string;
+    priority: keyof typeof PriorityMap;
 }
 
 export interface Project {
@@ -38,10 +38,18 @@ export interface Project {
     endTime: string;
 }
 
-export const PriorityMap = {
+export const PriorityMapJson = {
+    [Priority.Info]: '普通',
     [Priority.Success]: '成功',
     [Priority.Warning]: '紧急',
-    [Priority.Info]: '普通',
     [Priority.Primary]: '重要',
     [Priority.Danger]: '危险'
+} as const;
+
+export const PriorityMap = {
+    [Priority.Success]: 'success',
+    [Priority.Warning]: 'warning',
+    [Priority.Info]: 'info',
+    [Priority.Primary]: 'primary',
+    [Priority.Danger]: 'danger'
 } as const;

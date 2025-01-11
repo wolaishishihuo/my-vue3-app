@@ -1,20 +1,12 @@
 import { computed, ref, watch } from 'vue';
 import type { TodoItem } from '@/types/dashboard';
-import { Priority, PriorityMap } from '@/types/dashboard';
+import { Priority } from '@/types/dashboard';
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus';
 import useLocalCache from '@/hooks/useLocalCache';
 import useAuthButtons from '@/hooks/useAuthButtons';
 import { CACHE_KEYS } from '@/config';
-// 默认待办事项
-const DEFAULT_TODO: TodoItem = {
-    id: '1',
-    content: '首页开发',
-    completed: true,
-    deadline: '2024-01-01',
-    priority: Priority.Success,
-    priorityLabel: PriorityMap[Priority.Success],
-    createTime: new Date().toISOString()
-};
+import { getUserTodoListApi, updateUserTodoListApi, deleteUserTodoListApi, addUserTodoListApi } from '@/api/user';
+import { formatDate } from '@/utils/time';
 
 // 表单验证规则
 const TODO_RULES: FormRules = {
@@ -41,7 +33,7 @@ const TODO_RULES: FormRules = {
     ]
 };
 
-export function useDashboardTodo() {
+export function useDashboardTodo(userInfo: User.UserInfo) {
     const todos = ref<TodoItem[]>([]);
     const editTodoDialog = ref(false);
     const { getCache, setCache } = useLocalCache<TodoItem[]>({
@@ -51,16 +43,13 @@ export function useDashboardTodo() {
     const { hasPermission } = useAuthButtons();
     const editTodoFormRef = ref<FormInstance | null>(null);
 
-    // 使用计算属性获取新的 ID
-    const newTodoId = computed(() => String(todos.value.length + 1));
     const editTodoForm = ref<TodoItem>({
         id: '',
-        content: '',
+        title: '',
+        status: 0,
         completed: false,
         deadline: '',
-        priority: Priority.Info,
-        priorityLabel: PriorityMap[Priority.Info],
-        createTime: new Date().toISOString()
+        priority: Priority.Info
     });
     // 监听todos的变化，并缓存到本地
     watch(todos, () => {
@@ -75,34 +64,41 @@ export function useDashboardTodo() {
         callback();
         return true;
     };
-    const getTodos = () => {
-        const cachedTodos = getCache(CACHE_KEYS.todoKey);
-        todos.value = cachedTodos || [DEFAULT_TODO];
+    const getTodos = async () => {
+        // const cachedTodos = getCache(CACHE_KEYS.todoKey);
+        // if (cachedTodos) {
+        //     todos.value = cachedTodos;
+        //     return;
+        // }
+        const { data } = await getUserTodoListApi();
+        todos.value = (data as TodoItem[]).map(item => ({ ...item, completed: !!item.status }));
     };
     getTodos();
 
     const addTodo = () => {
-        withPermission('add', () => {
-            const newTodo: TodoItem = {
-                id: newTodoId.value,
-                content: '新的待办事项',
+        withPermission('add', async () => {
+            const newTodo: Omit<TodoItem, 'id'> = {
+                userId: userInfo.id,
+                title: '新的待办事项',
+                status: 0,
                 completed: false,
-                deadline: '待设置',
-                priority: Priority.Info,
-                priorityLabel: PriorityMap[Priority.Info],
-                createTime: new Date().toISOString()
+                deadline: formatDate(new Date()),
+                priority: Priority.Info
             };
-            todos.value.unshift(newTodo);
-            ElMessage.success('添加成功');
+            const { success } = await addUserTodoListApi(newTodo);
+            if (success) {
+                ElMessage.success('添加成功');
+                getTodos();
+            }
         });
     };
     // 方法：处理待办事项状态变化
     const handleTodoChange = (todo: TodoItem) => {
-        withPermission('edit', () => {
-            const index = todos.value.findIndex(item => item.id === todo.id);
-            if (index !== -1) {
-                todos.value[index] = { ...todo };
+        withPermission('edit', async () => {
+            const { success } = await updateUserTodoListApi({ ...todo, status: todo.completed ? 1 : 0 });
+            if (success) {
                 ElMessage.success(todo.completed ? '已完成' : '已取消完成');
+                getTodos();
             }
         });
     };
@@ -121,31 +117,32 @@ export function useDashboardTodo() {
             if (!editTodoFormRef.value) return;
             const valid = await editTodoFormRef.value.validate();
             if (!valid) return;
-
-            const index = todos.value.findIndex(item => item.id === editTodoForm.value.id);
-            if (index !== -1) {
-                editTodoForm.value.priorityLabel = PriorityMap[editTodoForm.value.priority as keyof typeof PriorityMap];
-                todos.value[index] = { ...editTodoForm.value };
-                editTodoDialog.value = false;
+            const { success } = await updateUserTodoListApi({ ...editTodoForm.value, status: editTodoForm.value.status ? 1 : 0 });
+            if (success) {
                 ElMessage.success('编辑成功');
+                getTodos();
             }
         } catch {
             ElMessage.error('保存失败，请重试');
+        } finally {
+            editTodoDialog.value = false;
         }
     };
 
     // 删除待办事项
-    const deleteTodo = (todo: TodoItem) => {
-        ElMessageBox.confirm(`确定要删除待办事项 "${todo.content}" 吗？`, '删除确认', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            const index = todos.value.findIndex(item => item.id === todo.id);
-            if (index !== -1) {
-                todos.value.splice(index, 1);
-                ElMessage.success('删除成功');
-            }
+    const deleteTodo = (todo: Pick<TodoItem, 'id' | 'title'>) => {
+        withPermission('delete', () => {
+            ElMessageBox.confirm(`确定要删除待办事项 "${todo.title}" 吗？`, '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                const { success } = await deleteUserTodoListApi({ id: todo.id });
+                if (success) {
+                    ElMessage.success('删除成功');
+                    getTodos();
+                }
+            });
         });
     };
 
