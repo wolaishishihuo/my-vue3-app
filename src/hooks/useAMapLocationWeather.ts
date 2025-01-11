@@ -1,5 +1,4 @@
 import { getWeatherInfo } from '@/api/common';
-import { AMAP_CONFIG } from '@/config';
 import { ref, onMounted } from 'vue';
 import { useAsyncState } from '@vueuse/core';
 import type { Ref } from 'vue';
@@ -28,7 +27,7 @@ interface UseAMapLocationWeatherReturn {
 export const useAMapLocationWeather = (): UseAMapLocationWeatherReturn => {
     const weatherInfo = ref<WeatherInfo | null>(null);
     const error = ref<string | null>(null);
-    const { setCache, getCache, clearCache } = useLocalCache();
+    const { setCache, getCache } = useLocalCache();
 
     const { execute, isLoading } = useAsyncState(
         async () => {

@@ -1,5 +1,5 @@
 import { ref, onMounted } from 'vue';
-import { getRepositoryCommits } from '@/api/github';
+import { githubCommits } from '@/api/common';
 import useLocalCache from './useLocalCache';
 import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 
@@ -20,22 +20,21 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
     const commits = ref<CommitInfo[]>([]);
     const loading = ref(false);
     const error = ref<string | null>(null);
-    const { getCache, setCache } = useLocalCache({
+    const { getCache, setCache, clearCache } = useLocalCache({
         // 1小时
         expiryTime: 1000 * 60 * 60 * 1
     });
 
-    const fetchCommits = async (page = 1, perPage = 10) => {
+    const fetchCommits = async (page = 1, per_page = 10) => {
+        console.log('fetchCommits');
         loading.value = true;
         error.value = null;
         try {
-            const response = await getRepositoryCommits({
-                owner,
-                repo,
+            const response = await githubCommits({
                 page,
-                per_page: perPage
+                per_page
             });
-            commits.value = response as CommitInfo[];
+            commits.value = response.data as CommitInfo[];
             setCache('commits', commits.value);
         } catch (err: any) {
             error.value = err.message || '获取提交记录失败';
@@ -60,10 +59,12 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
         return message.split('\n')[0];
     };
     onMounted(() => {
+        clearCache(['commits']);
         const cachedCommits = getCache('commits');
         if (cachedCommits) {
             commits.value = cachedCommits as CommitInfo[];
         } else {
+            console.log('fetchCommits');
             fetchCommits();
         }
     });
