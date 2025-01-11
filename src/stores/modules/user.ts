@@ -3,13 +3,14 @@ import router, { resetRouter } from '@/routers';
 import piniaPersistConfig from '../helper';
 import useLocalCache from '@/hooks/useLocalCache';
 import { EXCLUDE_CACHE_KEYS } from '@/config';
+import { getUserInfoApi } from '@/api/user';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         accessToken: '',
         refreshToken: '',
         userInfo: null as User.UserInfo | null,
-        roles: [] as string[],
+        roles: [] as { id: string; name: string }[],
         permissions: [] as string[]
     }),
     getters: {
@@ -28,11 +29,9 @@ export const useUserStore = defineStore('user', {
         // 获取用户信息
         async getUserInfo() {
             try {
-                const { data } = await import('@/assets/json/userInfo.json');
+                const { data } = await getUserInfoApi();
                 this.userInfo = data;
                 this.roles = data.roles;
-                await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
-                return data;
             } catch (error) {
                 return Promise.reject(error);
             }

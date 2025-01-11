@@ -26,8 +26,8 @@
                         <div class="info-content">
                             <h3 class="nickname">{{ userInfo?.nickname || userInfo?.username }}</h3>
                             <div class="role-tags">
-                                <el-tag v-for="role in userInfo?.roles" :key="role" size="small" type="info" effect="plain" class="role-tag">
-                                    {{ role }}
+                                <el-tag v-for="role in userInfo?.roles" :key="role.id" size="small" type="info" effect="plain" class="role-tag">
+                                    {{ role.name }}
                                 </el-tag>
                             </div>
                             <div class="contact-info">

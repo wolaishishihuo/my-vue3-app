@@ -38,8 +38,8 @@ class HttpRequest {
                     axiosCanceler.addPending(config);
                 }
                 if (config.headers && typeof config.headers.set === 'function') {
-                    config.headers.set('x-access-token', userStore.token);
-                    config.headers.set('Authorization', 'Bearer ' + userStore.token);
+                    config.headers.set('x-access-token', userStore.accessToken);
+                    config.headers.set('Authorization', 'Bearer ' + userStore.accessToken);
                 }
                 return config;
             },
