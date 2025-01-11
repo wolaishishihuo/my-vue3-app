@@ -45,6 +45,7 @@ router.beforeEach(async (to, from, next) => {
         if (ROUTER_WHITE_LIST.includes(to.path)) return next();
 
         // 4. 判断是否登录
+        console.log('userStore.isLogin', userStore.isLogin);
         if (!userStore.isLogin) {
             return next({
                 path: LOGIN_URL,

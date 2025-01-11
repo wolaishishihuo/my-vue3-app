@@ -6,20 +6,24 @@ import { EXCLUDE_CACHE_KEYS } from '@/config';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        token: '',
+        accessToken: '',
+        refreshToken: '',
         userInfo: null as User.UserInfo | null,
         roles: [] as string[],
         permissions: [] as string[]
     }),
     getters: {
-        isLogin: state => !!state.token,
+        isLogin: state => !!state.accessToken,
         userRoles: state => state.roles,
         userPermissions: state => state.permissions
     },
     actions: {
         // 设置 Token
-        setToken(token: string) {
-            this.token = token;
+        setAccessToken(token: string) {
+            this.accessToken = token;
+        },
+        setRefreshToken(token: string) {
+            this.refreshToken = token;
         },
         // 获取用户信息
         async getUserInfo() {
@@ -41,7 +45,8 @@ export const useUserStore = defineStore('user', {
         },
         // 重置用户信息
         resetUserInfo() {
-            this.token = '';
+            this.accessToken = '';
+            this.refreshToken = '';
             this.userInfo = null;
             this.roles = [];
             this.permissions = [];
@@ -50,5 +55,5 @@ export const useUserStore = defineStore('user', {
             clearCache(EXCLUDE_CACHE_KEYS);
         }
     },
-    persist: piniaPersistConfig('user-store', ['token', 'userInfo'])
+    persist: piniaPersistConfig('user-store', ['accessToken', 'refreshToken', 'userInfo'])
 });

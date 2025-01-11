@@ -10,8 +10,7 @@ declare namespace Auth {
     // 登录响应
     interface LoginResult {
         access_token: string;
-        token_type: string;
-        expires_in: number;
+        refresh_token: string;
     }
 
     // 注册参数

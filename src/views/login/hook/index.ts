@@ -2,9 +2,10 @@ import { loginApi, registerApi } from '@/api/auth';
 import { HOME_URL } from '@/config';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { useUserStore } from '@/stores/modules/user';
-import { FormInstance } from 'element-plus';
+import { ElForm, ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+type FormInstance = InstanceType<typeof ElForm>;
 
 export default () => {
     const router = useRouter();
@@ -19,50 +20,52 @@ export default () => {
     const registerForm = reactive({
         username: '',
         password: '',
-        passwordConfirm: '',
-        captchaValue: '',
-        captchaKey: ''
+        confirmPassword: '',
+        email: '',
+        code: ''
     });
-    const login = (formEl: FormInstance | undefined) => {
-        validateAndCallApi(formEl, loginForm, loginApi);
+    const formRef = ref<FormInstance | null>(null);
+
+    const formValidate = async () => {
+        loading.value = true;
+        return await formRef.value?.validate();
     };
 
-    const register = (formEl: FormInstance | undefined) => {
-        validateAndCallApi(formEl, registerForm, registerApi);
-    };
-    const validateAndCallApi = async (formEl: FormInstance | undefined, form: any, api: any) => {
-        formEl!.validate(async valid => {
-            if (!valid) return;
-            loading.value = true;
-            try {
-                const { data } = await api({ ...form, captcha: { key: form.captchaKey, value: form.captchaValue } });
-                // const data = {
-                //     access_token: 'admin123',
-                //     token_type: 'Bearer',
-                //     expires_in: 3600
-                // };
-                await new Promise(resolve => setTimeout(resolve, 1000)); // 添加1秒延时
-                successCallback(data);
-            } finally {
-                loading.value = false;
+    const login = async () => {
+        await formValidate();
+        try {
+            const { data, success, message } = await loginApi(loginForm);
+            if (success) {
+                userStore.setAccessToken(data.access_token);
+                userStore.setRefreshToken(data.refresh_token);
+                await userStore.getUserInfo();
+                // 添加动态路由
+                await initDynamicRouter();
+                // 清空 tabs、keepAlive 数据
+                // tabsStore.setTabs([]);
+                // keepAliveStore.setKeepAliveName([]);
+                // 跳转到首页
+                const redirect = router.currentRoute.value.query.redirect;
+                if (redirect) {
+                    router.push(redirect as string);
+                } else {
+                    router.push(HOME_URL);
+                }
+                ElMessage.success('登录成功');
+            } else {
+                ElMessage.error(message);
             }
-        });
+        } finally {
+            loading.value = false;
+        }
     };
 
-    const successCallback = async (data: Auth.LoginResult) => {
-        userStore.setToken(data.access_token);
-        await userStore.getUserInfo();
-        // 添加动态路由
-        await initDynamicRouter();
-        // // 清空 tabs、keepAlive 数据
-        // // tabsStore.setTabs([]);
-        // // keepAliveStore.setKeepAliveName([]);
-        // // 跳转到首页
-        const redirect = router.currentRoute.value.query.redirect;
-        if (redirect) {
-            router.push(redirect as string);
-        } else {
-            router.push(HOME_URL);
+    const register = async () => {
+        await formValidate();
+        try {
+            const { data } = await registerApi(registerForm);
+        } finally {
+            loading.value = false;
         }
     };
 
@@ -81,6 +84,7 @@ export default () => {
         loading,
         registerForm,
         loginForm,
-        monitorEnter
+        monitorEnter,
+        formRef
     };
 };
