@@ -1,4 +1,4 @@
-import { getIpAndLocation, getWeatherInfo } from '@/api/common';
+import { getWeatherInfo } from '@/api/common';
 import { AMAP_CONFIG } from '@/config';
 import { ref, onMounted } from 'vue';
 import { useAsyncState } from '@vueuse/core';
@@ -28,13 +28,12 @@ interface UseAMapLocationWeatherReturn {
 export const useAMapLocationWeather = (): UseAMapLocationWeatherReturn => {
     const weatherInfo = ref<WeatherInfo | null>(null);
     const error = ref<string | null>(null);
-    const { setCache, getCache } = useLocalCache();
+    const { setCache, getCache, clearCache } = useLocalCache();
 
     const { execute, isLoading } = useAsyncState(
         async () => {
-            const locationResponse = await getIpAndLocation(AMAP_CONFIG.key);
-            const weatherResponse = await getWeatherInfo({ location: locationResponse.city, key: AMAP_CONFIG.key });
-            weatherInfo.value = weatherResponse.lives[0] || {};
+            const weatherResponse = await getWeatherInfo();
+            weatherInfo.value = weatherResponse.data as WeatherInfo;
             setCache('weatherInfo', weatherInfo.value);
         },
         null,
