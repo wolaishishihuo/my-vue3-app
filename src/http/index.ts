@@ -21,6 +21,8 @@ const axiosCanceler = new AxiosCanceler();
 
 class HttpRequest {
     service: AxiosInstance;
+    isRefreshing = false;
+    refreshTokenQueue: Array<Function> = [];
     constructor(config: AxiosRequestConfig) {
         this.service = axios.create(config);
 
@@ -72,10 +74,24 @@ class HttpRequest {
                 if (error.message.indexOf('Network Error') !== -1) {
                     ElMessage.error('网络错误！请您稍后重试');
                 }
+                // 处理401错误
+                if (response?.status === 401 && config?.url !== '/auth/refresh') {
+                    if (!this.isRefreshing) {
+                        this.isRefreshing = true;
+                        return this.refreshToken(config as AxiosRequestConfig);
+                    }
+                    return new Promise((resolve, reject) => {
+                        refreshTokenQueue.push((error?: any) => {
+                            if (error) reject(error);
+                            else resolve(instance(config as AxiosRequestConfig));
+                        });
+                    });
+                }
                 // 如果请求被取消，则直接拒绝该错误
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 }
+
                 if (response) {
                     checkStatus(response.status, response);
                 }
@@ -91,6 +107,29 @@ class HttpRequest {
             }
         );
     }
+    private async refreshToken(config: AxiosRequestConfig) {
+        const userStore = useUserStore();
+        try {
+            const res = await this.get<Auth.RefreshTokenResult>('/auth/refresh', {
+                params: { refresh_token: userStore.refreshToken }
+            });
+            if (res.success) {
+                userStore.setAccessToken(res.data.access_token);
+                userStore.setRefreshToken(res.data.refresh_token);
+            }
+            this.refreshTokenQueue.forEach(callback => callback());
+            return this.service(config);
+        } catch (error) {
+            userStore.logout();
+            ElMessage.error('登录已过期，请重新登录');
+            this.refreshTokenQueue.forEach(callback => callback(Promise.reject(error)));
+            return Promise.reject(error);
+        } finally {
+            this.isRefreshing = false;
+            this.refreshTokenQueue.length = 0;
+        }
+    }
+
     /**
      * @description 常用请求方法封装
      */

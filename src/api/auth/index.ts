@@ -14,3 +14,8 @@ export const registerApi = (params: Auth.RegisterParams) => {
 export const getCaptchaApi = () => {
     return http.get<Auth.GetCaptchaResult>('/captcha');
 };
+
+// 获取刷新token
+export const refreshTokenApi = () => {
+    return http.get<Auth.RefreshTokenResult>('/auth/refresh');
+};

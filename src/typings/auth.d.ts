@@ -34,4 +34,10 @@ declare namespace Auth {
         captchaKey: string;
         captchaImage: string;
     }
+
+    // 刷新token
+    interface RefreshTokenResult {
+        access_token: string;
+        refresh_token: string;
+    }
 }
