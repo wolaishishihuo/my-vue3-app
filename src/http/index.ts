@@ -110,9 +110,7 @@ class HttpRequest {
     private async refreshToken(config: AxiosRequestConfig) {
         const userStore = useUserStore();
         try {
-            const res = await this.get<Auth.RefreshTokenResult>('/auth/refresh', {
-                params: { refresh_token: userStore.refreshToken }
-            });
+            const res = await this.get<Auth.RefreshTokenResult>('/auth/refresh', { refresh_token: userStore.refreshToken });
             if (res.success) {
                 userStore.setAccessToken(res.data.access_token);
                 userStore.setRefreshToken(res.data.refresh_token);
