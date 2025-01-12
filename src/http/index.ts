@@ -81,9 +81,9 @@ class HttpRequest {
                         return this.refreshToken(config as AxiosRequestConfig);
                     }
                     return new Promise((resolve, reject) => {
-                        refreshTokenQueue.push((error?: any) => {
+                        this.refreshTokenQueue.push((error?: any) => {
                             if (error) reject(error);
-                            else resolve(instance(config as AxiosRequestConfig));
+                            else resolve(this.service(config as AxiosRequestConfig));
                         });
                     });
                 }
