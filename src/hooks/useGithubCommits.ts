@@ -3,6 +3,10 @@ import { githubCommits } from '@/api/common';
 import useLocalCache from './useLocalCache';
 import { GITHUB_OWNER, GITHUB_REPO } from '@/config';
 
+// 添加提交类型的类型定义
+type CommitType = 'primary' | 'success' | 'warning' | 'danger' | 'info';
+type CommitTag = '1' | '2';
+
 export interface CommitInfo {
     sha: string;
     commit: {
@@ -14,6 +18,7 @@ export interface CommitInfo {
         message: string;
     };
     html_url: string;
+    tag: CommitTag;
 }
 
 export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
@@ -25,8 +30,35 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
         expiryTime: 1000 * 60 * 60 * 1
     });
 
+    // 移除不需要的 refs
+    const allCommits = ref<CommitInfo[]>([]);
+    const frontChecked = ref(true);
+    const backChecked = ref(true);
+
+    // 更新筛选逻辑
+    const filterCommits = () => {
+        if (frontChecked.value && backChecked.value) {
+            commits.value = allCommits.value; // 显示全部
+        } else if (frontChecked.value) {
+            commits.value = allCommits.value.filter(commit => commit.tag === '1');
+        } else if (backChecked.value) {
+            commits.value = allCommits.value.filter(commit => commit.tag === '2');
+        } else {
+            commits.value = []; // 都未选中时显示空列表
+        }
+    };
+
+    const toggleFront = () => {
+        frontChecked.value = !frontChecked.value;
+        filterCommits();
+    };
+
+    const toggleBack = () => {
+        backChecked.value = !backChecked.value;
+        filterCommits();
+    };
+
     const fetchCommits = async (page = 1, per_page = 10) => {
-        console.log('fetchCommits');
         loading.value = true;
         error.value = null;
         try {
@@ -34,8 +66,9 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
                 page,
                 per_page
             });
-            commits.value = response.data as CommitInfo[];
-            setCache('commits', commits.value);
+            allCommits.value = response.data as CommitInfo[];
+            commits.value = allCommits.value; // 默认显示全部
+            setCache('commits', allCommits.value);
         } catch (err: any) {
             error.value = err.message || '获取提交记录失败';
             console.error('Failed to fetch commits:', err);
@@ -43,15 +76,18 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
             loading.value = false;
         }
     };
-    // 获取提交类型
-    const getCommitType = (message: string): 'primary' | 'success' | 'warning' | 'danger' | 'info' => {
+    // 优化获取提交类型的函数
+    const getCommitType = (message: string): CommitType => {
+        const commitTypes: Record<string, CommitType> = {
+            feat: 'primary',
+            fix: 'warning',
+            docs: 'success',
+            update: 'success',
+            breaking: 'danger'
+        };
+
         const lowerMessage = message.toLowerCase();
-        if (lowerMessage.includes('feat')) return 'primary';
-        if (lowerMessage.includes('fix')) return 'warning';
-        if (lowerMessage.includes('docs')) return 'success';
-        if (lowerMessage.includes('update')) return 'success';
-        if (lowerMessage.includes('breaking')) return 'danger';
-        return 'info';
+        return Object.entries(commitTypes).find(([key]) => lowerMessage.includes(key))?.[1] ?? 'info';
     };
     // 格式化提交信息
     const formatCommitMessage = (message: string) => {
@@ -62,9 +98,9 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
         clearCache(['commits']);
         const cachedCommits = getCache('commits');
         if (cachedCommits) {
-            commits.value = cachedCommits as CommitInfo[];
+            allCommits.value = cachedCommits as CommitInfo[];
+            commits.value = allCommits.value; // 默认显示全部
         } else {
-            console.log('fetchCommits');
             fetchCommits();
         }
     });
@@ -75,6 +111,10 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
         error,
         fetchCommits,
         getCommitType,
-        formatCommitMessage
+        formatCommitMessage,
+        frontChecked,
+        backChecked,
+        toggleFront,
+        toggleBack
     };
 }

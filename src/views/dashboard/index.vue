@@ -57,6 +57,11 @@
                         </div>
                     </template>
 
+                    <div class="flex items-center gap-2 mb-4">
+                        <el-check-tag :checked="frontChecked" type="primary" @change="toggleFront"> 前端提交记录 </el-check-tag>
+                        <el-check-tag :checked="backChecked" type="primary" @change="toggleBack"> 后端提交记录 </el-check-tag>
+                    </div>
+
                     <el-timeline v-if="!commitsError && commits.length > 0">
                         <el-timeline-item
                             v-for="commit in commits"
@@ -193,7 +198,7 @@ const { nowTime } = useTime();
 const { weatherInfo } = useAMapLocationWeather();
 
 // 获取GitHub提交记录
-const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage } = useGithubCommits();
+const { commits, loading: commitsLoading, error: commitsError, fetchCommits, getCommitType, formatCommitMessage, frontChecked, backChecked, toggleFront, toggleBack } = useGithubCommits();
 // 待办事项
 const { todos, addTodo, handleTodoChange, deleteTodo, TODO_RULES, editTodo, editTodoDialog, editTodoForm, saveEditTodo, editTodoFormRef } = useDashboardTodo(userInfo.value!);
 
