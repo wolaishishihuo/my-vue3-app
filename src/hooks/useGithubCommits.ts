@@ -32,8 +32,8 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
 
     // 移除不需要的 refs
     const allCommits = ref<CommitInfo[]>([]);
-    const frontChecked = ref(true);
-    const backChecked = ref(true);
+    const frontChecked = ref(false);
+    const backChecked = ref(false);
 
     // 更新筛选逻辑
     const filterCommits = () => {
@@ -61,6 +61,8 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
     const fetchCommits = async (page = 1, per_page = 10) => {
         loading.value = true;
         error.value = null;
+        frontChecked.value = true;
+        backChecked.value = true;
         try {
             const response = await githubCommits({
                 page,

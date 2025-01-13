@@ -74,6 +74,9 @@
                                 <h4>
                                     <el-link :href="commit.html_url" target="_blank" type="primary">
                                         {{ formatCommitMessage(commit.commit.message) }}
+                                        <el-tag size="small" type="info" class="ml-2">
+                                            {{ commit.tag === '1' ? 'Fronted' : 'Server ' }}
+                                        </el-tag>
                                     </el-link>
                                 </h4>
                                 <div class="timeline-footer">
