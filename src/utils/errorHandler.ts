@@ -26,7 +26,7 @@ const errorHandler = (error: any) => {
     if (error?.status || error?.request?.status || error?.request?.status === 0) {
         return false;
     }
-
+    if (!errorMap[error?.name]) return false;
     const errorName = errorMap[error.name] || '未知错误';
     const errorMessage = error.message || String(error);
     console.log(errorName, errorMessage);

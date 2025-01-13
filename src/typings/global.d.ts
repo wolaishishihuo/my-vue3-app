@@ -14,6 +14,8 @@ declare interface ViteEnv {
     VITE_BASE_URL: string;
     VITE_API_URL: string;
     VITE_PROXY: [string, string][];
+    VITE_LOGIN_USERNAME: string;
+    VITE_LOGIN_PASSWORD: string;
 }
 
 /* __APP_INFO__ */

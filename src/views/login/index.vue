@@ -21,11 +21,12 @@
 </template>
 
 <script setup lang="ts" name="login">
-import { ref } from 'vue';
 import LoginForm from './components/LoginForm.vue';
 import RegisterForm from './components/RegisterForm.vue';
 import ExternalLinkIcons from '@/components/ExternalLinkIcons/index.vue';
 import { Back } from '@element-plus/icons-vue';
+import useLoginAndRegister from '@/views/login/hook';
+
 const externalLinkIcons = [
     {
         name: 'github',
@@ -37,11 +38,7 @@ const externalLinkIcons = [
     }
 ];
 
-const isRegister = ref(false);
-const back = () => (isRegister.value = false);
-const goRegister = () => {
-    isRegister.value = true;
-};
+const { isRegister, back, goRegister } = useLoginAndRegister();
 </script>
 
 <style scoped lang="scss">

@@ -10,3 +10,17 @@ export function checkPhoneNumber(rule: any, value: any, callback: any) {
         return callback();
     }
 }
+
+/**
+ *  @rule 邮箱
+ */
+export function checkEmail(rule: any, value: any, callback: any) {
+    const regexp = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+    if (value === '') callback('请输入邮箱!');
+
+    if (!regexp.test(value)) {
+        callback(new Error('请输入正确的邮箱格式'));
+    } else {
+        return callback();
+    }
+}

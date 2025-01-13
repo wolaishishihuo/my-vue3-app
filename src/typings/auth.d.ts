@@ -19,7 +19,6 @@ declare namespace Auth {
         password: string;
         confirmPassword: string;
         email: string;
-        code: string; // 验证码
     }
 
     // 注册响应

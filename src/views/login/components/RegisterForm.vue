@@ -1,10 +1,19 @@
 <template>
     <el-form ref="formRef" :model="registerForm" :rules="loginRules" size="large">
         <el-form-item prop="username">
-            <el-input v-model="registerForm.username" placeholder="请输入用户名">
+            <el-input v-model="registerForm.username" placeholder="请输入用户名" autocomplete="off">
                 <template #prefix>
                     <el-icon class="el-input__icon">
                         <user />
+                    </el-icon>
+                </template>
+            </el-input>
+        </el-form-item>
+        <el-form-item prop="email">
+            <el-input v-model="registerForm.email" placeholder="请输入邮箱" autocomplete="off">
+                <template #prefix>
+                    <el-icon class="el-input__icon">
+                        <Message />
                     </el-icon>
                 </template>
             </el-input>
@@ -40,11 +49,19 @@
 import { reactive, onMounted } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
 import Captcha from '@/components/Captcha/index.vue';
-import type { ElForm } from 'element-plus';
+import type { ElForm, FormRules } from 'element-plus';
 import useLoginAndRegister from '@/views/login/hook';
+import { checkEmail } from '@/utils/validate';
 
-const loginRules = reactive({
+const loginRules: FormRules = reactive({
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+    email: [
+        {
+            required: true,
+            validator: checkEmail,
+            trigger: 'blur'
+        }
+    ],
     password: [
         {
             required: true,
@@ -52,7 +69,7 @@ const loginRules = reactive({
             trigger: 'blur'
         }
     ],
-    passwordConfirm: [
+    confirmPassword: [
         {
             required: true,
             validator: (_: any, value: any, callback: any) => {

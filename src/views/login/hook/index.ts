@@ -1,19 +1,32 @@
 import { loginApi, registerApi } from '@/api/auth';
 import { HOME_URL } from '@/config';
+import useEnv from '@/hooks/useEnv';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { useUserStore } from '@/stores/modules/user';
 import { ElForm, ElMessage } from 'element-plus';
-import { reactive, ref } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 type FormInstance = InstanceType<typeof ElForm>;
-
+// 切换登录和注册
+const isRegister = ref(false);
+const back = () => {
+    nextTick(() => {
+        isRegister.value = false;
+    });
+    console.log(isRegister.value);
+};
+const goRegister = () => {
+    isRegister.value = true;
+};
 export default () => {
     const router = useRouter();
     const userStore = useUserStore();
     const loading = ref(false);
+    const env = useEnv();
+
     const loginForm = reactive({
-        username: 'admin',
-        password: 'admin',
+        username: env.VITE_LOGIN_USERNAME!,
+        password: env.VITE_LOGIN_PASSWORD!,
         captchaValue: '',
         captchaKey: ''
     });
@@ -22,17 +35,17 @@ export default () => {
         password: '',
         confirmPassword: '',
         email: '',
-        code: ''
+        nickname: ''
     });
     const formRef = ref<FormInstance | null>(null);
 
     const formValidate = async () => {
-        loading.value = true;
         return await formRef.value?.validate();
     };
 
     const login = async () => {
         await formValidate();
+        loading.value = true;
         try {
             const { data, success, message } = await loginApi(loginForm);
             if (success) {
@@ -62,8 +75,15 @@ export default () => {
 
     const register = async () => {
         await formValidate();
+        loading.value = true;
         try {
-            const { data } = await registerApi(registerForm);
+            const { success, message } = await registerApi(registerForm);
+            if (success) {
+                ElMessage.success('注册成功, 请前往登录!');
+                back();
+            } else {
+                ElMessage.error(message);
+            }
         } finally {
             loading.value = false;
         }
@@ -78,6 +98,7 @@ export default () => {
             }
         };
     };
+
     return {
         register,
         login,
@@ -85,6 +106,9 @@ export default () => {
         registerForm,
         loginForm,
         monitorEnter,
-        formRef
+        formRef,
+        isRegister,
+        back,
+        goRegister
     };
 };

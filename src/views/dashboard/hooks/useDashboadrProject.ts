@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { Project } from '@/types/dashboard';
+import type { Project } from '@/views/dashboard/types';
 
 // 项目进度
 export function useDashboardProject() {

@@ -182,7 +182,7 @@ import { useGithubCommits } from '@/hooks/useGithubCommits';
 import { useAMapLocationWeather } from '@/hooks/useAMapLocationWeather';
 import { useDashboardTodo } from './hooks/useDashboardTodo';
 import { useDashboardProject } from './hooks/useDashboadrProject';
-import { PriorityMap, PriorityMapJson } from '@/types/dashboard';
+import { PriorityMap, PriorityMapJson } from '@/views/dashboard/types';
 
 // 用户信息
 const userStore = useUserStore();

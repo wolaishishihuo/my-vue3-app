@@ -1,6 +1,6 @@
-import { computed, ref, watch } from 'vue';
-import type { TodoItem } from '@/types/dashboard';
-import { Priority } from '@/types/dashboard';
+import { ref, watch } from 'vue';
+import type { TodoItem } from '@/views/dashboard/types';
+import { Priority } from '@/views/dashboard/types';
 import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus';
 import useLocalCache from '@/hooks/useLocalCache';
 import useAuthButtons from '@/hooks/useAuthButtons';
