@@ -69,13 +69,6 @@ router.beforeEach(async (to, from, next) => {
             }
         }
 
-        // 6. 权限验证
-        const hasAuth = hasPermission(to, authStore.authMenuListGet, userStore.userRoles?.map(role => role.name) || []);
-
-        if (!hasAuth) {
-            ElMessage.error('暂无访问权限');
-            return next({ path: '/403' });
-        }
         authStore.setRouteName(to.name as string);
         next();
     } catch (error) {
