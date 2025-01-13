@@ -25,15 +25,15 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
     const commits = ref<CommitInfo[]>([]);
     const loading = ref(false);
     const error = ref<string | null>(null);
-    const { getCache, setCache, clearCache } = useLocalCache({
+    const { getCache, setCache } = useLocalCache({
         // 1小时
         expiryTime: 1000 * 60 * 60 * 1
     });
 
     // 移除不需要的 refs
     const allCommits = ref<CommitInfo[]>([]);
-    const frontChecked = ref(false);
-    const backChecked = ref(false);
+    const frontChecked = ref(true);
+    const backChecked = ref(true);
 
     // 更新筛选逻辑
     const filterCommits = () => {
@@ -61,8 +61,6 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
     const fetchCommits = async (page = 1, per_page = 10) => {
         loading.value = true;
         error.value = null;
-        frontChecked.value = true;
-        backChecked.value = true;
         try {
             const response = await githubCommits({
                 page,
@@ -70,6 +68,8 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
             });
             allCommits.value = response.data as CommitInfo[];
             commits.value = allCommits.value; // 默认显示全部
+            backChecked.value = true;
+            frontChecked.value = true;
             setCache('commits', allCommits.value);
         } catch (err: any) {
             error.value = err.message || '获取提交记录失败';
@@ -97,7 +97,6 @@ export function useGithubCommits(owner = GITHUB_OWNER, repo = GITHUB_REPO) {
         return message.split('\n')[0];
     };
     onMounted(() => {
-        clearCache(['commits']);
         const cachedCommits = getCache('commits');
         if (cachedCommits) {
             allCommits.value = cachedCommits as CommitInfo[];

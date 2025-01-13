@@ -43,7 +43,7 @@ export default function useLocalCache<T>(args?: { expiryTime?: number }) {
         globalStorage.value.clear();
         // 重新设置需要保留的缓存项
         entries.forEach(([key, value]) => {
-            if (excludeKeys.includes(key)) {
+            if (!excludeKeys.includes(key)) {
                 globalStorage.value.set(key, value);
             }
         });
