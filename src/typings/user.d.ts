@@ -7,10 +7,16 @@ declare namespace User {
         avatar?: string;
         email?: string;
         phone?: string;
-        roles: { id: string; name: string }[]; // 角色列表
+        roles: UserRole[]; // 角色列表
         status: number; // 状态：0-禁用，1-启用
         createTime: string; // 创建时间
         lastLoginTime?: string; // 最后登录时间
+    }
+    // 用户角色
+    interface UserRole {
+        id: string;
+        name: string;
+        description: string;
     }
 
     // 修改密码参数

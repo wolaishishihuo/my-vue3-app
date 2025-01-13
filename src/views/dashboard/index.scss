@@ -133,12 +133,6 @@
                 }
                 .contact-info {
                     .el-tag {
-                        @include flex(row, flex-start, center);
-
-                        gap: map-get($spacings, '2');
-                        padding: map-get($spacings, '2') map-get($spacings, '3');
-                        border-radius: map-get($border-radius, 'md');
-
                         @include transition;
                         &:hover {
                             transform: translateY(-2px);
@@ -148,6 +142,9 @@
                         .el-icon {
                             margin-right: map-get($spacings, '1');
                             font-size: map-get($font-sizes, 'sm');
+                        }
+                        :deep(.el-tag__content) {
+                            @apply flex items-center;
                         }
                     }
                 }

@@ -6,8 +6,6 @@ import { ROUTER_WHITE_LIST, LOGIN_URL } from '@/config';
 import { useUserStore } from '@/stores/modules/user';
 import { useAuthStore } from '@/stores/modules/auth';
 import NProgress from '@/config/nprogress';
-import { hasPermission } from '@/utils/permission';
-import { ElMessage } from 'element-plus';
 
 // 路由实例
 const router: Router = createRouter({

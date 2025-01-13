@@ -1,9 +1,13 @@
 import http from '@/http';
-import { TodoItem } from '@/types/dashboard';
+import type { TodoItem } from '@/views/dashboard/types';
 
 // 获取用户信息
 export const getUserInfoApi = () => {
     return http.get<User.UserInfo>('/user/findUser');
+};
+// 获取用户角色
+export const getUserRoleApi = () => {
+    return http.get<User.UserRole[]>('/user/findUserRole');
 };
 
 // 获取登录人待办事项

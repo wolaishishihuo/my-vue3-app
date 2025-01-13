@@ -27,7 +27,7 @@
                             <h3 class="nickname">{{ userInfo?.nickname || userInfo?.username }}</h3>
                             <div class="role-tags">
                                 <el-tag v-for="role in userInfo?.roles" :key="role.id" size="small" type="info" effect="plain" class="role-tag">
-                                    {{ role.name }}
+                                    {{ role.description }}
                                 </el-tag>
                             </div>
                             <div class="contact-info">

@@ -3,19 +3,18 @@ import router, { resetRouter } from '@/routers';
 import piniaPersistConfig from '../helper';
 import useLocalCache from '@/hooks/useLocalCache';
 import { EXCLUDE_CACHE_KEYS } from '@/config';
-import { getUserInfoApi } from '@/api/user';
+import { getUserInfoApi, getUserRoleApi } from '@/api/user';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         accessToken: '',
         refreshToken: '',
         userInfo: null as User.UserInfo | null,
-        roles: [] as { id: string; name: string }[],
         permissions: [] as string[]
     }),
     getters: {
         isLogin: state => !!state.accessToken,
-        userRoles: state => state.roles,
+        userRoles: state => state.userInfo?.roles,
         userPermissions: state => state.permissions
     },
     actions: {
@@ -29,9 +28,10 @@ export const useUserStore = defineStore('user', {
         // 获取用户信息
         async getUserInfo() {
             try {
-                const { data } = await getUserInfoApi();
-                this.userInfo = data;
-                this.roles = data.roles;
+                Promise.all([getUserInfoApi(), getUserRoleApi()]).then(([userInfo, roles]) => {
+                    this.userInfo = userInfo.data;
+                    this.userInfo.roles = roles.data;
+                });
             } catch (error) {
                 return Promise.reject(error);
             }
@@ -47,7 +47,6 @@ export const useUserStore = defineStore('user', {
             this.accessToken = '';
             this.refreshToken = '';
             this.userInfo = null;
-            this.roles = [];
             this.permissions = [];
             // 清除本地缓存
             const { clearCache } = useLocalCache();
