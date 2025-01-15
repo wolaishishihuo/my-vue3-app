@@ -1,16 +1,17 @@
 import { useIntervalFn, useTimeoutFn } from '@vueuse/core';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-export const useVerifycode = () => {
-    const isCountingDown = ref(false);
-    const countdown = ref(60);
+export const useVerifycode = (count = 60) => {
+    const countdown = ref(count);
 
-    const { pause: pauseCountdown } = useIntervalFn(
+    const {
+        pause: pauseCountdown,
+        resume: resumeCountdown,
+        isActive: isCountingDown
+    } = useIntervalFn(
         () => {
             if (countdown.value <= 1) {
-                pauseCountdown();
-                isCountingDown.value = false;
-                countdown.value = 60;
+                stopCountdown();
             } else {
                 countdown.value--;
             }
@@ -19,15 +20,29 @@ export const useVerifycode = () => {
         { immediate: false }
     );
 
-    const { start: startCountdown } = useTimeoutFn(() => {
-        isCountingDown.value = false;
-        countdown.value = 60;
-    }, 60000);
+    const codeButtonText = computed(() => {
+        if (isCountingDown.value) {
+            return `${countdown.value}秒后重试`;
+        }
+        return '获取验证码';
+    });
+
+    const startCountdown = () => {
+        countdown.value = count;
+        resumeCountdown();
+    };
+
+    const stopCountdown = () => {
+        pauseCountdown();
+        countdown.value = count;
+    };
 
     return {
         isCountingDown,
         countdown,
         pauseCountdown,
-        startCountdown
+        startCountdown,
+        stopCountdown,
+        codeButtonText
     };
 };

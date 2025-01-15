@@ -22,5 +22,5 @@ export const refreshTokenApi = () => {
 
 // 发送邮箱验证码
 export const sendEmailCodeApi = (email: string) => {
-    return http.post<Auth.SendEmailCodeResult>('/auth/email/code', { email });
+    return http.post<Auth.SendEmailCodeResult>('/email/getEmailCode', { email });
 };

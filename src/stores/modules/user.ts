@@ -4,6 +4,7 @@ import piniaPersistConfig from '../helper';
 import useLocalCache from '@/hooks/useLocalCache';
 import { EXCLUDE_CACHE_KEYS } from '@/config';
 import { getUserInfoApi, getUserRoleApi } from '@/api/user';
+import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 
 export const useUserStore = defineStore('user', {
     state: () => ({
@@ -25,23 +26,40 @@ export const useUserStore = defineStore('user', {
         setRefreshToken(token: string) {
             this.refreshToken = token;
         },
+
         // 获取用户信息
         async getUserInfo() {
             try {
-                Promise.all([getUserInfoApi(), getUserRoleApi()]).then(([userInfo, roles]) => {
-                    this.userInfo = userInfo.data;
-                    this.userInfo.roles = roles.data;
-                });
+                const [userInfo, roles] = await Promise.all([getUserInfoApi(), getUserRoleApi()]);
+                this.userInfo = userInfo.data;
+                this.userInfo.roles = roles.data;
+                // 获取用户信息后重新初始化路由
+                await initDynamicRouter();
             } catch (error) {
                 return Promise.reject(error);
             }
         },
+
+        // 初始化状态
+        async initState() {
+            if (this.accessToken && !router.hasRoute('dashboard')) {
+                try {
+                    await this.getUserInfo();
+                } catch (error) {
+                    console.error('Failed to initialize user state:', error);
+                    this.resetUserInfo();
+                    router.push('/login');
+                }
+            }
+        },
+
         // 登出
         async logout() {
             this.resetUserInfo();
             resetRouter();
             router.push('/login');
         },
+
         // 重置用户信息
         resetUserInfo() {
             this.accessToken = '';

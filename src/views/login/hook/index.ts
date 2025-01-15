@@ -4,7 +4,7 @@ import useEnv from '@/hooks/useEnv';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { useUserStore } from '@/stores/modules/user';
 import { ElForm, ElMessage, FormRules } from 'element-plus';
-import { nextTick, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 type FormInstance = InstanceType<typeof ElForm>;
@@ -13,6 +13,7 @@ interface LoginForm {
     username: string;
     password: string;
     emailCode: string;
+    email: string;
     loginType: 'password' | 'email';
 }
 
@@ -35,6 +36,7 @@ export default () => {
         username: env.VITE_LOGIN_USERNAME!,
         password: env.VITE_LOGIN_PASSWORD!,
         emailCode: '',
+        email: 'jiazhigang_888@163.com',
         loginType: 'password'
     });
 
@@ -56,13 +58,16 @@ export default () => {
         await formValidate();
         loading.value = true;
         try {
-            const { data, success, message } = await loginApi(loginForm);
+            const loginData = {
+                ...loginForm,
+                email: loginForm.loginType === 'email' ? loginForm.email : undefined,
+                emailCode: loginForm.loginType === 'email' ? loginForm.emailCode : undefined
+            };
+            const { data, success, message } = await loginApi(loginData);
             if (success) {
                 userStore.setAccessToken(data.access_token);
                 userStore.setRefreshToken(data.refresh_token);
                 await userStore.getUserInfo();
-                // 添加动态路由
-                await initDynamicRouter();
                 // 跳转到首页
                 const redirect = router.currentRoute.value.query.redirect;
                 if (redirect) {
@@ -116,9 +121,10 @@ export default () => {
     };
 
     const loginRules: FormRules = {
-        username: [{ required: true, message: '请输入用户名或邮箱', validator: loginForm.loginType === 'email' ? validateEmail : undefined, trigger: 'blur' }],
+        username: [{ required: true, message: '请输入用户名或邮箱', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-        emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+        emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+        email: [{ required: true, validator: validateEmail, trigger: 'blur' }]
     };
     return {
         register,

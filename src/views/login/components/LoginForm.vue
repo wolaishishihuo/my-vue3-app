@@ -45,7 +45,7 @@
                 </div>
                 <div v-else key="email" class="form-content">
                     <el-form-item prop="email">
-                        <el-input v-model="loginForm.username" placeholder="请输入邮箱地址" class="animate-input" />
+                        <el-input v-model="loginForm.email" placeholder="请输入邮箱地址" class="animate-input" />
                     </el-form-item>
 
                     <el-form-item prop="emailCode">
@@ -74,27 +74,20 @@ import { sendEmailCodeApi } from '@/api/auth';
 import { useVerifycode } from '@/hooks/useVerifycode';
 
 const { loading, loginForm, login, formRef, loginRules } = useLoginAndRegister();
-const { isCountingDown, countdown, startCountdown } = useVerifycode();
-const { canSendCode, codeButtonText, sendVerificationCode } = useSendEmailCode();
+const { isCountingDown, countdown, startCountdown, codeButtonText } = useVerifycode();
+const { canSendCode, sendVerificationCode } = useSendEmailCode();
 
 // 发送邮箱验证码
 function useSendEmailCode() {
     const canSendCode = computed(() => {
-        return loginForm.loginType === 'email' && loginForm.username && !isCountingDown.value;
+        return loginForm.loginType === 'email' && loginForm.email && !isCountingDown.value;
     });
-    const codeButtonText = computed(() => {
-        if (loginForm.loginType === 'email' && isCountingDown.value) {
-            return `${countdown.value}秒后重试`;
-        }
-        return '获取验证码';
-    });
+
     const sendVerificationCode = async () => {
         try {
-            const { success, message } = await sendEmailCodeApi(loginForm.username);
+            const { success, message } = await sendEmailCodeApi(loginForm.email);
             if (success) {
                 ElMessage.success('验证码已发送至您的邮箱');
-                isCountingDown.value = true;
-                countdown.value = 60;
                 startCountdown();
             } else {
                 ElMessage.error(message || '验证码发送失败，请稍后重试');
@@ -103,7 +96,11 @@ function useSendEmailCode() {
             ElMessage.error('验证码发送失败，请稍后重试');
         }
     };
-    return { canSendCode, codeButtonText, sendVerificationCode };
+
+    return {
+        canSendCode,
+        sendVerificationCode
+    };
 }
 
 const switchLoginType = (type: 'password' | 'email') => {
