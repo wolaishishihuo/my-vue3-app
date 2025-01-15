@@ -1,20 +1,52 @@
 <template>
     <div class="login-container">
         <div class="login-box">
-            <div class="login-left">
-                <img class="login-left-img" src="@/assets/images/login_left.png" alt="login" />
+            <div class="login-left" :class="{ 'is-register': isRegister }">
+                <transition name="image-fade" mode="out-in">
+                    <div :key="isRegister ? 'register' : 'login'" class="left-content">
+                        <div class="animated-text">
+                            {{ isRegister ? 'Join\nUs' : 'Welcome\nBack' }}
+                        </div>
+                        <div class="animated-circles">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </transition>
             </div>
-            <div class="login-form">
-                <div class="login-logo">
-                    <h2 class="logo-text">Get's started</h2>
+            <div class="login-content">
+                <transition name="fade" mode="out-in">
+                    <h2 class="welcome-title" :key="isRegister ? 'register' : 'login'">
+                        {{ isRegister ? 'Create Account' : 'Welcome Back!' }}
+                    </h2>
+                </transition>
+                <transition name="fade" mode="out-in">
+                    <p class="welcome-desc" :key="isRegister ? 'register' : 'login'">
+                        {{ isRegister ? 'Please fill in the form to create your account' : 'Please sign in to continue' }}
+                    </p>
+                </transition>
+
+                <div class="form-container">
+                    <transition name="form-fade" mode="out-in">
+                        <div :key="isRegister ? 'register' : 'login'" class="form-wrapper">
+                            <LoginForm v-if="!isRegister" />
+                            <RegisterForm v-if="isRegister" />
+                        </div>
+                    </transition>
                 </div>
-                <LoginForm v-if="!isRegister" />
-                <template v-if="isRegister">
-                    <el-button class="login-back" @click="back" :icon="Back" link />
-                    <RegisterForm />
-                </template>
-                <div class="login-signup" v-if="!isRegister">Dont have an acount yet? <el-button @click="goRegister" link type="primary">Sign Up</el-button></div>
-                <div class="login-externalLinkIcons"><ExternalLinkIcons v-for="icon in externalLinkIcons" :key="icon.name" :icon-name="icon.name" :iconlink="icon.link"></ExternalLinkIcons></div>
+
+                <div class="switch-form">
+                    <template v-if="!isRegister">
+                        Don't have an account?
+                        <el-link type="primary" :underline="false" @click="goRegister">Sign up now</el-link>
+                    </template>
+                    <template v-else>
+                        Already have an account?
+                        <el-link type="primary" :underline="false" @click="back">Sign in</el-link>
+                    </template>
+                </div>
+                <div class="flex justify-center gap-4"><ExternalLinkIcons v-for="icon in externalLinkIcons" :key="icon.name" :icon-name="icon.name" :iconlink="icon.link"></ExternalLinkIcons></div>
             </div>
         </div>
     </div>
@@ -23,20 +55,9 @@
 <script setup lang="ts" name="login">
 import LoginForm from './components/LoginForm.vue';
 import RegisterForm from './components/RegisterForm.vue';
+import useLoginAndRegister from './hook';
 import ExternalLinkIcons from '@/components/ExternalLinkIcons/index.vue';
-import { Back } from '@element-plus/icons-vue';
-import useLoginAndRegister from '@/views/login/hook';
-
-const externalLinkIcons = [
-    {
-        name: 'github',
-        link: 'https://github.com/wolaishishihuo'
-    },
-    {
-        name: 'vue',
-        link: 'https://cn.vuejs.org/'
-    }
-];
+import { externalLinkIcons } from '@/config/constant';
 
 const { isRegister, back, goRegister } = useLoginAndRegister();
 </script>

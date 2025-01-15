@@ -44,3 +44,14 @@
         content: '';
     }
 }
+
+// 输入框和按钮动画
+.animate-input {
+    :deep(.el-input__wrapper) {
+        transition: all 0.3s ease-in-out;
+        transform-origin: center;
+        &.is-focus {
+            transform: scale(1.01);
+        }
+    }
+}

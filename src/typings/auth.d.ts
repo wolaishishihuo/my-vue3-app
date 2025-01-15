@@ -2,8 +2,9 @@
 declare namespace Auth {
     // 登录参数
     interface LoginParams {
-        username: string;
-        password: string;
+        username?: string;
+        password?: string;
+        email?: string;
         code?: string; // 验证码
     }
 
@@ -38,5 +39,11 @@ declare namespace Auth {
     interface RefreshTokenResult {
         access_token: string;
         refresh_token: string;
+    }
+
+    // 发送邮箱验证码响应
+    interface SendEmailCodeResult {
+        success: boolean;
+        message: string;
     }
 }

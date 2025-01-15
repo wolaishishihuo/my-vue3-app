@@ -19,3 +19,8 @@ export const getCaptchaApi = () => {
 export const refreshTokenApi = () => {
     return http.get<Auth.RefreshTokenResult>('/auth/refresh');
 };
+
+// 发送邮箱验证码
+export const sendEmailCodeApi = (email: string) => {
+    return http.post<Auth.SendEmailCodeResult>('/auth/email/code', { email });
+};

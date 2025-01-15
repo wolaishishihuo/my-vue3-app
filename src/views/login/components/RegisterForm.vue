@@ -40,9 +40,7 @@
             <Captcha v-model:captcha_value="registerForm.captchaValue" v-model:captcha_key="registerForm.captchaKey" />
         </el-form-item> -->
     </el-form>
-    <div class="login-btn">
-        <el-button :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="register()"> 注册 </el-button>
-    </div>
+    <el-button class="submit-btn" :icon="UserFilled" round size="large" type="primary" :loading="loading" @click="register()"> 注册 </el-button>
 </template>
 
 <script setup lang="ts">

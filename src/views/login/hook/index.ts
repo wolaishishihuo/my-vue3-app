@@ -3,33 +3,41 @@ import { HOME_URL } from '@/config';
 import useEnv from '@/hooks/useEnv';
 import { initDynamicRouter } from '@/routers/modules/dynamicRouter';
 import { useUserStore } from '@/stores/modules/user';
-import { ElForm, ElMessage } from 'element-plus';
+import { ElForm, ElMessage, FormRules } from 'element-plus';
 import { nextTick, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 type FormInstance = InstanceType<typeof ElForm>;
+
+interface LoginForm {
+    username: string;
+    password: string;
+    emailCode: string;
+    loginType: 'password' | 'email';
+}
+
 // 切换登录和注册
 const isRegister = ref(false);
 const back = () => {
-    nextTick(() => {
-        isRegister.value = false;
-    });
-    console.log(isRegister.value);
+    isRegister.value = false;
 };
 const goRegister = () => {
     isRegister.value = true;
 };
+
 export default () => {
     const router = useRouter();
     const userStore = useUserStore();
     const loading = ref(false);
     const env = useEnv();
 
-    const loginForm = reactive({
+    const loginForm = reactive<LoginForm>({
         username: env.VITE_LOGIN_USERNAME!,
         password: env.VITE_LOGIN_PASSWORD!,
-        captchaValue: '',
-        captchaKey: ''
+        emailCode: '',
+        loginType: 'password'
     });
+
     const registerForm = reactive({
         username: '',
         password: '',
@@ -37,6 +45,7 @@ export default () => {
         email: '',
         nickname: ''
     });
+
     const formRef = ref<FormInstance | null>(null);
 
     const formValidate = async () => {
@@ -54,9 +63,6 @@ export default () => {
                 await userStore.getUserInfo();
                 // 添加动态路由
                 await initDynamicRouter();
-                // 清空 tabs、keepAlive 数据
-                // tabsStore.setTabs([]);
-                // keepAliveStore.setKeepAliveName([]);
                 // 跳转到首页
                 const redirect = router.currentRoute.value.query.redirect;
                 if (redirect) {
@@ -98,7 +104,22 @@ export default () => {
             }
         };
     };
+    const validateEmail = (rule: any, value: string, callback: any) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) {
+            callback(new Error('请输入邮箱地址'));
+        } else if (!emailRegex.test(value)) {
+            callback(new Error('请输入正确的邮箱格式'));
+        } else {
+            callback();
+        }
+    };
 
+    const loginRules: FormRules = {
+        username: [{ required: true, message: '请输入用户名或邮箱', validator: loginForm.loginType === 'email' ? validateEmail : undefined, trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        emailCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+    };
     return {
         register,
         login,
@@ -109,6 +130,7 @@ export default () => {
         formRef,
         isRegister,
         back,
-        goRegister
+        goRegister,
+        loginRules
     };
 };

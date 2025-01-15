@@ -1,0 +1,17 @@
+.submit-btn {
+    width: 100%;
+    height: 44px;
+    font-size: 16px;
+    background: var(--el-color-primary);
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    &:not(:disabled):hover {
+        box-shadow: 0 4px 12px rgba(var(--el-color-primary-rgb), 0.2);
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    &:not(:disabled):active {
+        transform: translateY(0);
+    }
+}

@@ -58,7 +58,6 @@
                     </template>
 
                     <div class="flex items-center gap-2 mb-4">
-                        {{ frontChecked }}
                         <el-check-tag :checked="frontChecked" type="primary" @change="toggleFront"> 前端提交记录 </el-check-tag>
                         <el-check-tag :checked="backChecked" type="primary" @change="toggleBack"> 后端提交记录 </el-check-tag>
                     </div>
